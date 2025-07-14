@@ -6,9 +6,9 @@ import java.util.List;
 public abstract class CompositeWidget extends Widget {
     protected static class ChildEntry {
         Widget widget;
-        float offsetX, offsetY;
+        int offsetX, offsetY;
 
-        ChildEntry(Widget widget, float offsetX, float offsetY) {
+        ChildEntry(Widget widget, int offsetX, int offsetY) {
             this.widget = widget;
             this.offsetX = offsetX;
             this.offsetY = offsetY;
@@ -31,7 +31,7 @@ public abstract class CompositeWidget extends Widget {
     }
     @Override
     public void update(float delta) {
-        if (!visible || !enabled) return;
+        if (!enabled) return;
 
         for (ChildEntry child : children) {
             child.widget.update(delta);
@@ -47,10 +47,14 @@ public abstract class CompositeWidget extends Widget {
 
     @Override
     public void render(int x, int y) {
+        if (!visible) return;
 
+        for (ChildEntry child : children) {
+            child.widget.render(x + child.offsetX, y + child.offsetY);
+        }
     }
 
-    public void addChild(Widget widget, float offsetX, float offsetY) {
+    public void addChild(Widget widget, int offsetX, int offsetY) {
         children.add(new ChildEntry(widget, offsetX, offsetY));
     }
     public void removeChild(Widget widget) {

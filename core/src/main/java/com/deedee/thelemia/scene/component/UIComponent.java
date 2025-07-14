@@ -1,11 +1,11 @@
 package com.deedee.thelemia.scene.component;
 
 import com.badlogic.gdx.math.Vector2;
-import com.deedee.thelemia.core.IGameObject;
+import com.deedee.thelemia.graphics.ui.IContainer;
 import com.deedee.thelemia.scene.IComponent;
 
 public class UIComponent implements IComponent {
-    protected IGameObject gameObject;
+    protected IContainer container;
     protected Vector2 position = new Vector2();
     protected float scale = 1.0f;
     protected boolean visible = true;
@@ -18,7 +18,8 @@ public class UIComponent implements IComponent {
     @Override
     public void update(float delta) {
         if (!enabled) return;
-        gameObject.update(delta);
+        container.update(delta);
+        container.render();
     }
 
     public Vector2 getPosition() {
