@@ -4,10 +4,10 @@ import com.deedee.thelemia.event.IEvent;
 import com.deedee.thelemia.event.IEventListener;
 import com.deedee.thelemia.event.common.ClickEvent;
 
-public class EntityLifecycleListener implements IEventListener {
+public class SceneEventListener implements IEventListener {
     private final SceneManager gameSystem;
 
-    public EntityLifecycleListener(SceneManager system) {
+    public SceneEventListener(SceneManager system) {
         this.gameSystem = system;
     }
 

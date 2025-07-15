@@ -6,10 +6,18 @@ import java.util.List;
 import java.util.Map;
 
 public class EventBus {
+    private static EventBus instance;
     private final Map<Class<?>, List<IEventListener>> listeners = new HashMap<>();
 
-    public EventBus() {
+    private EventBus() {
 
+    }
+
+    public static EventBus getInstance() {
+        if (instance == null) {
+            instance = new EventBus();
+        }
+        return instance;
     }
 
     public void subscribe(Class<?> eventType, IEventListener listener) {

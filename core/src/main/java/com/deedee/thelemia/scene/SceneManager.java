@@ -4,18 +4,17 @@ import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.IEventListener;
 import com.deedee.thelemia.event.common.ClickEvent;
 
-public class SceneManager extends GameSystem implements ISceneManager {
-    private final EntityLifecycleListener listener = new EntityLifecycleListener(this);
+public class SceneManager implements IGameSystem, ISceneManager {
+    private final SceneEventListener listener = new SceneEventListener(this);
     private Scene currentScene;
 
-    public SceneManager(EventBus eventBus) {
-        super(eventBus);
+    public SceneManager() {
         subscribeListener();
     }
 
     @Override
     public void subscribeListener() {
-        eventBus.subscribe(ClickEvent.class, listener);
+        EventBus.getInstance().subscribe(ClickEvent.class, listener);
     }
     @Override
     public void update(float delta) {

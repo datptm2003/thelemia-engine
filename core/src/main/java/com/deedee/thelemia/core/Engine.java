@@ -11,7 +11,6 @@ import com.deedee.thelemia.scene.SceneManager;
 
 public class Engine extends ApplicationAdapter implements IEngine {
     private final EngineConfig config;
-    private final EventBus eventBus;
     private final LifecycleListener lifecycleListener;
 
     private Renderer renderer;
@@ -20,16 +19,15 @@ public class Engine extends ApplicationAdapter implements IEngine {
 
     public Engine(EngineConfig config) {
         this.config = config;
-        eventBus = new EventBus();
         lifecycleListener = new LifecycleListener();
     }
 
     @Override
     public void create() {
         // Initialization logic for the engine
-        renderer = new Renderer(eventBus, new Camera(config.getWidth(), config.getHeight()));
-        inputHandler = new InputHandler(eventBus);
-        sceneManager = new SceneManager(eventBus);
+        renderer = new Renderer(new Camera(config.getWidth(), config.getHeight()));
+        inputHandler = new InputHandler();
+        sceneManager = new SceneManager();
     }
     @Override
     public void update(float delta) {
@@ -59,9 +57,6 @@ public class Engine extends ApplicationAdapter implements IEngine {
 
     public EngineConfig getConfig() {
         return config;
-    }
-    public EventBus getEventBus() {
-        return eventBus;
     }
     public LifecycleListener getLifecycleListener() {
         return lifecycleListener;

@@ -3,13 +3,11 @@ package com.deedee.thelemia.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
-import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.ClickEvent;
-import com.deedee.thelemia.scene.GameSystem;
+import com.deedee.thelemia.scene.IGameSystem;
 
 import java.util.*;
 
-public class InputHandler extends GameSystem implements IInputHandler {
+public class InputHandler implements IGameSystem, IInputHandler {
     private final InputListener listener = new InputListener(this);
     private final Map<Integer, Vector2> touchPositions = new HashMap<>();
     private final Set<Integer> activeTouches = new HashSet<>();
@@ -38,8 +36,7 @@ public class InputHandler extends GameSystem implements IInputHandler {
         }
     };
 
-    public InputHandler(EventBus eventBus) {
-        super(eventBus);
+    public InputHandler() {
         subscribeListener();
         Gdx.input.setInputProcessor(inputAdapter);
     }

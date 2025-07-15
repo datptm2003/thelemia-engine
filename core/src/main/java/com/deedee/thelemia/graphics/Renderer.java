@@ -6,17 +6,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
-import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.IEventListener;
-import com.deedee.thelemia.scene.GameSystem;
+import com.deedee.thelemia.scene.IGameSystem;
 
-public class Renderer extends GameSystem implements IRenderer {
+public class Renderer implements IGameSystem, IRenderer {
     private final SpriteBatch batch = new SpriteBatch();
     private final Camera camera;
     private final ShaderManager shaderManager = new ShaderManager();
 
-    public Renderer(EventBus eventBus, Camera camera) {
-        super(eventBus);
+    public Renderer(Camera camera) {
         this.camera = camera;
         subscribeListener();
         batch.setProjectionMatrix(camera.getProjectionMatrix());

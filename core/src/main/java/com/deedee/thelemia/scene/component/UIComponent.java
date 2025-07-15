@@ -9,15 +9,14 @@ public class UIComponent implements IComponent {
     protected boolean visible = true;
     protected boolean enabled = true;
 
-    public UIComponent() {
-
+    public UIComponent(IContainer container) {
+        this.container = container;
     }
 
     @Override
     public void update(float delta) {
-        if (!enabled) return;
-        container.update(delta);
-        container.render();
+        if (enabled) container.update(delta);
+        if (visible) container.render();
     }
 
     public boolean isVisible() {
