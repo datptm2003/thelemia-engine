@@ -1,7 +1,7 @@
 package com.deedee.thelemia.graphics.ui;
 
 import com.deedee.thelemia.core.IGameObject;
-import com.deedee.thelemia.graphics.ui.behavior.IRenderable;
+import com.deedee.thelemia.graphics.behavior.IRenderable;
 
 public abstract class Widget implements IGameObject, IRenderable {
     protected boolean visible = true;

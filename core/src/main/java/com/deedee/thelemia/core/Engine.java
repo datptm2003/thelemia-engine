@@ -2,24 +2,34 @@ package com.deedee.thelemia.core;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.graphics.Camera;
 import com.deedee.thelemia.graphics.Renderer;
 import com.deedee.thelemia.graphics.ShaderManager;
+import com.deedee.thelemia.input.InputHandler;
+import com.deedee.thelemia.scene.SceneManager;
 
 public class Engine extends ApplicationAdapter implements IEngine {
     private final EngineConfig config;
+    private final EventBus eventBus;
     private final LifecycleListener lifecycleListener;
+
     private Renderer renderer;
+    private InputHandler inputHandler;
+    private SceneManager sceneManager;
 
     public Engine(EngineConfig config) {
         this.config = config;
+        eventBus = new EventBus();
         lifecycleListener = new LifecycleListener();
     }
 
     @Override
     public void create() {
         // Initialization logic for the engine
-        renderer = new Renderer(new SpriteBatch(), new Camera(config.getWidth(), config.getHeight()), new ShaderManager());
+        renderer = new Renderer(eventBus, new Camera(config.getWidth(), config.getHeight()));
+        inputHandler = new InputHandler(eventBus);
+        sceneManager = new SceneManager(eventBus);
     }
     @Override
     public void update(float delta) {
@@ -50,10 +60,19 @@ public class Engine extends ApplicationAdapter implements IEngine {
     public EngineConfig getConfig() {
         return config;
     }
+    public EventBus getEventBus() {
+        return eventBus;
+    }
     public LifecycleListener getLifecycleListener() {
         return lifecycleListener;
     }
     public Renderer getRenderer() {
         return renderer;
+    }
+    public InputHandler getInputHandler() {
+        return inputHandler;
+    }
+    public SceneManager getSceneManager() {
+        return sceneManager;
     }
 }

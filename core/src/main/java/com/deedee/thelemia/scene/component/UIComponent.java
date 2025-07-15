@@ -6,8 +6,6 @@ import com.deedee.thelemia.scene.IComponent;
 
 public class UIComponent implements IComponent {
     protected IContainer container;
-    protected Vector2 position = new Vector2();
-    protected float scale = 1.0f;
     protected boolean visible = true;
     protected boolean enabled = true;
 
@@ -20,20 +18,6 @@ public class UIComponent implements IComponent {
         if (!enabled) return;
         container.update(delta);
         container.render();
-    }
-
-    public Vector2 getPosition() {
-        return position;
-    }
-    public void setPosition(Vector2 position) {
-        this.position = position;
-    }
-
-    public float getScale() {
-        return scale;
-    }
-    public void setScale(float scale) {
-        this.scale = scale;
     }
 
     public boolean isVisible() {

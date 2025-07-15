@@ -6,27 +6,24 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
-import com.deedee.thelemia.core.IGameObject;
+import com.deedee.thelemia.event.EventBus;
+import com.deedee.thelemia.event.IEventListener;
+import com.deedee.thelemia.scene.GameSystem;
 
-public class Renderer implements IGameObject, IRenderer {
-    private final SpriteBatch batch;
+public class Renderer extends GameSystem implements IRenderer {
+    private final SpriteBatch batch = new SpriteBatch();
     private final Camera camera;
-    private final ShaderManager shaderManager;
+    private final ShaderManager shaderManager = new ShaderManager();
 
-    public Renderer(SpriteBatch batch, Camera camera, ShaderManager shaderManager) {
-        System.out.println("ABC");
-        this.batch = batch;
+    public Renderer(EventBus eventBus, Camera camera) {
+        super(eventBus);
         this.camera = camera;
-        this.shaderManager = shaderManager;
-        this.batch.setProjectionMatrix(camera.getProjectionMatrix());
+        subscribeListener();
+        batch.setProjectionMatrix(camera.getProjectionMatrix());
     }
 
     @Override
-    public void create() {
-
-    }
-    @Override
-    public void start() {
+    public void subscribeListener() {
 
     }
     @Override
@@ -38,6 +35,10 @@ public class Renderer implements IGameObject, IRenderer {
         batch.dispose();
         camera.dispose();
         shaderManager.dispose();
+    }
+    @Override
+    public IEventListener getListener() {
+        return null;
     }
 
     @Override

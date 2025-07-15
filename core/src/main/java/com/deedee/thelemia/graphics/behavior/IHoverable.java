@@ -1,4 +1,4 @@
-package com.deedee.thelemia.graphics.ui.behavior;
+package com.deedee.thelemia.graphics.behavior;
 
 public interface IHoverable {
     void onHoverEnter(int x, int y);
