@@ -14,7 +14,7 @@ public class SceneManager implements IGameSystem, ISceneManager {
 
     @Override
     public void subscribeListener() {
-        EventBus.getInstance().subscribe(ClickEvent.class, listener);
+//        EventBus.getInstance().subscribe(ClickEvent.class, listener);
     }
     @Override
     public void update(float delta) {

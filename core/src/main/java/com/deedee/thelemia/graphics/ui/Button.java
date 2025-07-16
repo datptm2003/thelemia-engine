@@ -4,7 +4,13 @@ import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.ClickEvent;
 import com.deedee.thelemia.graphics.behavior.IClickable;
 
-public abstract class Button extends Widget implements IClickable {
+public class Button extends Widget implements IClickable {
+    private final Runnable callback;
+
+    public Button(int width, int height, Runnable callback) {
+        this.callback = callback;
+    }
+
     @Override
     public void create() {
         super.create();
@@ -27,5 +33,11 @@ public abstract class Button extends Widget implements IClickable {
     }
 
     @Override
-    public abstract void onClick(int x, int y);
+    public void onClick(int x, int y) {
+        callback.run();
+    }
+
+    public Runnable getCallback() {
+        return callback;
+    }
 }

@@ -1,21 +1,22 @@
 package com.deedee.thelemia.core;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.deedee.thelemia.event.EventBus;
+import com.badlogic.gdx.Gdx;
 import com.deedee.thelemia.graphics.Camera;
 import com.deedee.thelemia.graphics.Renderer;
-import com.deedee.thelemia.graphics.ShaderManager;
 import com.deedee.thelemia.input.InputHandler;
 import com.deedee.thelemia.scene.SceneManager;
+import com.deedee.thelemia.time.Timer;
+import com.deedee.thelemia.time.TimerManager;
 
-public class Engine extends ApplicationAdapter implements IEngine {
+public class Engine extends ApplicationAdapter {
     private final EngineConfig config;
     private final LifecycleListener lifecycleListener;
 
     private Renderer renderer;
     private InputHandler inputHandler;
     private SceneManager sceneManager;
+    private TimerManager timerManager;
 
     public Engine(EngineConfig config) {
         this.config = config;
@@ -28,14 +29,15 @@ public class Engine extends ApplicationAdapter implements IEngine {
         renderer = new Renderer(new Camera(config.getWidth(), config.getHeight()));
         inputHandler = new InputHandler();
         sceneManager = new SceneManager();
-    }
-    @Override
-    public void update(float delta) {
-        // Update logic for the engine
+        timerManager = new TimerManager();
     }
     @Override
     public void render() {
         // Rendering logic for the engine
+        float delta = Gdx.graphics.getDeltaTime();
+        renderer.update(delta);
+        inputHandler.update(delta);
+        timerManager.update(delta);
     }
     @Override
     public void resize(int width, int height) {
@@ -53,6 +55,9 @@ public class Engine extends ApplicationAdapter implements IEngine {
     public void dispose() {
         // Dispose logic for the engine
         renderer.dispose();
+        inputHandler.dispose();
+        sceneManager.dispose();
+        timerManager.dispose();
     }
 
     public EngineConfig getConfig() {
@@ -69,5 +74,8 @@ public class Engine extends ApplicationAdapter implements IEngine {
     }
     public SceneManager getSceneManager() {
         return sceneManager;
+    }
+    public TimerManager getTimerManager() {
+        return timerManager;
     }
 }
