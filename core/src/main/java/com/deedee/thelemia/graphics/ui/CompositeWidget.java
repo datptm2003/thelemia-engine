@@ -1,5 +1,7 @@
 package com.deedee.thelemia.graphics.ui;
 
+import com.deedee.thelemia.graphics.ui.context.IWidgetContext;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,10 @@ public abstract class CompositeWidget extends Widget {
 
     protected final List<ChildEntry> children = new ArrayList<>();
 
+    public CompositeWidget(IWidgetContext<? extends Widget> context) {
+        super(context);
+    }
+
     @Override
     public void create() {
         for (ChildEntry child : children) {
@@ -31,8 +37,6 @@ public abstract class CompositeWidget extends Widget {
     }
     @Override
     public void update(float delta) {
-        if (!enabled) return;
-
         for (ChildEntry child : children) {
             child.widget.update(delta);
         }
@@ -47,8 +51,6 @@ public abstract class CompositeWidget extends Widget {
 
     @Override
     public void render(int x, int y) {
-        if (!visible) return;
-
         for (ChildEntry child : children) {
             child.widget.render(x + child.offsetX, y + child.offsetY);
         }

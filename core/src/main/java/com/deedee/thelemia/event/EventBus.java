@@ -1,13 +1,12 @@
 package com.deedee.thelemia.event;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EventBus {
     private static EventBus instance;
     private final Map<Class<?>, List<IEventListener>> listeners = new HashMap<>();
+    private final Queue<IEvent> eventQueue = new LinkedList<>();
+    private boolean isProcessing = false;
 
     private EventBus() {
 
@@ -25,11 +24,33 @@ public class EventBus {
     }
 
     public void post(IEvent event) {
-        if (listeners.containsKey(event.getClass())) {
-            for (IEventListener listener : listeners.get(event.getClass())) {
-                listener.onEvent(event);
+        synchronized (eventQueue) {
+            eventQueue.add(event);
+        }
+    }
+
+    public void process() {
+        if (isProcessing) return;
+
+        isProcessing = true;
+
+        while (true) {
+            IEvent event;
+            synchronized (eventQueue) {
+                event = eventQueue.poll();
+            }
+
+            if (event == null) break;
+
+            List<IEventListener> eventListeners = listeners.get(event.getClass());
+            if (eventListeners != null) {
+                for (IEventListener listener : eventListeners) {
+                    listener.onEvent(event);
+                }
             }
         }
+
+        isProcessing = false;
     }
 
 }

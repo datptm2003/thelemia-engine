@@ -1,10 +1,10 @@
 package com.deedee.thelemia.graphics.ui;
 
-import com.deedee.thelemia.graphics.behavior.IClickable;
-import com.deedee.thelemia.graphics.ui.context.ButtonContext;
+import com.deedee.thelemia.graphics.behavior.ICullable;
+import com.deedee.thelemia.graphics.ui.context.CanvasContext;
 
-public class Button extends CompositeWidget implements IClickable {
-    public Button(ButtonContext context) {
+public class Canvas extends Widget implements ICullable {
+    public Canvas(CanvasContext context) {
         super(context);
     }
 
@@ -30,11 +30,17 @@ public class Button extends CompositeWidget implements IClickable {
     }
 
     @Override
-    public void onClick(int x, int y) {
-        this.getContext().getCallback().run();
+    public boolean isInsideVisibleArea(int x, int y) {
+        return false;
     }
     @Override
-    public ButtonContext getContext() {
-        return (ButtonContext) super.getContext();
+    public void setVisibleArea(int x, int y, int width, int height) {
+
     }
+
+    @Override
+    public CanvasContext getContext() {
+        return (CanvasContext) super.getContext();
+    }
+
 }

@@ -1,5 +1,8 @@
 package com.deedee.thelemia.event;
 
+import com.deedee.thelemia.scene.IGameSystem;
+
 public interface IEvent {
-    void handle();
+    String getTimestamp();
+    String getLog();
 }

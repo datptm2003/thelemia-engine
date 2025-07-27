@@ -27,7 +27,7 @@ public class SceneManager implements IGameSystem, ISceneManager {
         unloadScene();
     }
     @Override
-    public IEventListener getListener() {
+    public SceneEventListener getListener() {
         return listener;
     }
 

@@ -1,13 +1,14 @@
 package com.deedee.thelemia.event.common;
 
 import com.deedee.thelemia.core.IGameObject;
-import com.deedee.thelemia.event.IEvent;
+import com.deedee.thelemia.event.Event;
 
-public class ClickEvent implements IEvent {
+public class ClickEvent extends Event {
     private final IGameObject gameObject;
     private final int x, y;
 
     public ClickEvent(IGameObject gameObject, int x, int y) {
+        super();
         this.gameObject = gameObject;
         this.x = x;
         this.y = y;
@@ -24,7 +25,7 @@ public class ClickEvent implements IEvent {
     }
 
     @Override
-    public void handle() {
-
+    public String getLog() {
+        return "";
     }
 }

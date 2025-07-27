@@ -1,11 +1,10 @@
 package com.deedee.thelemia.time;
 
 import com.badlogic.gdx.utils.Array;
-import com.deedee.thelemia.event.IEventListener;
 import com.deedee.thelemia.scene.IGameSystem;
 
 public class TimerManager implements IGameSystem, ITimerManager {
-    private final TimerListener listener = new TimerListener(this);
+    private final TimeEventListener listener = new TimeEventListener(this);
     private final Array<ITimer> timers = new Array<>();
 
     public TimerManager() {
@@ -31,7 +30,7 @@ public class TimerManager implements IGameSystem, ITimerManager {
 
     }
     @Override
-    public TimerListener getListener() {
+    public TimeEventListener getListener() {
         return listener;
     }
 

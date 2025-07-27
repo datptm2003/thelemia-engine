@@ -1,46 +1,65 @@
 package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.deedee.thelemia.event.IEventListener;
+import com.deedee.thelemia.event.EventBus;
+import com.deedee.thelemia.event.common.RedrawScreenEvent;
+import com.deedee.thelemia.event.common.RenderRequestEvent;
 import com.deedee.thelemia.scene.IGameSystem;
 
 public class Renderer implements IGameSystem, IRenderer {
-    private final SpriteBatch batch = new SpriteBatch();
-    private final Camera camera;
-    private final ShaderManager shaderManager = new ShaderManager();
+    private final RenderListener listener = new RenderListener(this);
 
-    public Renderer(Camera camera) {
-        this.camera = camera;
+    private final Color DEFAULT_BACKGROUND = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+    private final Camera camera;
+    private final FrameBuffer fbo;
+
+    private final SpriteBatch batch = new SpriteBatch();
+    private final ShaderManager shaderManager = new ShaderManager();
+    private final ShapeRenderer shapeRenderer = new ShapeRenderer();
+
+    public Renderer(int width, int height) {
+        this.camera = new Camera(width, height);
+        this.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
         subscribeListener();
         batch.setProjectionMatrix(camera.getProjectionMatrix());
+        shapeRenderer.setProjectionMatrix(camera.getProjectionMatrix());
     }
 
     @Override
     public void subscribeListener() {
-
+        EventBus.getInstance().subscribe(RenderRequestEvent.class, listener);
+        EventBus.getInstance().subscribe(RedrawScreenEvent.class, listener);
     }
     @Override
     public void update(float delta) {
         batch.setProjectionMatrix(this.camera.getProjectionMatrix());
+        shapeRenderer.setProjectionMatrix(this.camera.getProjectionMatrix());
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
     @Override
     public void dispose() {
         batch.dispose();
         camera.dispose();
         shaderManager.dispose();
+        shapeRenderer.dispose();
     }
     @Override
-    public IEventListener getListener() {
-        return null;
+    public RenderListener getListener() {
+        return listener;
     }
 
     @Override
     public void begin() {
+        fbo.begin();
         batch.begin();
     }
     @Override
@@ -53,8 +72,19 @@ public class Renderer implements IGameSystem, IRenderer {
         float height = texture.getHeight() * scale;
         batch.draw(texture, position.x, position.y, width, height);
     }
+
+//    @Override
+//    public void draw(TextureRegion textureRegion, Vector2 position, Vector2 size) {
+//
+//    }
+//    @Override
+//    public void draw(TextureRegion textureRegion, Vector2 position, float scale) {
+//
+//    }
+
     @Override
     public void end() {
+        fbo.end();
         batch.end();
     }
     @Override
@@ -67,16 +97,19 @@ public class Renderer implements IGameSystem, IRenderer {
         batch.setShader(null);
     }
     @Override
-    public void clearScreen(float r, float g, float b, float a) {
-        Gdx.gl.glClearColor(r, g, b, a);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    public void clearScreen(Color color) {
+        if (color == null) Gdx.gl.glClearColor(DEFAULT_BACKGROUND.r, DEFAULT_BACKGROUND.g, DEFAULT_BACKGROUND.b, DEFAULT_BACKGROUND.a);
+        else Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
     }
 
-    public SpriteBatch getBatch() {
-        return batch;
-    }
     public Camera getCamera() {
         return camera;
+    }
+    public FrameBuffer getFrameBuffer() {
+        return fbo;
+    }
+    public SpriteBatch getBatch() {
+        return batch;
     }
     public ShaderProgram getCurrentShader() {
         return shaderManager.getCurrentShader();

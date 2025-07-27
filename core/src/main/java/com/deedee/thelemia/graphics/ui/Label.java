@@ -1,10 +1,10 @@
 package com.deedee.thelemia.graphics.ui;
 
-import com.deedee.thelemia.graphics.behavior.IClickable;
 import com.deedee.thelemia.graphics.ui.context.ButtonContext;
+import com.deedee.thelemia.graphics.ui.context.LabelContext;
 
-public class Button extends CompositeWidget implements IClickable {
-    public Button(ButtonContext context) {
+public class Label extends Widget {
+    public Label(LabelContext context) {
         super(context);
     }
 
@@ -30,11 +30,7 @@ public class Button extends CompositeWidget implements IClickable {
     }
 
     @Override
-    public void onClick(int x, int y) {
-        this.getContext().getCallback().run();
-    }
-    @Override
-    public ButtonContext getContext() {
-        return (ButtonContext) super.getContext();
+    public LabelContext getContext() {
+        return (LabelContext) super.getContext();
     }
 }

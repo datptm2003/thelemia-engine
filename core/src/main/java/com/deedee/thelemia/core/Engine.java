@@ -2,6 +2,7 @@ package com.deedee.thelemia.core;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.graphics.Camera;
 import com.deedee.thelemia.graphics.Renderer;
 import com.deedee.thelemia.input.InputHandler;
@@ -26,7 +27,7 @@ public class Engine extends ApplicationAdapter {
     @Override
     public void create() {
         // Initialization logic for the engine
-        renderer = new Renderer(new Camera(config.getWidth(), config.getHeight()));
+        renderer = new Renderer(config.getWidth(), config.getHeight());
         inputHandler = new InputHandler();
         sceneManager = new SceneManager();
         timerManager = new TimerManager();
@@ -38,6 +39,8 @@ public class Engine extends ApplicationAdapter {
         renderer.update(delta);
         inputHandler.update(delta);
         timerManager.update(delta);
+
+        EventBus.getInstance().process();
     }
     @Override
     public void resize(int width, int height) {

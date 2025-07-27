@@ -4,6 +4,8 @@ import com.deedee.thelemia.event.IEvent;
 import com.deedee.thelemia.event.IEventListener;
 import com.deedee.thelemia.event.common.ClickEvent;
 
+import java.util.ArrayList;
+
 public class SceneEventListener implements IEventListener {
     private final SceneManager gameSystem;
 
@@ -14,7 +16,7 @@ public class SceneEventListener implements IEventListener {
     @Override
     public void onEvent(IEvent event) {
         if (event instanceof ClickEvent) {
-            System.out.println("Hello from EntityLifecycleListener! (" + ((ClickEvent) event).getX() + ", " + ((ClickEvent) event).getY() + ")");
+            System.out.println("Hello from SceneEventListener! (" + ((ClickEvent) event).getX() + ", " + ((ClickEvent) event).getY() + ")");
         }
     }
 }
