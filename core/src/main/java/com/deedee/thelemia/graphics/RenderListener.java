@@ -7,6 +7,9 @@ import com.deedee.thelemia.event.common.RedrawScreenEvent;
 import com.deedee.thelemia.event.common.RenderRequestEvent;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.component.IGraphicsComponent;
+import com.deedee.thelemia.scene.enumerate.ComponentGroup;
+
+import java.util.List;
 
 public class RenderListener implements IEventListener {
     private final Renderer gameSystem;
@@ -29,12 +32,20 @@ public class RenderListener implements IEventListener {
                     break;
             }
             gameSystem.end();
+
         } else if (event instanceof RedrawScreenEvent) {
             RedrawScreenEvent redrawScreenEvent = (RedrawScreenEvent) event;
             gameSystem.clearScreen(redrawScreenEvent.getBackgroundColor());
+
             for (Entity entity : redrawScreenEvent.getRenderableEntities()) {
-                entity.getComponent(IGraphicsComponent.class).render();
+                if (!entity.hasComponentGroup(ComponentGroup.GRAPHICS)) continue;
+
+                List<IGraphicsComponent> graphicsComponents = entity.getComponentsByGroup(ComponentGroup.GRAPHICS);
+                for (IGraphicsComponent component : graphicsComponents) {
+                    component.render();
+                }
             }
+
         }
     }
 }

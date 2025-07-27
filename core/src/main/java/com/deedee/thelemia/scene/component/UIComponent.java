@@ -2,6 +2,7 @@ package com.deedee.thelemia.scene.component;
 
 import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.graphics.ui.IContainer;
+import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 public class UIComponent implements IGraphicsComponent {
     protected IContainer container;
@@ -47,6 +48,11 @@ public class UIComponent implements IGraphicsComponent {
     @Override
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    @Override
+    public ComponentGroup getGroup() {
+        return ComponentGroup.GRAPHICS;
     }
 
     public IContainer getContainer() {

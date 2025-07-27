@@ -46,7 +46,7 @@ public abstract class Scene implements IScene {
     @Override
     public void update(float delta) {
         for (IEntity entity : entities) {
-            for (IComponent component : entity.getComponents()) {
+            for (IComponent component : entity.getAllComponents()) {
                 component.update(delta);
             }
         }
