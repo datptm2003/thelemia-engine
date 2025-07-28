@@ -37,4 +37,5 @@ public class Button extends CompositeWidget implements IClickable {
     public ButtonContext getContext() {
         return (ButtonContext) super.getContext();
     }
+
 }

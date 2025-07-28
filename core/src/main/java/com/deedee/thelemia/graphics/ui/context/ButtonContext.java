@@ -1,15 +1,22 @@
 package com.deedee.thelemia.graphics.ui.context;
 
+import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.graphics.Style;
 import com.deedee.thelemia.graphics.ui.Button;
+import com.deedee.thelemia.graphics.ui.Canvas;
+import com.deedee.thelemia.graphics.ui.Label;
 import com.deedee.thelemia.graphics.ui.Widget;
 
-public class ButtonContext implements IWidgetContext<Button> {
-    private final Style style;
-    private final CanvasContext canvasContext;
-    private final LabelContext labelContext;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-    private Runnable callback;
+public class ButtonContext implements IWidgetContext<Button> {
+    protected final Style style;
+    protected final CanvasContext canvasContext;
+    protected final LabelContext labelContext;
+    protected Runnable callback;
 
     public ButtonContext(Style style, CanvasContext canvasContext, LabelContext labelContext) {
         this.style = style;
@@ -22,6 +29,7 @@ public class ButtonContext implements IWidgetContext<Button> {
 
     @Override
     public Button build() {
+        // TODO: Need more updates
         return new Button(this);
     }
     @Override
@@ -36,6 +44,11 @@ public class ButtonContext implements IWidgetContext<Button> {
     @Override
     public Style getStyle() {
         return style;
+    }
+
+    @Override
+    public Vector2 getHitboxSize() {
+        return new Vector2(canvasContext.getWidth(), canvasContext.getHeight());
     }
 
     public CanvasContext getCanvasContext() {

@@ -5,9 +5,9 @@ import com.deedee.thelemia.graphics.ui.IContainer;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 public class UIComponent implements IGraphicsComponent {
-    protected IContainer container;
-    protected boolean visible = true;
-    protected boolean enabled = true;
+    private IContainer container;
+    private boolean visible = true;
+    private boolean enabled = true;
 
     public UIComponent(IContainer container) {
         this.container = container;
@@ -55,9 +55,11 @@ public class UIComponent implements IGraphicsComponent {
         return ComponentGroup.GRAPHICS;
     }
 
+    @Override
     public IContainer getContainer() {
         return container;
     }
+    @Override
     public void setContainer(IContainer container) {
         this.container = container;
     }

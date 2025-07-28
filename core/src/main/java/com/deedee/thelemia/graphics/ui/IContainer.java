@@ -1,10 +1,14 @@
 package com.deedee.thelemia.graphics.ui;
 
-import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.core.IGameObject;
+import com.deedee.thelemia.graphics.Renderer;
+import com.deedee.thelemia.graphics.behavior.IRenderableObject;
+
+import java.util.List;
 
 public interface IContainer extends IGameObject {
-    void add(String name, Widget widget, int x, int y);
+    void add(String name, IRenderableObject object, int x, int y);
     void remove(String name);
     void render();
+    List<Renderer.ChildEntry> getAllEntries();
 }

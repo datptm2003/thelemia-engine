@@ -1,13 +1,13 @@
 package com.deedee.thelemia.graphics.ui;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.deedee.thelemia.core.IGameObject;
+import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.RenderRequestEvent;
-import com.deedee.thelemia.graphics.behavior.IRenderable;
+import com.deedee.thelemia.event.common.UpdateBufferEvent;
+import com.deedee.thelemia.graphics.behavior.IRenderableObject;
 import com.deedee.thelemia.graphics.ui.context.IWidgetContext;
 
-public abstract class Widget implements IGameObject, IRenderable {
+public abstract class Widget implements IRenderableObject {
     protected Texture texture;
     protected IWidgetContext<? extends Widget> context;
 
@@ -32,7 +32,7 @@ public abstract class Widget implements IGameObject, IRenderable {
         if (texture == null) {
             throw new IllegalArgumentException("Texture cannot be null!");
         }
-        EventBus.getInstance().post(new RenderRequestEvent(texture, x, y, 1.0f));
+        EventBus.getInstance().post(new UpdateBufferEvent(texture, x, y, 1.0f));
     }
     @Override
     public void dispose() {
@@ -45,5 +45,10 @@ public abstract class Widget implements IGameObject, IRenderable {
     }
     public IWidgetContext<? extends Widget> getContext() {
         return context;
+    }
+
+    @Override
+    public Vector2 getHitboxSize() {
+        return context.getHitboxSize();
     }
 }

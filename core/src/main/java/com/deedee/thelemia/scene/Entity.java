@@ -1,21 +1,27 @@
 package com.deedee.thelemia.scene;
 
+import com.badlogic.gdx.math.Vector2;
+import com.deedee.thelemia.graphics.Renderer.ChildEntry;
+import com.deedee.thelemia.graphics.behavior.IRenderableObject;
+import com.deedee.thelemia.scene.component.IGraphicsComponent;
+import com.deedee.thelemia.scene.component.TransformComponent;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 import java.util.*;
 
 public class Entity implements IEntity {
-    private final String id;
-    private final Map<Class<? extends IComponent>, IComponent> components = new HashMap<>();
-    private final Map<ComponentGroup, Boolean> componentGroups = new HashMap<>();
+    protected final String id;
+    protected final Map<Class<? extends IComponent>, IComponent> components = new HashMap<>();
+    protected final Map<ComponentGroup, Boolean> componentGroups = new HashMap<>();
 
     public Entity() {
         this.id = UUID.randomUUID().toString();
-        initComponentGroups();
+        init();
     }
 
-    private void initComponentGroups() {
+    private void init() {
         for (ComponentGroup group : ComponentGroup.values()) componentGroups.put(group, false);
+        addComponent(new TransformComponent());
     }
 
     @Override
@@ -34,7 +40,7 @@ public class Entity implements IEntity {
     }
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends IComponent> T getComponent(Class<T> type) {
+    public <T extends IComponent> T getComponentByType(Class<T> type) {
         return (T) components.get(type);
     }
     @Override
@@ -57,4 +63,35 @@ public class Entity implements IEntity {
         components.remove(componentType);
     }
 
+    @Override
+    public IRenderableObject getHitObject(int x, int y) {
+        TransformComponent transform = getComponentByType(TransformComponent.class);
+        if (transform == null) return null;
+
+        Vector2 entityPos = transform.getPosition();
+
+        List<IGraphicsComponent> graphicsComponents = getComponentsByGroup(ComponentGroup.GRAPHICS);
+        for (IGraphicsComponent graphicsComponent : graphicsComponents) {
+            List<ChildEntry> entries = graphicsComponent.getContainer().getAllEntries();
+
+            for (int i = entries.size() - 1; i >= 0; i--) {
+                ChildEntry entry = entries.get(i);
+                IRenderableObject renderable = entry.object;
+
+                Vector2 hitboxSize = renderable.getHitboxSize();
+                float hitboxWidth = hitboxSize.x;
+                float hitboxHeight = hitboxSize.y;
+
+                float worldX = entityPos.x + entry.x;
+                float worldY = entityPos.y + entry.y;
+
+                if (x >= worldX && x <= worldX + hitboxWidth &&
+                    y >= worldY && y <= worldY + hitboxHeight) {
+                    return renderable;
+                }
+            }
+        }
+
+        return null;
+    }
 }

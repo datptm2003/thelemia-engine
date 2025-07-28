@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.event.Event;
 import com.deedee.thelemia.graphics.enumerate.RenderRequestType;
 
-public class RenderRequestEvent extends Event {
+public class UpdateBufferEvent extends Event {
     private final Texture texture;
     private final int x, y;
 
@@ -13,7 +13,7 @@ public class RenderRequestEvent extends Event {
     private int width, height;
     private float scale;
 
-    public RenderRequestEvent(Texture texture, int x, int y, int width, int height) {
+    public UpdateBufferEvent(Texture texture, int x, int y, int width, int height) {
         super();
         this.texture = texture;
         this.x = x;
@@ -23,7 +23,7 @@ public class RenderRequestEvent extends Event {
         this.width = width;
         this.height = height;
     }
-    public RenderRequestEvent(Texture texture, int x, int y, float scale) {
+    public UpdateBufferEvent(Texture texture, int x, int y, float scale) {
         super();
         this.texture = texture;
         this.x = x;

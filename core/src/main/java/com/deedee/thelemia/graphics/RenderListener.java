@@ -1,10 +1,9 @@
 package com.deedee.thelemia.graphics;
 
-import com.badlogic.gdx.graphics.Color;
 import com.deedee.thelemia.event.IEvent;
 import com.deedee.thelemia.event.IEventListener;
-import com.deedee.thelemia.event.common.RedrawScreenEvent;
-import com.deedee.thelemia.event.common.RenderRequestEvent;
+import com.deedee.thelemia.event.common.ResetBufferEvent;
+import com.deedee.thelemia.event.common.UpdateBufferEvent;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.component.IGraphicsComponent;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
@@ -20,24 +19,24 @@ public class RenderListener implements IEventListener {
 
     @Override
     public void onEvent(IEvent event) {
-        if (event instanceof RenderRequestEvent) {
-            RenderRequestEvent renderRequestEvent = (RenderRequestEvent) event;
+        if (event instanceof UpdateBufferEvent) {
+            UpdateBufferEvent updateBufferEvent = (UpdateBufferEvent) event;
             gameSystem.begin();
-            switch (renderRequestEvent.getRequestType()) {
+            switch (updateBufferEvent.getRequestType()) {
                 case BY_SIZE:
-                    gameSystem.draw(renderRequestEvent.getTexture(), renderRequestEvent.getPosition(), renderRequestEvent.getSize());
+                    gameSystem.draw(updateBufferEvent.getTexture(), updateBufferEvent.getPosition(), updateBufferEvent.getSize());
                     break;
                 case BY_SCALE:
-                    gameSystem.draw(renderRequestEvent.getTexture(), renderRequestEvent.getPosition(), renderRequestEvent.getScale());
+                    gameSystem.draw(updateBufferEvent.getTexture(), updateBufferEvent.getPosition(), updateBufferEvent.getScale());
                     break;
             }
             gameSystem.end();
 
-        } else if (event instanceof RedrawScreenEvent) {
-            RedrawScreenEvent redrawScreenEvent = (RedrawScreenEvent) event;
-            gameSystem.clearScreen(redrawScreenEvent.getBackgroundColor());
+        } else if (event instanceof ResetBufferEvent) {
+            ResetBufferEvent resetBufferEvent = (ResetBufferEvent) event;
+            gameSystem.clearScreen(resetBufferEvent.getBackgroundColor());
 
-            for (Entity entity : redrawScreenEvent.getRenderableEntities()) {
+            for (Entity entity : resetBufferEvent.getRenderableEntities()) {
                 if (!entity.hasComponentGroup(ComponentGroup.GRAPHICS)) continue;
 
                 List<IGraphicsComponent> graphicsComponents = entity.getComponentsByGroup(ComponentGroup.GRAPHICS);

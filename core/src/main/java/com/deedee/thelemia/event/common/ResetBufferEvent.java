@@ -6,14 +6,14 @@ import com.deedee.thelemia.scene.Entity;
 
 import java.util.List;
 
-public class RedrawScreenEvent extends Event {
+public class ResetBufferEvent extends Event {
     /**
      * Clear screen and re-render
      */
     private final Color backgroundColor;
     private final List<Entity> renderableEntities;
 
-    public RedrawScreenEvent(Color backgroundColor, List<Entity> renderableEntities) {
+    public ResetBufferEvent(Color backgroundColor, List<Entity> renderableEntities) {
         super();
         this.backgroundColor = backgroundColor;
         this.renderableEntities = renderableEntities;

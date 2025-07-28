@@ -11,11 +11,31 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.RedrawScreenEvent;
-import com.deedee.thelemia.event.common.RenderRequestEvent;
+import com.deedee.thelemia.event.common.ResetBufferEvent;
+import com.deedee.thelemia.event.common.UpdateBufferEvent;
+import com.deedee.thelemia.graphics.behavior.IRenderableObject;
 import com.deedee.thelemia.scene.IGameSystem;
 
 public class Renderer implements IGameSystem, IRenderer {
+    public static class ChildEntry {
+        public String name;
+        public IRenderableObject object;
+        public int x, y;
+
+        public ChildEntry(String name, IRenderableObject object, int x, int y) {
+            this.name = name;
+            this.object = object;
+            this.x = x;
+            this.y = y;
+        }
+        public ChildEntry(IRenderableObject object, int x, int y) {
+            this.name = "";
+            this.object = object;
+            this.x = x;
+            this.y = y;
+        }
+    }
+
     private final RenderListener listener = new RenderListener(this);
 
     private final Color DEFAULT_BACKGROUND = new Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -36,8 +56,8 @@ public class Renderer implements IGameSystem, IRenderer {
 
     @Override
     public void subscribeListener() {
-        EventBus.getInstance().subscribe(RenderRequestEvent.class, listener);
-        EventBus.getInstance().subscribe(RedrawScreenEvent.class, listener);
+        EventBus.getInstance().subscribe(UpdateBufferEvent.class, listener);
+        EventBus.getInstance().subscribe(ResetBufferEvent.class, listener);
     }
     @Override
     public void update(float delta) {

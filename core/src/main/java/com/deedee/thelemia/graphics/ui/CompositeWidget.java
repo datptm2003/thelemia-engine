@@ -1,22 +1,12 @@
 package com.deedee.thelemia.graphics.ui;
 
+import com.deedee.thelemia.graphics.Renderer.ChildEntry;
 import com.deedee.thelemia.graphics.ui.context.IWidgetContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class CompositeWidget extends Widget {
-    protected static class ChildEntry {
-        Widget widget;
-        int offsetX, offsetY;
-
-        ChildEntry(Widget widget, int offsetX, int offsetY) {
-            this.widget = widget;
-            this.offsetX = offsetX;
-            this.offsetY = offsetY;
-        }
-    }
-
     protected final List<ChildEntry> children = new ArrayList<>();
 
     public CompositeWidget(IWidgetContext<? extends Widget> context) {
@@ -26,25 +16,25 @@ public abstract class CompositeWidget extends Widget {
     @Override
     public void create() {
         for (ChildEntry child : children) {
-            child.widget.create();
+            child.object.create();
         }
     }
     @Override
     public void start() {
         for (ChildEntry child : children) {
-            child.widget.start();
+            child.object.start();
         }
     }
     @Override
     public void update(float delta) {
         for (ChildEntry child : children) {
-            child.widget.update(delta);
+            child.object.update(delta);
         }
     }
     @Override
     public void dispose() {
         for (ChildEntry child : children) {
-            child.widget.dispose();
+            child.object.dispose();
         }
         children.clear();
     }
@@ -52,7 +42,7 @@ public abstract class CompositeWidget extends Widget {
     @Override
     public void render(int x, int y) {
         for (ChildEntry child : children) {
-            child.widget.render(x + child.offsetX, y + child.offsetY);
+            child.object.render(x + child.x, y + child.y);
         }
     }
 
@@ -60,11 +50,11 @@ public abstract class CompositeWidget extends Widget {
         children.add(new ChildEntry(widget, offsetX, offsetY));
     }
     public void removeChild(Widget widget) {
-        children.removeIf(entry -> entry.widget == widget);
+        children.removeIf(entry -> entry.object == widget);
     }
     public List<Widget> getChildren() {
         List<Widget> flat = new ArrayList<>();
-        for (ChildEntry entry : children) flat.add(entry.widget);
+        for (ChildEntry entry : children) flat.add((Widget) entry.object);
         return flat;
     }
 

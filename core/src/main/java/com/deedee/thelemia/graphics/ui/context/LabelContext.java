@@ -1,10 +1,11 @@
 package com.deedee.thelemia.graphics.ui.context;
 
+import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.graphics.Style;
 import com.deedee.thelemia.graphics.ui.Label;
 
 public class LabelContext implements IWidgetContext<Label> {
-    private final Style style;
+    protected final Style style;
 
     public LabelContext(Style style) {
         this.style = style;
@@ -22,5 +23,10 @@ public class LabelContext implements IWidgetContext<Label> {
     @Override
     public Style getStyle() {
         return style;
+    }
+
+    @Override
+    public Vector2 getHitboxSize() {
+        return new Vector2();
     }
 }

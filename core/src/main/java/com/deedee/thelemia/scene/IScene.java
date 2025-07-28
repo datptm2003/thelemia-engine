@@ -1,13 +1,17 @@
 package com.deedee.thelemia.scene;
 
+import com.deedee.thelemia.graphics.behavior.IRenderableObject;
+
 import java.util.List;
 
 public interface IScene {
-    void addEntity(IEntity entity);
+    void addEntity(Entity entity);
     void removeEntity(String id);
-    IEntity getEntityById(String id);
-    List<IEntity> getEntitiesByType(Class<? extends IEntity> type);
-    List<IEntity> getAllEntities();
+    Entity getEntityById(String id);
+    List<Entity> getEntitiesByType(Class<? extends Entity> type);
+    List<Entity> getAllEntities();
+
+    IRenderableObject getHitObjectByRaycast(int x, int y);
 
     void show();
     void update(float delta);

@@ -2,15 +2,7 @@ package com.deedee.thelemia.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.ClickEvent;
-import com.deedee.thelemia.event.common.RedrawScreenEvent;
-import com.deedee.thelemia.graphics.Style;
-import com.deedee.thelemia.graphics.ui.Button;
-import com.deedee.thelemia.graphics.ui.Label;
-import com.deedee.thelemia.graphics.ui.context.LabelContext;
 import com.deedee.thelemia.scene.IGameSystem;
 
 import java.util.*;

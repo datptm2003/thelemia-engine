@@ -30,12 +30,8 @@ public class Canvas extends Widget implements ICullable {
     }
 
     @Override
-    public boolean isInsideVisibleArea(int x, int y) {
-        return false;
-    }
-    @Override
-    public void setVisibleArea(int x, int y, int width, int height) {
-
+    public boolean isInsideVisibleArea(int x, int y, int width, int height) {
+        return x >= 0 && y >= 0 && x + width <= getContext().getWidth() && y + height <= getContext().getHeight();
     }
 
     @Override

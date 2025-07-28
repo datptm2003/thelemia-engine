@@ -1,19 +1,21 @@
 package com.deedee.thelemia.scene;
 
+import com.deedee.thelemia.graphics.behavior.IRenderableObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public abstract class Scene implements IScene {
     protected SceneManager sceneManager;
-    private final List<IEntity> entities = new ArrayList<>();
+    protected final List<Entity> entities = new ArrayList<>();
 
     public Scene(SceneManager sceneManager) {
         this.sceneManager = sceneManager;
     }
 
     @Override
-    public void addEntity(IEntity entity) {
+    public void addEntity(Entity entity) {
         entities.add(entity);
     }
     @Override
@@ -21,13 +23,13 @@ public abstract class Scene implements IScene {
         entities.removeIf(entity -> entity.getId().equals(id));
     }
     @Override
-    public IEntity getEntityById(String id) {
+    public Entity getEntityById(String id) {
         return entities.stream().filter(entity -> Objects.equals(entity.getId(), id)).findFirst().orElse(null);
     }
     @Override
-    public List<IEntity> getEntitiesByType(Class<? extends IEntity> type) {
-        List<IEntity> result = new ArrayList<>();
-        for (IEntity entity : entities) {
+    public List<Entity> getEntitiesByType(Class<? extends Entity> type) {
+        List<Entity> result = new ArrayList<>();
+        for (Entity entity : entities) {
             if (type.isInstance(entity)) {
                 result.add(entity);
             }
@@ -35,8 +37,19 @@ public abstract class Scene implements IScene {
         return result;
     }
     @Override
-    public List<IEntity> getAllEntities() {
+    public List<Entity> getAllEntities() {
         return entities;
+    }
+
+    @Override
+    public IRenderableObject getHitObjectByRaycast(int x, int y) {
+        for (int i = entities.size() - 1; i >= 0; i--) {
+            IRenderableObject object = entities.get(i).getHitObject(x, y);
+            if (object != null) {
+                return object;
+            }
+        }
+        return null;
     }
 
     @Override

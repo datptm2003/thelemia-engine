@@ -1,28 +1,12 @@
 package com.deedee.thelemia.graphics.ui;
 
-import com.badlogic.gdx.math.Vector2;
-import com.deedee.thelemia.graphics.Style;
-import com.deedee.thelemia.graphics.ui.context.ButtonContext;
-import com.deedee.thelemia.graphics.ui.context.CanvasContext;
-import com.deedee.thelemia.graphics.ui.context.LabelContext;
+import com.deedee.thelemia.graphics.behavior.IRenderableObject;
+import com.deedee.thelemia.graphics.Renderer.ChildEntry;
 
 import java.util.*;
 
 public class Fragment implements IFragment {
-    protected static class ChildEntry {
-        String name;
-        Widget widget;
-        int x, y;
-
-        ChildEntry(String name, Widget widget, int x, int y) {
-            this.name = name;
-            this.widget = widget;
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    private final List<ChildEntry> widgets = new ArrayList<>();
+    private final List<ChildEntry> entries = new ArrayList<>();
 
     @Override
     public void create() {
@@ -47,36 +31,34 @@ public class Fragment implements IFragment {
     }
     @Override
     public void update(float delta) {
-        for (ChildEntry entry : widgets) {
-            entry.widget.update(delta);
+        for (ChildEntry entry : entries) {
+            entry.object.update(delta);
         }
     }
     @Override
     public void dispose() {
-        for (ChildEntry entry : widgets) {
-            entry.widget.dispose();
+        for (ChildEntry entry : entries) {
+            entry.object.dispose();
         }
-        widgets.clear();
+        entries.clear();
     }
 
     @Override
-    public void add(String name, Widget widget, int x, int y) {
-        widgets.add(new ChildEntry(name, widget, x, y));
+    public void add(String name, IRenderableObject object, int x, int y) {
+        entries.add(new ChildEntry(name, object, x, y));
     }
     @Override
     public void remove(String name) {
-        widgets.removeIf(entry -> Objects.equals(entry.name, name));
+        entries.removeIf(entry -> Objects.equals(entry.name, name));
     }
     @Override
     public void render() {
-        for (ChildEntry entry : widgets) {
-            entry.widget.render(entry.x, entry.y);
+        for (ChildEntry entry : entries) {
+            entry.object.render(entry.x, entry.y);
         }
     }
-
-    public List<Widget> getWidgets() {
-        List<Widget> flat = new ArrayList<>();
-        for (ChildEntry entry : widgets) flat.add(entry.widget);
-        return flat;
+    @Override
+    public List<ChildEntry> getAllEntries() {
+        return entries;
     }
 }
