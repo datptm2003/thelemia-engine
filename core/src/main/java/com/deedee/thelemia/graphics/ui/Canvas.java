@@ -1,37 +1,19 @@
 package com.deedee.thelemia.graphics.ui;
 
+import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.graphics.behavior.ICullable;
 import com.deedee.thelemia.graphics.ui.context.CanvasContext;
+import com.deedee.thelemia.graphics.ui.style.CanvasStyle;
 
 public class Canvas extends Widget implements ICullable {
-    public Canvas(CanvasContext context) {
-        super(context);
-    }
-
-    @Override
-    public void create() {
-        super.create();
-    }
-    @Override
-    public void start() {
-        super.start();
-    }
-    @Override
-    public void update(float delta) {
-        super.update(delta);
-    }
-    @Override
-    public void render(int x, int y) {
-        super.render(x, y);
-    }
-    @Override
-    public void dispose() {
-        super.dispose();
+    public Canvas(CanvasContext context, CanvasStyle style) {
+        super(context, style);
     }
 
     @Override
     public boolean isInsideVisibleArea(int x, int y, int width, int height) {
-        return x >= 0 && y >= 0 && x + width <= getContext().getWidth() && y + height <= getContext().getHeight();
+        Vector2 canvasSize = getHitboxSize();
+        return x >= 0 && y >= 0 && x + width <= canvasSize.x && y + height <= canvasSize.y;
     }
 
     @Override

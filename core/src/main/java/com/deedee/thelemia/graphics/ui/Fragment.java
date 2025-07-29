@@ -52,9 +52,9 @@ public class Fragment implements IFragment {
         entries.removeIf(entry -> Objects.equals(entry.name, name));
     }
     @Override
-    public void render() {
+    public void render(int x, int y) {
         for (ChildEntry entry : entries) {
-            entry.object.render(entry.x, entry.y);
+            entry.object.render(x + entry.x, y + entry.y);
         }
     }
     @Override

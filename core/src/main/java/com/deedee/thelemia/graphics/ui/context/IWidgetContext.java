@@ -5,8 +5,10 @@ import com.deedee.thelemia.graphics.Style;
 import com.deedee.thelemia.graphics.ui.Widget;
 
 public interface IWidgetContext<T extends Widget> {
-    T build();
+    T build(Style style);
     void reset();
-    Style getStyle();
     Vector2 getHitboxSize();
+
+    Vector2 getRelativePosition();
+    void setRelativePosition(int x, int y);
 }

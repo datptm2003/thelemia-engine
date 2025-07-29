@@ -2,31 +2,11 @@ package com.deedee.thelemia.graphics.ui;
 
 import com.deedee.thelemia.graphics.behavior.IClickable;
 import com.deedee.thelemia.graphics.ui.context.ButtonContext;
+import com.deedee.thelemia.graphics.ui.style.ButtonStyle;
 
 public class Button extends CompositeWidget implements IClickable {
-    public Button(ButtonContext context) {
-        super(context);
-    }
-
-    @Override
-    public void create() {
-        super.create();
-    }
-    @Override
-    public void start() {
-        super.start();
-    }
-    @Override
-    public void update(float delta) {
-        super.update(delta);
-    }
-    @Override
-    public void render(int x, int y) {
-        super.render(x, y);
-    }
-    @Override
-    public void dispose() {
-        super.dispose();
+    public Button(ButtonContext context, ButtonStyle style) {
+        super(context, style);
     }
 
     @Override

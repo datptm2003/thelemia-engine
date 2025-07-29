@@ -35,10 +35,10 @@ public class UIComponent implements IGraphicsComponent {
     }
 
     @Override
-    public void render() {
+    public void render(int x, int y) {
         if (!visible) return;
 
-        container.render();
+        container.render(x, y);
     }
 
     @Override

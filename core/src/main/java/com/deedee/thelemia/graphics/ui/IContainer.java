@@ -9,6 +9,6 @@ import java.util.List;
 public interface IContainer extends IGameObject {
     void add(String name, IRenderableObject object, int x, int y);
     void remove(String name);
-    void render();
+    void render(int x, int y);
     List<Renderer.ChildEntry> getAllEntries();
 }

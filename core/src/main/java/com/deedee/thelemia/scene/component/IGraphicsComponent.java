@@ -4,7 +4,7 @@ import com.deedee.thelemia.graphics.ui.IContainer;
 import com.deedee.thelemia.scene.IComponent;
 
 public interface IGraphicsComponent extends IComponent {
-    void render();
+    void render(int x, int y);
     boolean isVisible();
     void setVisible(boolean visible);
 

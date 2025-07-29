@@ -6,6 +6,7 @@ import com.deedee.thelemia.event.common.ResetBufferEvent;
 import com.deedee.thelemia.event.common.UpdateBufferEvent;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.component.IGraphicsComponent;
+import com.deedee.thelemia.scene.component.TransformComponent;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 import java.util.List;
@@ -38,10 +39,11 @@ public class RenderListener implements IEventListener {
 
             for (Entity entity : resetBufferEvent.getRenderableEntities()) {
                 if (!entity.hasComponentGroup(ComponentGroup.GRAPHICS)) continue;
+                TransformComponent transform = entity.getComponentByType(TransformComponent.class);
 
                 List<IGraphicsComponent> graphicsComponents = entity.getComponentsByGroup(ComponentGroup.GRAPHICS);
                 for (IGraphicsComponent component : graphicsComponents) {
-                    component.render();
+                    component.render((int) transform.getPosition().x, (int) transform.getPosition().y);
                 }
             }
 
