@@ -1,8 +1,7 @@
 package com.deedee.thelemia.graphics.ui;
 
 import com.deedee.thelemia.graphics.Renderer.ChildEntry;
-import com.deedee.thelemia.graphics.Style;
-import com.deedee.thelemia.graphics.ui.context.IWidgetContext;
+import com.deedee.thelemia.graphics.ui.style.Style;
 import com.deedee.thelemia.graphics.ui.context.WidgetContext;
 
 import java.util.ArrayList;

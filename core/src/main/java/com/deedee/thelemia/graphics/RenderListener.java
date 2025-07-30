@@ -22,16 +22,14 @@ public class RenderListener implements IEventListener {
     public void onEvent(IEvent event) {
         if (event instanceof UpdateBufferEvent) {
             UpdateBufferEvent updateBufferEvent = (UpdateBufferEvent) event;
-            gameSystem.begin();
             switch (updateBufferEvent.getRequestType()) {
                 case BY_SIZE:
-                    gameSystem.draw(updateBufferEvent.getTexture(), updateBufferEvent.getPosition(), updateBufferEvent.getSize());
+                    gameSystem.draw(updateBufferEvent.getRenderableObject(), updateBufferEvent.getPosition(), updateBufferEvent.getSize());
                     break;
                 case BY_SCALE:
-                    gameSystem.draw(updateBufferEvent.getTexture(), updateBufferEvent.getPosition(), updateBufferEvent.getScale());
+                    gameSystem.draw(updateBufferEvent.getRenderableObject(), updateBufferEvent.getPosition(), updateBufferEvent.getScale());
                     break;
             }
-            gameSystem.end();
 
         } else if (event instanceof ResetBufferEvent) {
             ResetBufferEvent resetBufferEvent = (ResetBufferEvent) event;

@@ -1,6 +1,7 @@
 package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deedee.thelemia.graphics.ui.style.Style;
 
 import java.util.HashMap;
 import java.util.Map;

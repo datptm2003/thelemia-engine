@@ -1,16 +1,18 @@
 package com.deedee.thelemia.graphics.ui;
 
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.UpdateBufferEvent;
-import com.deedee.thelemia.graphics.Style;
+import com.deedee.thelemia.graphics.ui.style.Style;
 import com.deedee.thelemia.graphics.behavior.IRenderableObject;
-import com.deedee.thelemia.graphics.ui.context.IWidgetContext;
 import com.deedee.thelemia.graphics.ui.context.WidgetContext;
 
 public abstract class Widget implements IRenderableObject {
-    protected Texture texture;
     protected WidgetContext<? extends Widget> context;
     protected Style style;
 
@@ -34,17 +36,11 @@ public abstract class Widget implements IRenderableObject {
 
     @Override
     public void render(int x, int y) {
-        if (texture == null) {
-            throw new IllegalArgumentException("Texture cannot be null!");
-        }
-        EventBus.getInstance().post(new UpdateBufferEvent(texture, x, y, 1.0f));
+        EventBus.getInstance().post(new UpdateBufferEvent(this, x, y, 1.0f));
     }
     @Override
     public void render() {
-        if (texture == null) {
-            throw new IllegalArgumentException("Texture cannot be null!");
-        }
-        EventBus.getInstance().post(new UpdateBufferEvent(texture, (int) context.getRelativePosition().x, (int) context.getRelativePosition().y, 1.0f));
+        EventBus.getInstance().post(new UpdateBufferEvent(this, (int) context.getRelativePosition().x, (int) context.getRelativePosition().y, 1.0f));
     }
 
     @Override
@@ -52,13 +48,13 @@ public abstract class Widget implements IRenderableObject {
 
     }
 
+    @Override
     public Style getStyle() {
         return style;
     }
-
     @Override
-    public Texture getTexture() {
-        return texture;
+    public Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean transparent) {
+        return style.apply(context, batch, fbo, transparent);
     }
     public WidgetContext<? extends Widget> getContext() {
         return context;

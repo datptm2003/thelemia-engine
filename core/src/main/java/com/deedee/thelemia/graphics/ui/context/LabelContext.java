@@ -1,8 +1,7 @@
 package com.deedee.thelemia.graphics.ui.context;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deedee.thelemia.graphics.Style;
+import com.deedee.thelemia.graphics.ui.style.Style;
 import com.deedee.thelemia.graphics.enumerate.Anchor;
 import com.deedee.thelemia.graphics.ui.Label;
 import com.deedee.thelemia.graphics.ui.style.LabelStyle;
@@ -30,6 +29,7 @@ public class LabelContext extends WidgetContext<Label> {
 
         return new Label(this, labelStyle);
     }
+
     @Override
     public void reset() {
 

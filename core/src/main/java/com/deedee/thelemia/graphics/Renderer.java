@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.ResetBufferEvent;
 import com.deedee.thelemia.event.common.UpdateBufferEvent;
@@ -40,7 +41,7 @@ public class Renderer implements IGameSystem, IRenderer {
 
     private final Color DEFAULT_BACKGROUND = new Color(1.0f, 1.0f, 1.0f, 1.0f);
     private final Camera camera;
-    private final FrameBuffer fbo;
+    private FrameBuffer fbo;
 
     private final SpriteBatch batch = new SpriteBatch();
     private final ShaderManager shaderManager = new ShaderManager();
@@ -48,7 +49,6 @@ public class Renderer implements IGameSystem, IRenderer {
 
     public Renderer(int width, int height) {
         this.camera = new Camera(width, height);
-        this.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
         subscribeListener();
         batch.setProjectionMatrix(camera.getProjectionMatrix());
         shapeRenderer.setProjectionMatrix(camera.getProjectionMatrix());
@@ -68,6 +68,7 @@ public class Renderer implements IGameSystem, IRenderer {
     @Override
     public void dispose() {
         batch.dispose();
+        fbo.dispose();
         camera.dispose();
         shaderManager.dispose();
         shapeRenderer.dispose();
@@ -78,19 +79,17 @@ public class Renderer implements IGameSystem, IRenderer {
     }
 
     @Override
-    public void begin() {
-        fbo.begin();
-        batch.begin();
+    public void draw(IRenderableObject object, Vector2 position, Vector2 size) {
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, (int) object.getHitboxSize().x, (int) object.getHitboxSize().y, false);
+        object.getDrawable(batch, fbo, false).draw(batch, position.x, position.y, size.x, size.y);
     }
     @Override
-    public void draw(Texture texture, Vector2 position, Vector2 size) {
-        batch.draw(texture, position.x, position.y, size.x, size.y);
-    }
-    @Override
-    public void draw(Texture texture, Vector2 position, float scale) {
-        float width = texture.getWidth() * scale;
-        float height = texture.getHeight() * scale;
-        batch.draw(texture, position.x, position.y, width, height);
+    public void draw(IRenderableObject object, Vector2 position, float scale) {
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, (int) object.getHitboxSize().x, (int) object.getHitboxSize().y, false);
+        Drawable drawable = object.getDrawable(batch, fbo, false);
+        float width = object.getHitboxSize().x * scale;
+        float height = object.getHitboxSize().y * scale;
+        drawable.draw(batch, position.x, position.y, width, height);
     }
 
 //    @Override
@@ -102,11 +101,6 @@ public class Renderer implements IGameSystem, IRenderer {
 //
 //    }
 
-    @Override
-    public void end() {
-        fbo.end();
-        batch.end();
-    }
     @Override
     public void applyShader(String name) {
         ShaderProgram currentShader = shaderManager.applyShader(name);
@@ -124,9 +118,6 @@ public class Renderer implements IGameSystem, IRenderer {
 
     public Camera getCamera() {
         return camera;
-    }
-    public FrameBuffer getFrameBuffer() {
-        return fbo;
     }
     public SpriteBatch getBatch() {
         return batch;

@@ -2,6 +2,10 @@ package com.deedee.thelemia.graphics.ui.context;
 
 import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.graphics.ui.Widget;
+import com.deedee.thelemia.graphics.ui.style.Style;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class WidgetContext<T extends Widget> implements IWidgetContext<T> {
     protected int width, height;
@@ -25,4 +29,5 @@ public abstract class WidgetContext<T extends Widget> implements IWidgetContext<
         this.x = x;
         this.y = y;
     }
+
 }

@@ -1,33 +1,24 @@
 package com.deedee.thelemia.graphics.ui.context;
 
-import com.badlogic.gdx.math.Vector2;
-import com.deedee.thelemia.graphics.Style;
+import com.deedee.thelemia.graphics.ui.style.Style;
 import com.deedee.thelemia.graphics.enumerate.Anchor;
 import com.deedee.thelemia.graphics.ui.Button;
-import com.deedee.thelemia.graphics.ui.Canvas;
-import com.deedee.thelemia.graphics.ui.Label;
-import com.deedee.thelemia.graphics.ui.Widget;
 import com.deedee.thelemia.graphics.ui.style.ButtonStyle;
 import com.deedee.thelemia.graphics.ui.style.CanvasStyle;
 import com.deedee.thelemia.graphics.ui.style.LabelStyle;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class ButtonContext extends WidgetContext<Button> {
-    protected String text;
-    protected Anchor anchor;
-    protected int fontSize;
     protected Runnable callback;
+
+    protected final CanvasContext canvasContext;
+    protected final LabelContext labelContext;
 
     public ButtonContext(int width, int height, String text, Anchor anchor, int fontSize, Runnable callback) {
         super(width, height);
-        this.text = text;
-        this.anchor = anchor;
-        this.fontSize = fontSize;
         this.callback = callback;
+
+        canvasContext = new CanvasContext(width, height);
+        labelContext = new LabelContext(width, height, text, anchor, fontSize);
     }
 
     @Override
@@ -36,9 +27,6 @@ public class ButtonContext extends WidgetContext<Button> {
         CanvasStyle canvasStyle = (CanvasStyle) buttonStyle.getSubstyle(CanvasStyle.class);
         LabelStyle labelStyle = (LabelStyle) buttonStyle.getSubstyle(LabelStyle.class);
 
-        CanvasContext canvasContext = new CanvasContext(width, height);
-        LabelContext labelContext = new LabelContext(width, height, text, anchor, fontSize);
-
         Button button = new Button(this, buttonStyle);
 
         button.addChild(canvasContext.build(canvasStyle), canvasContext.x, canvasContext.y);
@@ -46,6 +34,7 @@ public class ButtonContext extends WidgetContext<Button> {
 
         return button;
     }
+
     @Override
     public void reset() {
         callback = () -> {
@@ -54,10 +43,24 @@ public class ButtonContext extends WidgetContext<Button> {
     }
 
     public String getText() {
-        return text;
+        return labelContext.getText();
     }
     public void setText(String text) {
-        this.text = text;
+        labelContext.setText(text);
+    }
+
+    public Anchor getAnchor() {
+        return labelContext.getAnchor();
+    }
+    public void setAnchor(Anchor anchor) {
+        labelContext.setAnchor(anchor);
+    }
+
+    public int getFontSize() {
+        return labelContext.getSize();
+    }
+    public void setFontSize(int fontSize) {
+        labelContext.setSize(fontSize);
     }
 
     public Runnable getCallback() {
@@ -65,5 +68,12 @@ public class ButtonContext extends WidgetContext<Button> {
     }
     public void setCallback(Runnable callback) {
         this.callback = callback;
+    }
+
+    public CanvasContext getCanvasContext() {
+        return canvasContext;
+    }
+    public LabelContext getLabelContext() {
+        return labelContext;
     }
 }
