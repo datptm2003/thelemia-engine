@@ -10,13 +10,6 @@ public class CanvasContext extends WidgetContext<Canvas> {
     }
 
     @Override
-    public Canvas build(Style style) {
-        CanvasStyle canvasStyle = (CanvasStyle) style;
-        // TODO
-        return new Canvas(this, canvasStyle);
-    }
-
-    @Override
     public void reset() {
 
     }

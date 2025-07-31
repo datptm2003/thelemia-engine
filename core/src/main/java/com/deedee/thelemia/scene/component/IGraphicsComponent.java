@@ -1,9 +1,10 @@
 package com.deedee.thelemia.scene.component;
 
+import com.deedee.thelemia.graphics.behavior.IDisposable;
 import com.deedee.thelemia.graphics.ui.IContainer;
 import com.deedee.thelemia.scene.IComponent;
 
-public interface IGraphicsComponent extends IComponent {
+public interface IGraphicsComponent extends IComponent, IDisposable {
     void render(int x, int y);
     boolean isVisible();
     void setVisible(boolean visible);

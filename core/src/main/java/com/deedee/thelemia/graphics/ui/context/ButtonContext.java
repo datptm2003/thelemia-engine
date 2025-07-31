@@ -1,11 +1,15 @@
 package com.deedee.thelemia.graphics.ui.context;
 
+import com.deedee.thelemia.graphics.ui.Canvas;
+import com.deedee.thelemia.graphics.ui.Widget;
 import com.deedee.thelemia.graphics.ui.style.Style;
 import com.deedee.thelemia.graphics.enumerate.Anchor;
 import com.deedee.thelemia.graphics.ui.Button;
 import com.deedee.thelemia.graphics.ui.style.ButtonStyle;
 import com.deedee.thelemia.graphics.ui.style.CanvasStyle;
 import com.deedee.thelemia.graphics.ui.style.LabelStyle;
+
+import java.util.List;
 
 public class ButtonContext extends WidgetContext<Button> {
     protected Runnable callback;
@@ -19,20 +23,6 @@ public class ButtonContext extends WidgetContext<Button> {
 
         canvasContext = new CanvasContext(width, height);
         labelContext = new LabelContext(width, height, text, anchor, fontSize);
-    }
-
-    @Override
-    public Button build(Style style) {
-        ButtonStyle buttonStyle = (ButtonStyle) style;
-        CanvasStyle canvasStyle = (CanvasStyle) buttonStyle.getSubstyle(CanvasStyle.class);
-        LabelStyle labelStyle = (LabelStyle) buttonStyle.getSubstyle(LabelStyle.class);
-
-        Button button = new Button(this, buttonStyle);
-
-        button.addChild(canvasContext.build(canvasStyle), canvasContext.x, canvasContext.y);
-        button.addChild(labelContext.build(labelStyle), labelContext.x, labelContext.y);
-
-        return button;
     }
 
     @Override

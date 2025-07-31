@@ -11,6 +11,7 @@ public class UIComponent implements IGraphicsComponent {
 
     public UIComponent(IContainer container) {
         this.container = container;
+        this.container.create();
     }
 
     @Override
@@ -23,6 +24,11 @@ public class UIComponent implements IGraphicsComponent {
     public void reset() {
         visible = true;
         enabled = true;
+    }
+
+    @Override
+    public void dispose() {
+        container.dispose();
     }
 
     @Override
@@ -40,6 +46,8 @@ public class UIComponent implements IGraphicsComponent {
 
         container.render(x, y);
     }
+
+
 
     @Override
     public boolean isVisible() {

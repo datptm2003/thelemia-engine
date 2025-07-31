@@ -23,14 +23,6 @@ public class LabelContext extends WidgetContext<Label> {
     }
 
     @Override
-    public Label build(Style style) {
-        LabelStyle labelStyle = (LabelStyle) style;
-        // TODO
-
-        return new Label(this, labelStyle);
-    }
-
-    @Override
     public void reset() {
 
     }

@@ -10,6 +10,10 @@ public class Fragment implements IFragment {
 
     @Override
     public void create() {
+        for (ChildEntry entry : entries) {
+            entry.object.create();
+        }
+
 //        Style style = new Style();
 //        ButtonContext buttonContext = new ButtonContext(style, new CanvasContext(style), new LabelContext(style));
 //
@@ -27,7 +31,9 @@ public class Fragment implements IFragment {
     }
     @Override
     public void start() {
-
+        for (ChildEntry entry : entries) {
+            entry.object.start();
+        }
     }
     @Override
     public void update(float delta) {

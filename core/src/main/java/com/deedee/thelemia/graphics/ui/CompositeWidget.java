@@ -60,7 +60,15 @@ public abstract class CompositeWidget extends Widget {
     public void removeChild(Widget widget) {
         children.removeIf(entry -> entry.object == widget);
     }
-    public List<Widget> getChildren() {
+    public Widget getChildByType(Class<? extends Widget> widgetType) {
+        for (ChildEntry entry : children) {
+            if (widgetType.isInstance(entry.object)) {
+                return (Widget) entry.object;
+            }
+        }
+        return null;
+    }
+    public List<Widget> getAllChildren() {
         List<Widget> flat = new ArrayList<>();
         for (ChildEntry entry : children) flat.add((Widget) entry.object);
         return flat;

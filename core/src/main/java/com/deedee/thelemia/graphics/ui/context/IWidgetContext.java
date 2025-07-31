@@ -5,7 +5,6 @@ import com.deedee.thelemia.graphics.ui.style.Style;
 import com.deedee.thelemia.graphics.ui.Widget;
 
 public interface IWidgetContext<T extends Widget> {
-    T build(Style style);
     void reset();
     Vector2 getHitboxSize();
 
