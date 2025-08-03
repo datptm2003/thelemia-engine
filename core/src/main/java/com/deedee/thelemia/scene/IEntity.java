@@ -1,6 +1,6 @@
 package com.deedee.thelemia.scene;
 
-import com.deedee.thelemia.graphics.behavior.IRenderableObject;
+import com.deedee.thelemia.graphics.utils.IRenderableObject;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 import java.util.List;

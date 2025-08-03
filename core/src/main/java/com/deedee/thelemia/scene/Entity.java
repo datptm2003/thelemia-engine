@@ -2,7 +2,7 @@ package com.deedee.thelemia.scene;
 
 import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.graphics.Renderer.ChildEntry;
-import com.deedee.thelemia.graphics.behavior.IRenderableObject;
+import com.deedee.thelemia.graphics.utils.IRenderableObject;
 import com.deedee.thelemia.scene.component.IGraphicsComponent;
 import com.deedee.thelemia.scene.component.TransformComponent;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
@@ -72,10 +72,10 @@ public class Entity implements IEntity {
 
         List<IGraphicsComponent> graphicsComponents = getComponentsByGroup(ComponentGroup.GRAPHICS);
         for (IGraphicsComponent graphicsComponent : graphicsComponents) {
-            List<ChildEntry> entries = graphicsComponent.getContainer().getAllEntries();
+            List<ChildEntry<IRenderableObject>> entries = graphicsComponent.getContainer().getAllEntries();
 
             for (int i = entries.size() - 1; i >= 0; i--) {
-                ChildEntry entry = entries.get(i);
+                ChildEntry<IRenderableObject> entry = entries.get(i);
                 IRenderableObject renderable = entry.object;
 
                 Vector2 hitboxSize = renderable.getHitboxSize();

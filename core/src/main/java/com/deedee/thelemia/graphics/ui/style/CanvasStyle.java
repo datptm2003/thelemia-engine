@@ -3,17 +3,19 @@ package com.deedee.thelemia.graphics.ui.style;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.deedee.thelemia.graphics.ui.Widget;
 import com.deedee.thelemia.graphics.ui.context.CanvasContext;
 import com.deedee.thelemia.graphics.ui.context.WidgetContext;
 
 public class CanvasStyle extends Style {
-    private final Texture background;
+    private final NinePatch background;
 
     @Override
     public Drawable apply(WidgetContext<? extends Widget> context, SpriteBatch batch, FrameBuffer fbo, boolean clear) {
@@ -28,14 +30,11 @@ public class CanvasStyle extends Style {
         batch.begin();
 
         if (background != null) {
-            // Draw the background to fill the entire FBO
-            batch.draw(
-                background,
-                0, 0,
-                fbo.getWidth(), fbo.getHeight(),
-                0, 0,
-                background.getWidth(), background.getHeight(),
-                false, true // Flip vertically to match FBO orientation
+            // Draw the ninepatch background using widget coordinates and size
+            background.draw(
+                batch,
+                context.getRelativePosition().x, context.getRelativePosition().y,
+                fbo.getWidth(), fbo.getHeight()
             );
         }
 
@@ -43,17 +42,20 @@ public class CanvasStyle extends Style {
         fbo.end();
 
         // Wrap the FBO texture as a Drawable and return it
-        return new TextureRegionDrawable(new TextureRegion(fbo.getColorBufferTexture()));
+        TextureRegion region = new TextureRegion(fbo.getColorBufferTexture());
+        region.flip(false, true); // Flip because FBO rendering is upside down
+
+        return new TextureRegionDrawable(region);
     }
 
-    public CanvasStyle(Texture background) {
+    public CanvasStyle(NinePatch background) {
         this.background = background;
     }
     public CanvasStyle() {
         this.background = null;
     }
 
-    public Texture getBackground() {
+    public NinePatch getBackground() {
         return background;
     }
 }

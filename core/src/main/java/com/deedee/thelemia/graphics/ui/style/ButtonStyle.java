@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -22,26 +23,24 @@ import java.awt.*;
 public class ButtonStyle extends Style {
     private final BitmapFont font;
     private final Color fontColor;
-    private final Texture bgUp;
-    private final Texture bgDown;
+    private final NinePatch background;
 
-    public ButtonStyle(BitmapFont font, Color fontColor, Texture bgUp, Texture bgDown) {
+    public ButtonStyle(BitmapFont font, Color fontColor, NinePatch background) {
         this.font = font;
         this.fontColor = fontColor;
-        this.bgUp = bgUp;
-        this.bgDown = bgDown;
+        this.background = background;
 
         substyles.put(LabelStyle.class, new LabelStyle(font, fontColor));
-        substyles.put(CanvasStyle.class, new CanvasStyle(bgUp));
+        substyles.put(CanvasStyle.class, new CanvasStyle(background));
     }
 
     @Override
     public Drawable apply(WidgetContext<? extends Widget> context, SpriteBatch batch, FrameBuffer fbo, boolean transparent) {
         ButtonContext buttonContext = (ButtonContext) context;
-        CanvasStyle canvasStyle = (CanvasStyle) getSubstyle(CanvasStyle.class);
-        LabelStyle labelStyle = (LabelStyle) getSubstyle(LabelStyle.class);
+        CanvasStyle canvasStyle = getSubstyle(CanvasStyle.class);
+        LabelStyle labelStyle = getSubstyle(LabelStyle.class);
 
-        if (labelStyle == null || canvasStyle == null) return null;
+        if (canvasStyle == null || labelStyle == null) return null;
 
         // Begin drawing to FBO
         fbo.begin();
@@ -69,6 +68,7 @@ public class ButtonStyle extends Style {
         // Flip FBO texture vertically to make it render correctly
         TextureRegion region = new TextureRegion(fbo.getColorBufferTexture());
         region.flip(false, true);
+
         return new TextureRegionDrawable(region);
     }
 
@@ -80,11 +80,7 @@ public class ButtonStyle extends Style {
         return fontColor;
     }
 
-    public Texture getBgUp() {
-        return bgUp;
-    }
-
-    public Texture getBgDown() {
-        return bgDown;
+    public NinePatch getBgUp() {
+        return background;
     }
 }

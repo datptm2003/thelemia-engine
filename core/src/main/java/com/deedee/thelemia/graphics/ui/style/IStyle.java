@@ -10,7 +10,7 @@ import com.deedee.thelemia.graphics.ui.context.WidgetContext;
 import java.awt.*;
 
 public interface IStyle {
-    Style getSubstyle(Class<? extends Style> styleType);
+    <T extends Style> T getSubstyle(Class<T> styleType);
 
     Drawable apply(WidgetContext<? extends Widget> context, SpriteBatch batch, FrameBuffer fbo, boolean clear);
 }

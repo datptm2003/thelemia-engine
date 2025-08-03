@@ -1,10 +1,8 @@
 package com.deedee.thelemia.event.common;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.deedee.thelemia.event.Event;
-import com.deedee.thelemia.graphics.behavior.IRenderableObject;
+import com.deedee.thelemia.graphics.utils.IRenderableObject;
 import com.deedee.thelemia.graphics.enumerate.RenderRequestType;
 
 public class UpdateBufferEvent extends Event {

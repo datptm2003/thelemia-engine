@@ -1,6 +1,6 @@
 package com.deedee.thelemia.graphics.ui;
 
-import com.deedee.thelemia.graphics.behavior.IClickable;
+import com.deedee.thelemia.graphics.utils.IClickable;
 import com.deedee.thelemia.graphics.ui.context.ButtonContext;
 import com.deedee.thelemia.graphics.ui.context.CanvasContext;
 import com.deedee.thelemia.graphics.ui.context.LabelContext;
@@ -12,14 +12,14 @@ public class Button extends CompositeWidget implements IClickable {
     public Button(ButtonContext context, ButtonStyle style) {
         super(context, style);
 
-        CanvasStyle canvasStyle = (CanvasStyle) style.getSubstyle(CanvasStyle.class);
-        LabelStyle labelStyle = (LabelStyle) style.getSubstyle(LabelStyle.class);
+        CanvasStyle canvasStyle = style.getSubstyle(CanvasStyle.class);
+        LabelStyle labelStyle = style.getSubstyle(LabelStyle.class);
 
         CanvasContext canvasContext = context.getCanvasContext();
         LabelContext labelContext = context.getLabelContext();
 
-        this.addChild(new Canvas(canvasContext, canvasStyle), (int) canvasContext.getRelativePosition().x, (int) canvasContext.getRelativePosition().y);
-        this.addChild(new Label(labelContext, labelStyle), (int) labelContext.getRelativePosition().x, (int) labelContext.getRelativePosition().y);
+        this.addChild("background", new Canvas(canvasContext, canvasStyle), (int) canvasContext.getRelativePosition().x, (int) canvasContext.getRelativePosition().y);
+        this.addChild("label", new Label(labelContext, labelStyle), (int) labelContext.getRelativePosition().x, (int) labelContext.getRelativePosition().y);
     }
 
     @Override

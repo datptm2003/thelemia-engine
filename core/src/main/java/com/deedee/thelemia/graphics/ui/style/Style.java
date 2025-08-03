@@ -7,7 +7,8 @@ public abstract class Style implements IStyle {
     protected final Map<Class<? extends Style>, Style> substyles = new HashMap<>();
 
     @Override
-    public Style getSubstyle(Class<? extends Style> styleType) {
-        return substyles.get(styleType);
+    public <T extends Style> T getSubstyle(Class<T> styleType) {
+        Style style = substyles.get(styleType);
+        return styleType.cast(style); // Safe cast
     }
 }

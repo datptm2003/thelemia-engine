@@ -1,4 +1,4 @@
-package com.deedee.thelemia.graphics.behavior;
+package com.deedee.thelemia.graphics.utils;
 
 public interface IDraggable {
     void onDragStart(int x, int y);

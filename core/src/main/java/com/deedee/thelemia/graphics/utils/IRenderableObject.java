@@ -1,4 +1,4 @@
-package com.deedee.thelemia.graphics.behavior;
+package com.deedee.thelemia.graphics.utils;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;

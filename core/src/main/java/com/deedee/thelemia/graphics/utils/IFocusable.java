@@ -1,4 +1,4 @@
-package com.deedee.thelemia.graphics.behavior;
+package com.deedee.thelemia.graphics.utils;
 
 public interface IFocusable {
     void onFocus();

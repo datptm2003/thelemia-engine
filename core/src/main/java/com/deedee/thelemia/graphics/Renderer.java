@@ -1,35 +1,35 @@
 package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.ResetBufferEvent;
 import com.deedee.thelemia.event.common.UpdateBufferEvent;
-import com.deedee.thelemia.graphics.behavior.IRenderableObject;
+import com.deedee.thelemia.graphics.utils.IRenderableObject;
 import com.deedee.thelemia.scene.IGameSystem;
 
 public class Renderer implements IGameSystem, IRenderer {
-    public static class ChildEntry {
+    public static class ChildEntry<T extends IRenderableObject> {
         public String name;
-        public IRenderableObject object;
+        public T object;
         public int x, y;
 
-        public ChildEntry(String name, IRenderableObject object, int x, int y) {
+        public ChildEntry(String name, T object, int x, int y) {
             this.name = name;
             this.object = object;
             this.x = x;
             this.y = y;
         }
-        public ChildEntry(IRenderableObject object, int x, int y) {
+        public ChildEntry(T object, int x, int y) {
             this.name = "";
             this.object = object;
             this.x = x;
@@ -44,14 +44,13 @@ public class Renderer implements IGameSystem, IRenderer {
     private FrameBuffer fbo;
 
     private final SpriteBatch batch = new SpriteBatch();
+    private final AssetManager assetManager = new AssetManager();
     private final ShaderManager shaderManager = new ShaderManager();
-    private final ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     public Renderer(int width, int height) {
         this.camera = new Camera(width, height);
         subscribeListener();
         batch.setProjectionMatrix(camera.getProjectionMatrix());
-        shapeRenderer.setProjectionMatrix(camera.getProjectionMatrix());
     }
 
     @Override
@@ -62,7 +61,6 @@ public class Renderer implements IGameSystem, IRenderer {
     @Override
     public void update(float delta) {
         batch.setProjectionMatrix(this.camera.getProjectionMatrix());
-        shapeRenderer.setProjectionMatrix(this.camera.getProjectionMatrix());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
     @Override
@@ -71,7 +69,6 @@ public class Renderer implements IGameSystem, IRenderer {
         fbo.dispose();
         camera.dispose();
         shaderManager.dispose();
-        shapeRenderer.dispose();
     }
     @Override
     public RenderListener getListener() {
@@ -92,15 +89,24 @@ public class Renderer implements IGameSystem, IRenderer {
         drawable.draw(batch, position.x, position.y, width, height);
     }
 
-//    @Override
-//    public void draw(TextureRegion textureRegion, Vector2 position, Vector2 size) {
-//
-//    }
-//    @Override
-//    public void draw(TextureRegion textureRegion, Vector2 position, float scale) {
-//
-//    }
+    @Override
+    public void addSkin(String name, Skin skin) {
+        assetManager.addUiSkin(name, skin);
+    }
+    @Override
+    public void addSkin(String name, String skinPath) {
+        FileHandle file = Gdx.files.internal(skinPath);
+        assetManager.addUiSkin(name, file);
+    }
+    @Override
+    public Skin getSkin(String name) {
+        return assetManager.getUiSkin(name);
+    }
 
+    @Override
+    public void loadShader(String name, String vertexPath, String fragmentPath) {
+        shaderManager.loadShader(name, vertexPath, fragmentPath);
+    }
     @Override
     public void applyShader(String name) {
         ShaderProgram currentShader = shaderManager.applyShader(name);
@@ -110,6 +116,7 @@ public class Renderer implements IGameSystem, IRenderer {
     public void resetShader() {
         batch.setShader(null);
     }
+
     @Override
     public void clearScreen(Color color) {
         if (color == null) Gdx.gl.glClearColor(DEFAULT_BACKGROUND.r, DEFAULT_BACKGROUND.g, DEFAULT_BACKGROUND.b, DEFAULT_BACKGROUND.a);
@@ -121,8 +128,5 @@ public class Renderer implements IGameSystem, IRenderer {
     }
     public SpriteBatch getBatch() {
         return batch;
-    }
-    public ShaderProgram getCurrentShader() {
-        return shaderManager.getCurrentShader();
     }
 }

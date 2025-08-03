@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class CompositeWidget extends Widget {
-    protected final List<ChildEntry> children = new ArrayList<>();
+    protected final List<ChildEntry<Widget>> children = new ArrayList<>();
 
     public CompositeWidget(WidgetContext<? extends Widget> context, Style style) {
         super(context, style);
@@ -16,25 +16,25 @@ public abstract class CompositeWidget extends Widget {
 
     @Override
     public void create() {
-        for (ChildEntry child : children) {
+        for (ChildEntry<Widget> child : children) {
             child.object.create();
         }
     }
     @Override
     public void start() {
-        for (ChildEntry child : children) {
+        for (ChildEntry<Widget> child : children) {
             child.object.start();
         }
     }
     @Override
     public void update(float delta) {
-        for (ChildEntry child : children) {
+        for (ChildEntry<Widget> child : children) {
             child.object.update(delta);
         }
     }
     @Override
     public void dispose() {
-        for (ChildEntry child : children) {
+        for (ChildEntry<Widget> child : children) {
             child.object.dispose();
         }
         children.clear();
@@ -42,35 +42,44 @@ public abstract class CompositeWidget extends Widget {
 
     @Override
     public void render(int x, int y) {
-        for (ChildEntry child : children) {
+        for (ChildEntry<Widget> child : children) {
             child.object.render(x + child.x, y + child.y);
         }
     }
 
     @Override
     public void render() {
-        for (ChildEntry child : children) {
+        for (ChildEntry<Widget> child : children) {
             child.object.render((int) context.getRelativePosition().x + child.x, (int) context.getRelativePosition().y + child.y);
         }
     }
 
-    public void addChild(Widget widget, int offsetX, int offsetY) {
-        children.add(new ChildEntry(widget, offsetX, offsetY));
+    public void addChild(String name, Widget widget, int offsetX, int offsetY) {
+        children.add(new ChildEntry<>(name, widget, offsetX, offsetY));
     }
     public void removeChild(Widget widget) {
         children.removeIf(entry -> entry.object == widget);
     }
-    public Widget getChildByType(Class<? extends Widget> widgetType) {
-        for (ChildEntry entry : children) {
-            if (widgetType.isInstance(entry.object)) {
-                return (Widget) entry.object;
+    public <T extends Widget> T getChildByName(String name, Class<T> widgetType) {
+        for (ChildEntry<Widget> entry : children) {
+            if (entry.name.equals(name)) {
+                return widgetType.cast(entry.object);
             }
         }
         return null;
     }
+    public <T extends Widget> List<T> getChildrenByType(Class<T> widgetType) {
+        List<T> widgets = new ArrayList<>();
+        for (ChildEntry<Widget> entry : children) {
+            if (widgetType.isInstance(entry.object)) {
+                widgets.add(widgetType.cast(entry.object));
+            }
+        }
+        return widgets;
+    }
     public List<Widget> getAllChildren() {
         List<Widget> flat = new ArrayList<>();
-        for (ChildEntry entry : children) flat.add((Widget) entry.object);
+        for (ChildEntry<Widget> entry : children) flat.add(entry.object);
         return flat;
     }
 

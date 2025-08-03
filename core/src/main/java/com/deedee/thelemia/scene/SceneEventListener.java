@@ -3,8 +3,8 @@ package com.deedee.thelemia.scene;
 import com.deedee.thelemia.event.IEvent;
 import com.deedee.thelemia.event.IEventListener;
 import com.deedee.thelemia.event.common.ClickEvent;
-import com.deedee.thelemia.graphics.behavior.IClickable;
-import com.deedee.thelemia.graphics.behavior.IRenderableObject;
+import com.deedee.thelemia.graphics.utils.IClickable;
+import com.deedee.thelemia.graphics.utils.IRenderableObject;
 
 public class SceneEventListener implements IEventListener {
     private final SceneManager gameSystem;

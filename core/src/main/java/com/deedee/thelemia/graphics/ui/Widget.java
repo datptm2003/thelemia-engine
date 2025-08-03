@@ -1,7 +1,5 @@
 package com.deedee.thelemia.graphics.ui;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector2;
@@ -9,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.UpdateBufferEvent;
 import com.deedee.thelemia.graphics.ui.style.Style;
-import com.deedee.thelemia.graphics.behavior.IRenderableObject;
+import com.deedee.thelemia.graphics.utils.IRenderableObject;
 import com.deedee.thelemia.graphics.ui.context.WidgetContext;
 
 public abstract class Widget implements IRenderableObject {
