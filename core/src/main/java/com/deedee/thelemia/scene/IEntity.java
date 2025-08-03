@@ -6,7 +6,6 @@ import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 import java.util.List;
 
 public interface IEntity {
-    String getId();
     void addComponent(IComponent component);
     boolean hasComponentGroup(ComponentGroup group);
     <T extends IComponent> T getComponentByType(Class<T> type);
