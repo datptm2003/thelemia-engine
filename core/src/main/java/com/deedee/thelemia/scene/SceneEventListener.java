@@ -3,6 +3,7 @@ package com.deedee.thelemia.scene;
 import com.deedee.thelemia.event.IEvent;
 import com.deedee.thelemia.event.IEventListener;
 import com.deedee.thelemia.event.common.ClickEvent;
+import com.deedee.thelemia.event.common.MessageDispatchEvent;
 import com.deedee.thelemia.graphics.utils.IClickable;
 import com.deedee.thelemia.graphics.utils.IRenderableObject;
 
@@ -22,6 +23,18 @@ public class SceneEventListener implements IEventListener {
                 ((IClickable) hitObject).onClick(clickEvent.getX(), clickEvent.getY());
             }
 
+        } else if (event instanceof MessageDispatchEvent) {
+            MessageDispatchEvent dispatchEvent = (MessageDispatchEvent) event;
+            switch (dispatchEvent.getScope()) {
+                case SINGLE:
+                    gameSystem.getMessageDispatcher().dispatch(dispatchEvent.getSingleReceiver(), dispatchEvent.getMessage());
+                    break;
+                case GROUP:
+                    gameSystem.getMessageDispatcher().dispatchGroup(dispatchEvent.getReceiverGroup(), dispatchEvent.getMessage());
+                    break;
+                case BROADCAST:
+                    gameSystem.getMessageDispatcher().dispatchGroup(gameSystem.getCurrentScene().getAllEntities(), dispatchEvent.getMessage());
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.deedee.thelemia.ai.fsm;
 
+import com.deedee.thelemia.ai.utils.Message;
 import com.deedee.thelemia.scene.Entity;
 
 public interface IState {

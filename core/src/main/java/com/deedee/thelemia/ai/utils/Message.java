@@ -1,4 +1,4 @@
-package com.deedee.thelemia.ai.fsm;
+package com.deedee.thelemia.ai.utils;
 
 import com.deedee.thelemia.ai.enumerate.MessageTarget;
 

@@ -1,13 +1,12 @@
 package com.deedee.thelemia.scene.component;
 
-import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.graphics.ui.IContainer;
+import com.deedee.thelemia.scene.Component;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
-public class UIComponent implements IGraphicsComponent {
+public class UIComponent extends Component implements IGraphicsComponent {
     private IContainer container;
     private boolean visible = true;
-    private boolean enabled = true;
 
     public UIComponent(IContainer container) {
         this.container = container;
@@ -32,22 +31,11 @@ public class UIComponent implements IGraphicsComponent {
     }
 
     @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-    @Override
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Override
     public void render(int x, int y) {
         if (!visible) return;
 
         container.render(x, y);
     }
-
-
 
     @Override
     public boolean isVisible() {

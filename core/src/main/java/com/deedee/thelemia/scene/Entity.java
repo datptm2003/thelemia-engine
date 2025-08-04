@@ -12,13 +12,11 @@ import java.util.*;
 
 public class Entity implements IEntity {
     protected final String id;
-    protected final StateMachine stateMachine;
     protected final Map<Class<? extends IComponent>, IComponent> components = new HashMap<>();
     protected final Map<ComponentGroup, Boolean> componentGroups = new HashMap<>();
 
     public Entity() {
         this.id = UUID.randomUUID().toString();
-        this.stateMachine = new StateMachine(this);
         init();
     }
 
@@ -95,8 +93,5 @@ public class Entity implements IEntity {
 
     public String getId() {
         return id;
-    }
-    public StateMachine getStateMachine() {
-        return stateMachine;
     }
 }

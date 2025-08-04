@@ -1,14 +1,13 @@
 package com.deedee.thelemia.scene.component;
 
 import com.badlogic.gdx.math.Vector2;
-import com.deedee.thelemia.scene.IComponent;
+import com.deedee.thelemia.scene.Component;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
-public class TransformComponent implements ICoreComponent {
+public class TransformComponent extends Component implements ICoreComponent {
     private Vector2 position = new Vector2(0.0f,0.0f);
     private float scale = 1.0f;
     private float rotation = 0.0f;
-    private boolean enabled = true;
 
     public TransformComponent() {
 
@@ -21,15 +20,6 @@ public class TransformComponent implements ICoreComponent {
     @Override
     public void reset() {
 
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-    @Override
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     @Override
