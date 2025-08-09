@@ -1,7 +1,7 @@
 package com.deedee.thelemia.scene.component;
 
 import com.deedee.thelemia.graphics.utils.IDisposable;
-import com.deedee.thelemia.graphics.ui.IContainer;
+import com.deedee.thelemia.graphics.IContainer;
 import com.deedee.thelemia.scene.IComponent;
 
 public interface IGraphicsComponent extends IComponent, IDisposable {

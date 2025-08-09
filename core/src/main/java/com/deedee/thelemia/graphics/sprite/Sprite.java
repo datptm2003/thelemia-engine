@@ -1,4 +1,4 @@
-package com.deedee.thelemia.graphics.ui;
+package com.deedee.thelemia.graphics.sprite;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -6,17 +6,20 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.UpdateBufferEvent;
-import com.deedee.thelemia.graphics.Style;
-import com.deedee.thelemia.graphics.utils.IRenderableObject;
 import com.deedee.thelemia.graphics.GraphicsContext;
+import com.deedee.thelemia.graphics.Style;
+import com.deedee.thelemia.graphics.ui.Widget;
+import com.deedee.thelemia.graphics.utils.IRenderableObject;
 
-public abstract class Widget implements IRenderableObject {
+public class Sprite implements IRenderableObject {
     protected final GraphicsContext<? extends Widget> context;
     protected final Style style;
+    protected final Animation animation;
 
-    public Widget(GraphicsContext<? extends Widget> context, Style style) {
+    public Sprite(GraphicsContext<? extends Widget> context, Style style, Animation animation) {
         this.context = context;
         this.style = style;
+        this.animation = animation;
     }
 
     @Override
@@ -56,6 +59,10 @@ public abstract class Widget implements IRenderableObject {
     public Style getStyle() {
         return style;
     }
+    public Animation getAnimation() {
+        return animation;
+    }
+
 
     @Override
     public Vector2 getHitboxSize() {

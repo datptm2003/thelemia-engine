@@ -1,18 +1,14 @@
-package com.deedee.thelemia.graphics.ui.context;
+package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.graphics.ui.Widget;
-import com.deedee.thelemia.graphics.ui.style.Style;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public abstract class WidgetContext<T extends Widget> implements IWidgetContext<T> {
+public abstract class GraphicsContext<T extends Widget> implements IGraphicsContext<T> {
     protected int width, height;
     protected int x = 0;
     protected int y = 0;
 
-    public WidgetContext(int width, int height) {
+    public GraphicsContext(int width, int height) {
         this.width = width;
         this.height = height;
     }

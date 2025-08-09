@@ -1,12 +1,11 @@
 package com.deedee.thelemia.graphics.ui.context;
 
 import com.badlogic.gdx.math.Vector2;
-import com.deedee.thelemia.graphics.ui.style.Style;
+import com.deedee.thelemia.graphics.GraphicsContext;
 import com.deedee.thelemia.graphics.enumerate.Anchor;
 import com.deedee.thelemia.graphics.ui.Label;
-import com.deedee.thelemia.graphics.ui.style.LabelStyle;
 
-public class LabelContext extends WidgetContext<Label> {
+public class LabelContext extends GraphicsContext<Label> {
     private String text;
     private Anchor anchor;
     private int size;

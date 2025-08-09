@@ -3,7 +3,6 @@ package com.deedee.thelemia.graphics.ui.style;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,14 +10,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.deedee.thelemia.graphics.ui.Button;
+import com.deedee.thelemia.graphics.Style;
 import com.deedee.thelemia.graphics.ui.Widget;
 import com.deedee.thelemia.graphics.ui.context.ButtonContext;
-import com.deedee.thelemia.graphics.ui.context.CanvasContext;
-import com.deedee.thelemia.graphics.ui.context.LabelContext;
-import com.deedee.thelemia.graphics.ui.context.WidgetContext;
-
-import java.awt.*;
+import com.deedee.thelemia.graphics.GraphicsContext;
 
 public class ButtonStyle extends Style {
     private final BitmapFont font;
@@ -35,7 +30,7 @@ public class ButtonStyle extends Style {
     }
 
     @Override
-    public Drawable apply(WidgetContext<? extends Widget> context, SpriteBatch batch, FrameBuffer fbo, boolean transparent) {
+    public Drawable apply(GraphicsContext<? extends Widget> context, SpriteBatch batch, FrameBuffer fbo, boolean transparent) {
         ButtonContext buttonContext = (ButtonContext) context;
         CanvasStyle canvasStyle = getSubstyle(CanvasStyle.class);
         LabelStyle labelStyle = getSubstyle(LabelStyle.class);

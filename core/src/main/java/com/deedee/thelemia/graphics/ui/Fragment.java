@@ -7,8 +7,8 @@ import com.deedee.thelemia.graphics.Renderer.ChildEntry;
 import java.util.*;
 
 public class Fragment implements IFragment {
-    private final Skin skin;
-    private final List<ChildEntry<IRenderableObject>> entries = new ArrayList<>();
+    protected final Skin skin;
+    protected final List<ChildEntry<IRenderableObject>> entries = new ArrayList<>();
 
     public Fragment(Skin skin) {
         this.skin = skin;

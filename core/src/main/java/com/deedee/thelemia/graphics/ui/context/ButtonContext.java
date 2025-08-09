@@ -1,17 +1,10 @@
 package com.deedee.thelemia.graphics.ui.context;
 
-import com.deedee.thelemia.graphics.ui.Canvas;
-import com.deedee.thelemia.graphics.ui.Widget;
-import com.deedee.thelemia.graphics.ui.style.Style;
+import com.deedee.thelemia.graphics.GraphicsContext;
 import com.deedee.thelemia.graphics.enumerate.Anchor;
 import com.deedee.thelemia.graphics.ui.Button;
-import com.deedee.thelemia.graphics.ui.style.ButtonStyle;
-import com.deedee.thelemia.graphics.ui.style.CanvasStyle;
-import com.deedee.thelemia.graphics.ui.style.LabelStyle;
 
-import java.util.List;
-
-public class ButtonContext extends WidgetContext<Button> {
+public class ButtonContext extends GraphicsContext<Button> {
     protected Runnable callback;
 
     protected final CanvasContext canvasContext;

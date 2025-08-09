@@ -3,20 +3,18 @@ package com.deedee.thelemia.graphics.ui.style;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.deedee.thelemia.graphics.Style;
 import com.deedee.thelemia.graphics.enumerate.Anchor;
 import com.deedee.thelemia.graphics.ui.Widget;
 import com.deedee.thelemia.graphics.ui.context.LabelContext;
-import com.deedee.thelemia.graphics.ui.context.WidgetContext;
+import com.deedee.thelemia.graphics.GraphicsContext;
 
 public class LabelStyle extends Style {
     private final BitmapFont font;
@@ -28,7 +26,7 @@ public class LabelStyle extends Style {
     }
 
     @Override
-    public Drawable apply(WidgetContext<? extends Widget> context, SpriteBatch batch, FrameBuffer fbo, boolean transparent) {
+    public Drawable apply(GraphicsContext<? extends Widget> context, SpriteBatch batch, FrameBuffer fbo, boolean transparent) {
         LabelContext labelContext = (LabelContext) context;
 
         // Store original font scale to restore it later, preventing side effects

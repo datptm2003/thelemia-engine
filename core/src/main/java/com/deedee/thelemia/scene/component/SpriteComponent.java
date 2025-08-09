@@ -1,15 +1,26 @@
 package com.deedee.thelemia.scene.component;
 
 import com.deedee.thelemia.graphics.IContainer;
+import com.deedee.thelemia.graphics.sprite.Animation;
 import com.deedee.thelemia.scene.Component;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
-public class UIComponent extends Component implements IGraphicsComponent {
+public class SpriteComponent extends Component implements IGraphicsComponent {
     private IContainer container;
     private boolean visible = true;
 
-    public UIComponent(IContainer container) {
+    private Animation animation;
+
+    public SpriteComponent(IContainer container, Animation animation) {
         this.container = container;
+        this.animation = animation;
+
+        this.container.create();
+    }
+    public SpriteComponent(IContainer container) {
+        this.container = container;
+        this.animation = new Animation();
+
         this.container.create();
     }
 
@@ -60,4 +71,10 @@ public class UIComponent extends Component implements IGraphicsComponent {
         this.container = container;
     }
 
+    public Animation getAnimation() {
+        return animation;
+    }
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
+    }
 }

@@ -1,4 +1,4 @@
-package com.deedee.thelemia.graphics.ui;
+package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deedee.thelemia.core.IGameObject;
