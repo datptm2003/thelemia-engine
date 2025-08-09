@@ -21,19 +21,17 @@ public class Renderer implements IGameSystem, IRenderer {
     public static class ChildEntry<T extends IRenderableObject> {
         public String name;
         public T object;
-        public int x, y;
+        public Vector2 position;
 
-        public ChildEntry(String name, T object, int x, int y) {
+        public ChildEntry(String name, T object, Vector2 position) {
             this.name = name;
             this.object = object;
-            this.x = x;
-            this.y = y;
+            this.position = position;
         }
-        public ChildEntry(T object, int x, int y) {
+        public ChildEntry(T object, Vector2 position) {
             this.name = "";
             this.object = object;
-            this.x = x;
-            this.y = y;
+            this.position = position;
         }
     }
 
@@ -77,15 +75,15 @@ public class Renderer implements IGameSystem, IRenderer {
 
     @Override
     public void draw(IRenderableObject object, Vector2 position, Vector2 size) {
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, (int) object.getHitboxSize().x, (int) object.getHitboxSize().y, false);
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, object.getWidth(), object.getHeight(), false);
         object.getDrawable(batch, fbo, false).draw(batch, position.x, position.y, size.x, size.y);
     }
     @Override
     public void draw(IRenderableObject object, Vector2 position, float scale) {
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, (int) object.getHitboxSize().x, (int) object.getHitboxSize().y, false);
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, object.getWidth(), object.getHeight(), false);
         Drawable drawable = object.getDrawable(batch, fbo, false);
-        float width = object.getHitboxSize().x * scale;
-        float height = object.getHitboxSize().y * scale;
+        float width = object.getWidth() * scale;
+        float height = object.getHeight() * scale;
         drawable.draw(batch, position.x, position.y, width, height);
     }
 

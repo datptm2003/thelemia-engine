@@ -24,47 +24,6 @@ public class ButtonStyle extends Style {
         this.font = font;
         this.fontColor = fontColor;
         this.background = background;
-
-        substyles.put(LabelStyle.class, new LabelStyle(font, fontColor));
-        substyles.put(CanvasStyle.class, new CanvasStyle(background));
-    }
-
-    @Override
-    public Drawable apply(GraphicsContext<? extends Widget> context, SpriteBatch batch, FrameBuffer fbo, boolean transparent) {
-        ButtonContext buttonContext = (ButtonContext) context;
-        CanvasStyle canvasStyle = getSubstyle(CanvasStyle.class);
-        LabelStyle labelStyle = getSubstyle(LabelStyle.class);
-
-        if (canvasStyle == null || labelStyle == null) return null;
-
-        // Begin drawing to FBO
-        fbo.begin();
-
-        if (transparent) {
-            Gdx.gl.glClearColor(0, 0, 0, 0); // transparent
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        }
-
-        batch.begin();
-
-        Drawable canvasDrawable = canvasStyle.apply(buttonContext.getCanvasContext(), batch, fbo, transparent);
-        if (canvasDrawable != null) {
-            canvasDrawable.draw(batch, 0, 0, fbo.getWidth(), fbo.getHeight());
-        }
-
-        Drawable labelDrawable = labelStyle.apply(buttonContext.getLabelContext(), batch, fbo, false);
-        if (labelDrawable != null) {
-            labelDrawable.draw(batch, 0, 0, fbo.getWidth(), fbo.getHeight());
-        }
-
-        batch.end();
-        fbo.end();
-
-        // Flip FBO texture vertically to make it render correctly
-        TextureRegion region = new TextureRegion(fbo.getColorBufferTexture());
-        region.flip(false, true);
-
-        return new TextureRegionDrawable(region);
     }
 
     public BitmapFont getFont() {
@@ -75,7 +34,7 @@ public class ButtonStyle extends Style {
         return fontColor;
     }
 
-    public NinePatch getBgUp() {
+    public NinePatch getBackground() {
         return background;
     }
 }

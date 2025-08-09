@@ -8,6 +8,8 @@ import com.deedee.thelemia.core.IGameObject;
 import com.deedee.thelemia.graphics.Style;
 
 public interface IRenderableObject extends IGameObject, IRenderable {
-    Vector2 getHitboxSize();
+    int getWidth();
+    int getHeight();
+
     Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean transparent);
 }

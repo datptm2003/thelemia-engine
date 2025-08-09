@@ -1,5 +1,12 @@
 package com.deedee.thelemia.graphics.ui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.deedee.thelemia.graphics.utils.IClickable;
 import com.deedee.thelemia.graphics.ui.context.ButtonContext;
 import com.deedee.thelemia.graphics.ui.context.CanvasContext;
@@ -12,24 +19,65 @@ public class Button extends CompositeWidget implements IClickable {
     public Button(ButtonContext context, ButtonStyle style) {
         super(context, style);
 
-        CanvasStyle canvasStyle = style.getSubstyle(CanvasStyle.class);
-        LabelStyle labelStyle = style.getSubstyle(LabelStyle.class);
+        CanvasStyle canvasStyle = new CanvasStyle(style.getBackground());
+        LabelStyle labelStyle = new LabelStyle(style.getFont(), style.getFontColor());
 
-        CanvasContext canvasContext = context.getCanvasContext();
-        LabelContext labelContext = context.getLabelContext();
+        CanvasContext canvasContext = new CanvasContext(context.getWidth(), context.getHeight());
+        LabelContext labelContext = new LabelContext(context.getWidth(), context.getHeight(), context.getText(), context.getAnchor(), context.getFontSize());
 
-        this.addChild("background", new Canvas(canvasContext, canvasStyle), (int) canvasContext.getRelativePosition().x, (int) canvasContext.getRelativePosition().y);
-        this.addChild("label", new Label(labelContext, labelStyle), (int) labelContext.getRelativePosition().x, (int) labelContext.getRelativePosition().y);
+        addChild("background", new Canvas(canvasContext, canvasStyle), canvasContext.getPosition());
+        addChild("label", new Label(labelContext, labelStyle), labelContext.getPosition());
     }
 
     @Override
     public void onClick(int x, int y) {
-        this.getContext().getCallback().run();
+        getContext().getCallback().run();
     }
 
     @Override
     public ButtonContext getContext() {
-        return (ButtonContext) super.getContext();
+        return (ButtonContext) context;
+    }
+    @Override
+    public ButtonStyle getStyle() {
+        return (ButtonStyle) style;
     }
 
+    @Override
+    public Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean transparent) {
+        // Begin drawing to FBO
+        fbo.begin();
+
+        if (transparent) {
+            Gdx.gl.glClearColor(0, 0, 0, 0); // transparent
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        }
+
+        batch.begin();
+
+        Drawable canvasDrawable = getCanvas().getDrawable(batch, fbo, transparent);
+        if (canvasDrawable != null) {
+            canvasDrawable.draw(batch, 0, 0, fbo.getWidth(), fbo.getHeight());
+        }
+        Drawable labelDrawable = getLabel().getDrawable(batch, fbo, false);
+        if (labelDrawable != null) {
+            labelDrawable.draw(batch, 0, 0, fbo.getWidth(), fbo.getHeight());
+        }
+
+        batch.end();
+        fbo.end();
+
+        // Flip FBO texture vertically to make it render correctly
+        TextureRegion region = new TextureRegion(fbo.getColorBufferTexture());
+        region.flip(false, true);
+
+        return new TextureRegionDrawable(region);
+    }
+
+    public Canvas getCanvas() {
+        return getChildByName("background", Canvas.class);
+    }
+    public Label getLabel() {
+        return getChildByName("label", Label.class);
+    }
 }

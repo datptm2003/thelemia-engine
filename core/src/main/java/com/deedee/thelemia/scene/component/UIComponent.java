@@ -1,23 +1,25 @@
 package com.deedee.thelemia.scene.component;
 
-import com.deedee.thelemia.graphics.IContainer;
+import com.deedee.thelemia.graphics.ui.Fragment;
 import com.deedee.thelemia.scene.Component;
+import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 public class UIComponent extends Component implements IGraphicsComponent {
-    private IContainer container;
+    private final Fragment fragment;
     private boolean visible = true;
 
-    public UIComponent(IContainer container) {
-        this.container = container;
-        this.container.create();
+    public UIComponent(Entity owner, Fragment fragment) {
+        super(owner);
+        this.fragment = fragment;
+        this.fragment.create();
     }
 
     @Override
     public void update(float delta) {
         if (!enabled) return;
 
-        container.update(delta);
+        fragment.update(delta);
     }
     @Override
     public void reset() {
@@ -27,14 +29,15 @@ public class UIComponent extends Component implements IGraphicsComponent {
 
     @Override
     public void dispose() {
-        container.dispose();
+        fragment.dispose();
     }
 
     @Override
-    public void render(int x, int y) {
+    public void render() {
         if (!visible) return;
 
-        container.render(x, y);
+        TransformComponent transform = owner.getComponentByType(TransformComponent.class);
+        fragment.render(transform.getPosition());
     }
 
     @Override
@@ -50,14 +53,9 @@ public class UIComponent extends Component implements IGraphicsComponent {
     public ComponentGroup getGroup() {
         return ComponentGroup.GRAPHICS;
     }
-
     @Override
-    public IContainer getContainer() {
-        return container;
-    }
-    @Override
-    public void setContainer(IContainer container) {
-        this.container = container;
+    public Fragment getContainer() {
+        return fragment;
     }
 
 }

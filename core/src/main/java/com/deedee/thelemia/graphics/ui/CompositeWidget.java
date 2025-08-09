@@ -1,5 +1,6 @@
 package com.deedee.thelemia.graphics.ui;
 
+import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.graphics.Renderer.ChildEntry;
 import com.deedee.thelemia.graphics.Style;
 import com.deedee.thelemia.graphics.GraphicsContext;
@@ -41,20 +42,20 @@ public abstract class CompositeWidget extends Widget {
     }
 
     @Override
-    public void render(int x, int y) {
+    public void render(Vector2 position) {
         for (ChildEntry<Widget> child : children) {
-            child.object.render(x + child.x, y + child.y);
+            child.object.render(new Vector2(position.x + child.position.x, position.y + child.position.y));
         }
     }
     @Override
     public void render() {
         for (ChildEntry<Widget> child : children) {
-            child.object.render((int) context.getRelativePosition().x + child.x, (int) context.getRelativePosition().y + child.y);
+            child.object.render(new Vector2(context.getPosition().x + child.position.x, context.getPosition().y + child.position.y));
         }
     }
 
-    public void addChild(String name, Widget widget, int offsetX, int offsetY) {
-        children.add(new ChildEntry<>(name, widget, offsetX, offsetY));
+    public void addChild(String name, Widget widget, Vector2 position) {
+        children.add(new ChildEntry<>(name, widget, position));
     }
     public void removeChild(Widget widget) {
         children.removeIf(entry -> entry.object == widget);

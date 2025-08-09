@@ -33,12 +33,12 @@ public abstract class Widget implements IRenderableObject {
     }
 
     @Override
-    public void render(int x, int y) {
-        EventBus.getInstance().post(new UpdateBufferEvent(this, x, y, 1.0f));
+    public void render(Vector2 position) {
+        EventBus.getInstance().post(new UpdateBufferEvent(this, position, 1.0f));
     }
     @Override
     public void render() {
-        EventBus.getInstance().post(new UpdateBufferEvent(this, (int) context.getRelativePosition().x, (int) context.getRelativePosition().y, 1.0f));
+        EventBus.getInstance().post(new UpdateBufferEvent(this, context.getPosition(), 1.0f));
     }
 
     @Override
@@ -47,18 +47,18 @@ public abstract class Widget implements IRenderableObject {
     }
 
     @Override
-    public Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean transparent) {
-        return style.apply(context, batch, fbo, transparent);
+    public int getWidth() {
+        return context.getWidth();
     }
-    public GraphicsContext<? extends Widget> getContext() {
-        return context;
-    }
-    public Style getStyle() {
-        return style;
+    @Override
+    public int getHeight() {
+        return context.getHeight();
     }
 
     @Override
-    public Vector2 getHitboxSize() {
-        return context.getHitboxSize();
-    }
+    public abstract Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean transparent);
+
+    public abstract GraphicsContext<? extends Widget> getContext();
+    public abstract Style getStyle();
+
 }

@@ -37,11 +37,10 @@ public class RenderListener implements IEventListener {
 
             for (Entity entity : resetBufferEvent.getRenderableEntities()) {
                 if (!entity.hasComponentGroup(ComponentGroup.GRAPHICS)) continue;
-                TransformComponent transform = entity.getComponentByType(TransformComponent.class);
 
-                List<IGraphicsComponent> graphicsComponents = entity.getComponentsByGroup(ComponentGroup.GRAPHICS);
+                List<? extends IGraphicsComponent> graphicsComponents = entity.getComponentsByGroup(ComponentGroup.GRAPHICS);
                 for (IGraphicsComponent component : graphicsComponents) {
-                    component.render((int) transform.getPosition().x, (int) transform.getPosition().y);
+                    component.render();
                 }
             }
 

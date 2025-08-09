@@ -1,7 +1,5 @@
 package com.deedee.thelemia.graphics.ui;
 
-import com.deedee.thelemia.graphics.IContainer;
-
-public interface IFragment extends IContainer {
-
+public interface IFragment {
+    <T extends Widget> T getWidgetByName(String name, Class<T> type);
 }

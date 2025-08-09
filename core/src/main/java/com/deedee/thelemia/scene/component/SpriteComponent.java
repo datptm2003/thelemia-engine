@@ -1,34 +1,37 @@
 package com.deedee.thelemia.scene.component;
 
-import com.deedee.thelemia.graphics.IContainer;
 import com.deedee.thelemia.graphics.sprite.Animation;
+import com.deedee.thelemia.graphics.sprite.SpriteGroup;
 import com.deedee.thelemia.scene.Component;
+import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 public class SpriteComponent extends Component implements IGraphicsComponent {
-    private IContainer container;
+    private final SpriteGroup group;
     private boolean visible = true;
 
     private Animation animation;
 
-    public SpriteComponent(IContainer container, Animation animation) {
-        this.container = container;
+    public SpriteComponent(Entity owner, SpriteGroup group, Animation animation) {
+        super(owner);
+        this.group = group;
         this.animation = animation;
 
-        this.container.create();
+        this.group.create();
     }
-    public SpriteComponent(IContainer container) {
-        this.container = container;
+    public SpriteComponent(Entity owner, SpriteGroup group) {
+        super(owner);
+        this.group = group;
         this.animation = new Animation();
 
-        this.container.create();
+        this.group.create();
     }
 
     @Override
     public void update(float delta) {
         if (!enabled) return;
 
-        container.update(delta);
+        group.update(delta);
     }
     @Override
     public void reset() {
@@ -38,14 +41,15 @@ public class SpriteComponent extends Component implements IGraphicsComponent {
 
     @Override
     public void dispose() {
-        container.dispose();
+        group.dispose();
     }
 
     @Override
-    public void render(int x, int y) {
+    public void render() {
         if (!visible) return;
 
-        container.render(x, y);
+        TransformComponent transform = owner.getComponentByType(TransformComponent.class);
+        group.render(transform.getPosition());
     }
 
     @Override
@@ -61,14 +65,9 @@ public class SpriteComponent extends Component implements IGraphicsComponent {
     public ComponentGroup getGroup() {
         return ComponentGroup.GRAPHICS;
     }
-
     @Override
-    public IContainer getContainer() {
-        return container;
-    }
-    @Override
-    public void setContainer(IContainer container) {
-        this.container = container;
+    public SpriteGroup getContainer() {
+        return group;
     }
 
     public Animation getAnimation() {

@@ -7,27 +7,25 @@ import com.deedee.thelemia.graphics.enumerate.RenderRequestType;
 
 public class UpdateBufferEvent extends Event {
     private final IRenderableObject object;
-    private final int x, y;
+    private final Vector2 position;
 
     private final RenderRequestType renderRequestType;
     private int width, height;
     private float scale;
 
-    public UpdateBufferEvent(IRenderableObject object, int x, int y, int width, int height) {
+    public UpdateBufferEvent(IRenderableObject object, Vector2 position, int width, int height) {
         super();
         this.object = object;
-        this.x = x;
-        this.y = y;
+        this.position = position;
 
         this.renderRequestType = RenderRequestType.BY_SIZE;
         this.width = width;
         this.height = height;
     }
-    public UpdateBufferEvent(IRenderableObject object, int x, int y, float scale) {
+    public UpdateBufferEvent(IRenderableObject object, Vector2 position, float scale) {
         super();
         this.object = object;
-        this.x = x;
-        this.y = y;
+        this.position = position;
 
         this.renderRequestType = RenderRequestType.BY_SCALE;
         this.scale = scale;
@@ -37,7 +35,7 @@ public class UpdateBufferEvent extends Event {
         return object;
     }
     public Vector2 getPosition() {
-        return new Vector2(x, y);
+        return position;
     }
     public Vector2 getSize() {
         return new Vector2(width, height);

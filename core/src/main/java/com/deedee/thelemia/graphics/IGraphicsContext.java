@@ -5,8 +5,10 @@ import com.deedee.thelemia.graphics.ui.Widget;
 
 public interface IGraphicsContext<T extends Widget> {
     void reset();
-    Vector2 getHitboxSize();
 
-    Vector2 getRelativePosition();
-    void setRelativePosition(int x, int y);
+    int getWidth();
+    int getHeight();
+
+    Vector2 getPosition();
+    void setPosition(int x, int y);
 }

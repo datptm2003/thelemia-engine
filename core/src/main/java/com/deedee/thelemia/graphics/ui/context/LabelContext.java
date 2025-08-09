@@ -16,14 +16,17 @@ public class LabelContext extends GraphicsContext<Label> {
         this.anchor = anchor;
         this.size = size;
 
+        // TODO: Not true
         Vector2 relativePosition = anchor.getRelativePosition(width, height);
-        x = (int) relativePosition.x - width / 2;
-        y = (int) relativePosition.y - height / 2;
+        position.x = relativePosition.x - (float) width / 2;
+        position.y = relativePosition.y - (float) height / 2;
     }
 
     @Override
     public void reset() {
-
+        text = "Default Text";
+        anchor = Anchor.CENTER;
+        size = 24;
     }
 
     public String getText() {

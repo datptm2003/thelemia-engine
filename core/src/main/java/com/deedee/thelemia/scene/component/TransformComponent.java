@@ -2,15 +2,17 @@ package com.deedee.thelemia.scene.component;
 
 import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.scene.Component;
+import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 public class TransformComponent extends Component implements ICoreComponent {
+    private Vector2 origin = new Vector2(0.0f, 0.0f);
     private Vector2 position = new Vector2(0.0f,0.0f);
     private float scale = 1.0f;
     private float rotation = 0.0f;
 
-    public TransformComponent() {
-
+    public TransformComponent(Entity owner) {
+        super(owner);
     }
 
     @Override
@@ -25,6 +27,13 @@ public class TransformComponent extends Component implements ICoreComponent {
     @Override
     public ComponentGroup getGroup() {
         return ComponentGroup.CORE;
+    }
+
+    public Vector2 getOrigin() {
+        return origin;
+    }
+    public void setOrigin(Vector2 origin) {
+        this.origin = origin;
     }
 
     public Vector2 getPosition() {

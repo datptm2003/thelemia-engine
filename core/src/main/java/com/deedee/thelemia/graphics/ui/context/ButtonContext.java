@@ -5,45 +5,48 @@ import com.deedee.thelemia.graphics.enumerate.Anchor;
 import com.deedee.thelemia.graphics.ui.Button;
 
 public class ButtonContext extends GraphicsContext<Button> {
+    protected String text;
+    protected Anchor anchor;
+    protected int fontSize;
     protected Runnable callback;
-
-    protected final CanvasContext canvasContext;
-    protected final LabelContext labelContext;
 
     public ButtonContext(int width, int height, String text, Anchor anchor, int fontSize, Runnable callback) {
         super(width, height);
+        this.text = text;
+        this.anchor = anchor;
+        this.fontSize = fontSize;
         this.callback = callback;
-
-        canvasContext = new CanvasContext(width, height);
-        labelContext = new LabelContext(width, height, text, anchor, fontSize);
     }
 
     @Override
     public void reset() {
+        text = "Default Text";
+        anchor = Anchor.CENTER;
+        fontSize = 24;
         callback = () -> {
             // Do nothing
         };
     }
 
     public String getText() {
-        return labelContext.getText();
+        return text;
     }
     public void setText(String text) {
-        labelContext.setText(text);
+        this.text = text;
     }
 
     public Anchor getAnchor() {
-        return labelContext.getAnchor();
+        return anchor;
     }
     public void setAnchor(Anchor anchor) {
-        labelContext.setAnchor(anchor);
+        this.anchor = anchor;
     }
 
     public int getFontSize() {
-        return labelContext.getSize();
+        return fontSize;
     }
     public void setFontSize(int fontSize) {
-        labelContext.setSize(fontSize);
+        this.fontSize = fontSize;
     }
 
     public Runnable getCallback() {
@@ -53,10 +56,4 @@ public class ButtonContext extends GraphicsContext<Button> {
         this.callback = callback;
     }
 
-    public CanvasContext getCanvasContext() {
-        return canvasContext;
-    }
-    public LabelContext getLabelContext() {
-        return labelContext;
-    }
 }

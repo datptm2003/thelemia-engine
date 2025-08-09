@@ -4,26 +4,32 @@ import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.graphics.ui.Widget;
 
 public abstract class GraphicsContext<T extends Widget> implements IGraphicsContext<T> {
-    protected int width, height;
-    protected int x = 0;
-    protected int y = 0;
+    protected final int width, height;
+    protected Vector2 position;
 
     public GraphicsContext(int width, int height) {
         this.width = width;
         this.height = height;
+        this.position = new Vector2(0, 0);
     }
 
     @Override
-    public Vector2 getHitboxSize() {
-        return new Vector2(width, height);
+    public int getWidth() {
+        return width;
+    }
+    @Override
+    public int getHeight() {
+        return height;
     }
 
-    public Vector2 getRelativePosition() {
-        return new Vector2(x, y);
+    @Override
+    public Vector2 getPosition() {
+        return position;
     }
-    public void setRelativePosition(int x, int y) {
-        this.x = x;
-        this.y = y;
+    @Override
+    public void setPosition(int x, int y) {
+        this.position.x = x;
+        this.position.y = y;
     }
 
 }

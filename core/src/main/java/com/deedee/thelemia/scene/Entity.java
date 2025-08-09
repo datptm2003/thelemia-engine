@@ -12,7 +12,7 @@ import java.util.*;
 
 public class Entity implements IEntity {
     protected final String id;
-    protected final Map<Class<? extends IComponent>, IComponent> components = new HashMap<>();
+    protected final Map<Class<? extends Component>, Component> components = new HashMap<>();
     protected final Map<ComponentGroup, Boolean> componentGroups = new HashMap<>();
 
     public Entity() {
@@ -22,11 +22,11 @@ public class Entity implements IEntity {
 
     private void init() {
         for (ComponentGroup group : ComponentGroup.values()) componentGroups.put(group, false);
-        addComponent(new TransformComponent());
+        addComponent(new TransformComponent(this));
     }
 
     @Override
-    public void addComponent(IComponent component) {
+    public void addComponent(Component component) {
         components.put(component.getClass(), component);
         componentGroups.put(component.getGroup(), true);
     }
@@ -36,14 +36,14 @@ public class Entity implements IEntity {
     }
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends IComponent> T getComponentByType(Class<T> type) {
+    public <T extends Component> T getComponentByType(Class<T> type) {
         return (T) components.get(type);
     }
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends IComponent> List<T> getComponentsByGroup(ComponentGroup group) {
+    public <T extends Component> List<T> getComponentsByGroup(ComponentGroup group) {
         List<T> result = new ArrayList<>();
-        for (IComponent component : components.values()) {
+        for (Component component : components.values()) {
             if (component.getGroup() == group) {
                 result.add((T) component);
             }
@@ -51,11 +51,11 @@ public class Entity implements IEntity {
         return result;
     }
     @Override
-    public List<IComponent> getAllComponents() {
+    public List<Component> getAllComponents() {
         return new ArrayList<>(components.values());
     }
     @Override
-    public void removeComponent(Class<? extends IComponent> componentType) {
+    public void removeComponent(Class<? extends Component> componentType) {
         components.remove(componentType);
     }
 
@@ -66,7 +66,7 @@ public class Entity implements IEntity {
 
         Vector2 entityPos = transform.getPosition();
 
-        List<IGraphicsComponent> graphicsComponents = getComponentsByGroup(ComponentGroup.GRAPHICS);
+        List<? extends IGraphicsComponent> graphicsComponents = getComponentsByGroup(ComponentGroup.GRAPHICS);
         for (IGraphicsComponent graphicsComponent : graphicsComponents) {
             List<ChildEntry<IRenderableObject>> entries = graphicsComponent.getContainer().getAllEntries();
 
@@ -74,15 +74,11 @@ public class Entity implements IEntity {
                 ChildEntry<IRenderableObject> entry = entries.get(i);
                 IRenderableObject renderable = entry.object;
 
-                Vector2 hitboxSize = renderable.getHitboxSize();
-                float hitboxWidth = hitboxSize.x;
-                float hitboxHeight = hitboxSize.y;
+                float worldX = entityPos.x + entry.position.x;
+                float worldY = entityPos.y + entry.position.y;
 
-                float worldX = entityPos.x + entry.x;
-                float worldY = entityPos.y + entry.y;
-
-                if (x >= worldX && x <= worldX + hitboxWidth &&
-                    y >= worldY && y <= worldY + hitboxHeight) {
+                if (x >= worldX && x <= worldX + renderable.getWidth() &&
+                    y >= worldY && y <= worldY + renderable.getHeight()) {
                     return renderable;
                 }
             }
