@@ -16,9 +16,9 @@ import com.deedee.thelemia.graphics.ui.context.ButtonContext;
 import com.deedee.thelemia.graphics.GraphicsContext;
 
 public class ButtonStyle extends Style {
-    private final BitmapFont font;
-    private final Color fontColor;
-    private final NinePatch background;
+    public BitmapFont font;
+    public Color fontColor;
+    public NinePatch background;
 
     public ButtonStyle(BitmapFont font, Color fontColor, NinePatch background) {
         this.font = font;
@@ -26,15 +26,4 @@ public class ButtonStyle extends Style {
         this.background = background;
     }
 
-    public BitmapFont getFont() {
-        return font;
-    }
-
-    public Color getFontColor() {
-        return fontColor;
-    }
-
-    public NinePatch getBackground() {
-        return background;
-    }
 }

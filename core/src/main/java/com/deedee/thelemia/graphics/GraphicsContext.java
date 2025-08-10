@@ -3,7 +3,7 @@ package com.deedee.thelemia.graphics;
 import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.graphics.ui.Widget;
 
-public abstract class GraphicsContext<T extends Widget> implements IGraphicsContext<T> {
+public abstract class GraphicsContext implements IGraphicsContext {
     protected final int width, height;
     protected Vector2 position;
 

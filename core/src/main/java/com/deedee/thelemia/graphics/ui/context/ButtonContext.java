@@ -4,7 +4,7 @@ import com.deedee.thelemia.graphics.GraphicsContext;
 import com.deedee.thelemia.graphics.enumerate.Anchor;
 import com.deedee.thelemia.graphics.ui.Button;
 
-public class ButtonContext extends GraphicsContext<Button> {
+public class ButtonContext extends GraphicsContext {
     protected String text;
     protected Anchor anchor;
     protected int fontSize;

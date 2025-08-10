@@ -15,15 +15,15 @@ public class Fragment extends Container implements IFragment {
 
     @Override
     public void add(String name, IRenderableObject object, Vector2 position) {
-        if (!(object instanceof Widget)) {
+        if (!(object instanceof Widget<?, ?>)) {
             throw new IllegalArgumentException("Only Widget objects can be added to a Fragment.");
         }
         super.add(name, object, position);
     }
 
     @Override
-    public <T extends Widget> T getWidgetByName(String name, Class<T> type) {
-        for (ChildEntry<IRenderableObject> entry : entries) {
+    public <T extends Widget<?, ?>> T getWidgetByName(String name, Class<T> type) {
+        for (ChildEntry<?> entry : entries) {
             if (Objects.equals(entry.name, name) && type.isInstance(entry.object)) {
                 return type.cast(entry.object);
             }

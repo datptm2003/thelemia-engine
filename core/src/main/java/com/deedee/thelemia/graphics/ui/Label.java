@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -16,25 +17,22 @@ import com.deedee.thelemia.graphics.ui.context.ButtonContext;
 import com.deedee.thelemia.graphics.ui.context.LabelContext;
 import com.deedee.thelemia.graphics.ui.style.LabelStyle;
 
-public class Label extends Widget {
+public class Label extends Widget<LabelContext, LabelStyle> {
     public Label(LabelContext context, LabelStyle style) {
         super(context, style);
     }
-
-    @Override
-    public LabelContext getContext() {
-        return (LabelContext) context;
+    public Label(LabelContext context, Skin skin, String styleName) {
+        this(context, skin.get(styleName, LabelStyle.class));
     }
-    @Override
-    public LabelStyle getStyle() {
-        return (LabelStyle) style;
+    public Label(LabelContext context, Skin skin) {
+        this(context, skin, "default");
     }
 
     @Override
     public Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean transparent) {// Store original font scale to restore it later, preventing side effects
         LabelContext labelContext = getContext();
-        BitmapFont font = getStyle().getFont();
-        Color color = getStyle().getColor();
+        BitmapFont font = getStyle().font;
+        Color color = getStyle().color;
 
         float originalScaleX = font.getScaleX();
         float originalScaleY = font.getScaleY();

@@ -68,10 +68,10 @@ public class Entity implements IEntity {
 
         List<? extends IGraphicsComponent> graphicsComponents = getComponentsByGroup(ComponentGroup.GRAPHICS);
         for (IGraphicsComponent graphicsComponent : graphicsComponents) {
-            List<ChildEntry<IRenderableObject>> entries = graphicsComponent.getContainer().getAllEntries();
+            List<ChildEntry<?>> entries = graphicsComponent.getContainer().getAllEntries();
 
             for (int i = entries.size() - 1; i >= 0; i--) {
-                ChildEntry<IRenderableObject> entry = entries.get(i);
+                ChildEntry<?> entry = entries.get(i);
                 IRenderableObject renderable = entry.object;
 
                 float worldX = entityPos.x + entry.position.x;

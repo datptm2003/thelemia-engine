@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.deedee.thelemia.graphics.utils.IClickable;
@@ -15,12 +16,12 @@ import com.deedee.thelemia.graphics.ui.style.ButtonStyle;
 import com.deedee.thelemia.graphics.ui.style.CanvasStyle;
 import com.deedee.thelemia.graphics.ui.style.LabelStyle;
 
-public class Button extends CompositeWidget implements IClickable {
+public class Button extends CompositeWidget<ButtonContext, ButtonStyle> implements IClickable {
     public Button(ButtonContext context, ButtonStyle style) {
         super(context, style);
 
-        CanvasStyle canvasStyle = new CanvasStyle(style.getBackground());
-        LabelStyle labelStyle = new LabelStyle(style.getFont(), style.getFontColor());
+        CanvasStyle canvasStyle = new CanvasStyle(style.background);
+        LabelStyle labelStyle = new LabelStyle(style.font, style.fontColor);
 
         CanvasContext canvasContext = new CanvasContext(context.getWidth(), context.getHeight());
         LabelContext labelContext = new LabelContext(context.getWidth(), context.getHeight(), context.getText(), context.getAnchor(), context.getFontSize());
@@ -28,19 +29,16 @@ public class Button extends CompositeWidget implements IClickable {
         addChild("background", new Canvas(canvasContext, canvasStyle), canvasContext.getPosition());
         addChild("label", new Label(labelContext, labelStyle), labelContext.getPosition());
     }
+    public Button(ButtonContext context, Skin skin, String styleName) {
+        this(context, skin.get(styleName, ButtonStyle.class));
+    }
+    public Button(ButtonContext context, Skin skin) {
+        this(context, skin, "default");
+    }
 
     @Override
     public void onClick(int x, int y) {
         getContext().getCallback().run();
-    }
-
-    @Override
-    public ButtonContext getContext() {
-        return (ButtonContext) context;
-    }
-    @Override
-    public ButtonStyle getStyle() {
-        return (ButtonStyle) style;
     }
 
     @Override

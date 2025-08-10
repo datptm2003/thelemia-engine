@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.deedee.thelemia.graphics.GraphicsContext;
@@ -14,9 +15,15 @@ import com.deedee.thelemia.graphics.utils.ICullable;
 import com.deedee.thelemia.graphics.ui.context.CanvasContext;
 import com.deedee.thelemia.graphics.ui.style.CanvasStyle;
 
-public class Canvas extends Widget implements ICullable {
+public class Canvas extends Widget<CanvasContext, CanvasStyle> implements ICullable {
     public Canvas(CanvasContext context, CanvasStyle style) {
         super(context, style);
+    }
+    public Canvas(CanvasContext context, Skin skin, String styleName) {
+        this(context, skin.get(styleName, CanvasStyle.class));
+    }
+    public Canvas(CanvasContext context, Skin skin) {
+        this(context, skin, "default");
     }
 
     @Override
@@ -25,17 +32,8 @@ public class Canvas extends Widget implements ICullable {
     }
 
     @Override
-    public CanvasContext getContext() {
-        return (CanvasContext) context;
-    }
-    @Override
-    public CanvasStyle getStyle() {
-        return (CanvasStyle) style;
-    }
-
-    @Override
     public Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean clear) {
-        NinePatch background = getStyle().getBackground();
+        NinePatch background = getStyle().background;
 
         // Begin rendering to the FrameBuffer
         fbo.begin();

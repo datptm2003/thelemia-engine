@@ -17,19 +17,11 @@ import com.deedee.thelemia.graphics.ui.context.LabelContext;
 import com.deedee.thelemia.graphics.GraphicsContext;
 
 public class LabelStyle extends Style {
-    private final BitmapFont font;
-    private final Color color;
+    public BitmapFont font;
+    public Color color;
 
     public LabelStyle(BitmapFont font, Color color) {
         this.font = font;
         this.color = color;
-    }
-
-    public BitmapFont getFont() {
-        return font;
-    }
-
-    public Color getColor() {
-        return color;
     }
 }

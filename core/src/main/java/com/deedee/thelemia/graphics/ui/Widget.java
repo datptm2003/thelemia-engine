@@ -3,6 +3,7 @@ package com.deedee.thelemia.graphics.ui;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.UpdateBufferEvent;
@@ -10,11 +11,11 @@ import com.deedee.thelemia.graphics.Style;
 import com.deedee.thelemia.graphics.utils.IRenderableObject;
 import com.deedee.thelemia.graphics.GraphicsContext;
 
-public abstract class Widget implements IRenderableObject {
-    protected final GraphicsContext<? extends Widget> context;
-    protected final Style style;
+public abstract class Widget<C extends GraphicsContext, S extends Style> implements IRenderableObject {
+    protected final C context;
+    protected final S style;
 
-    public Widget(GraphicsContext<? extends Widget> context, Style style) {
+    public Widget(C context, S style) {
         this.context = context;
         this.style = style;
     }
@@ -58,7 +59,11 @@ public abstract class Widget implements IRenderableObject {
     @Override
     public abstract Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean transparent);
 
-    public abstract GraphicsContext<? extends Widget> getContext();
-    public abstract Style getStyle();
+    public C getContext() {
+        return context;
+    }
+    public S getStyle() {
+        return style;
+    }
 
 }

@@ -14,5 +14,5 @@ public interface IContainer extends IGameObject {
     void render(Vector2 position);
 
     Skin getSkin();
-    List<ChildEntry<IRenderableObject>> getAllEntries();
+    List<ChildEntry<?>> getAllEntries();
 }

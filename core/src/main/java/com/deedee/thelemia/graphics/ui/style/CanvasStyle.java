@@ -13,16 +13,12 @@ import com.deedee.thelemia.graphics.ui.Widget;
 import com.deedee.thelemia.graphics.GraphicsContext;
 
 public class CanvasStyle extends Style {
-    private final NinePatch background;
+    public NinePatch background;
 
     public CanvasStyle(NinePatch background) {
         this.background = background;
     }
     public CanvasStyle() {
         this.background = null;
-    }
-
-    public NinePatch getBackground() {
-        return background;
     }
 }

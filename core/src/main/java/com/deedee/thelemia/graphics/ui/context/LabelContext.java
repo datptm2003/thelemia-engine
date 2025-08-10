@@ -5,7 +5,7 @@ import com.deedee.thelemia.graphics.GraphicsContext;
 import com.deedee.thelemia.graphics.enumerate.Anchor;
 import com.deedee.thelemia.graphics.ui.Label;
 
-public class LabelContext extends GraphicsContext<Label> {
+public class LabelContext extends GraphicsContext {
     private String text;
     private Anchor anchor;
     private int size;
@@ -16,7 +16,7 @@ public class LabelContext extends GraphicsContext<Label> {
         this.anchor = anchor;
         this.size = size;
 
-        // TODO: Not true
+        // TODO: Need more handles here
         Vector2 relativePosition = anchor.getRelativePosition(width, height);
         position.x = relativePosition.x - (float) width / 2;
         position.y = relativePosition.y - (float) height / 2;
