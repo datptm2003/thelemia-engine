@@ -3,7 +3,7 @@ package com.deedee.thelemia.graphics.ui;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deedee.thelemia.graphics.Container;
-import com.deedee.thelemia.graphics.utils.IRenderableObject;
+import com.deedee.thelemia.graphics.IRenderableObject;
 import com.deedee.thelemia.graphics.Renderer.ChildEntry;
 
 import java.util.*;

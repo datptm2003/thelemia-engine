@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.ResetBufferEvent;
 import com.deedee.thelemia.event.common.UpdateBufferEvent;
-import com.deedee.thelemia.graphics.utils.IRenderableObject;
 import com.deedee.thelemia.scene.IGameSystem;
 
 public class Renderer implements IGameSystem, IRenderer {

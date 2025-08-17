@@ -1,9 +1,8 @@
 package com.deedee.thelemia.scene;
 
 import com.badlogic.gdx.math.Vector2;
-import com.deedee.thelemia.ai.fsm.StateMachine;
 import com.deedee.thelemia.graphics.Renderer.ChildEntry;
-import com.deedee.thelemia.graphics.utils.IRenderableObject;
+import com.deedee.thelemia.graphics.IRenderableObject;
 import com.deedee.thelemia.scene.component.IGraphicsComponent;
 import com.deedee.thelemia.scene.component.TransformComponent;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;

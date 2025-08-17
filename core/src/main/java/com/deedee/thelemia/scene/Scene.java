@@ -1,6 +1,6 @@
 package com.deedee.thelemia.scene;
 
-import com.deedee.thelemia.graphics.utils.IRenderableObject;
+import com.deedee.thelemia.graphics.IRenderableObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +58,8 @@ public abstract class Scene implements IScene {
     }
     @Override
     public void update(float delta) {
-        for (IEntity entity : entities) {
-            for (IComponent component : entity.getAllComponents()) {
+        for (Entity entity : entities) {
+            for (Component component : entity.getAllComponents()) {
                 component.update(delta);
             }
         }

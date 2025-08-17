@@ -1,8 +1,9 @@
 package com.deedee.thelemia.event.common;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Null;
 import com.deedee.thelemia.event.Event;
-import com.deedee.thelemia.graphics.utils.IRenderableObject;
+import com.deedee.thelemia.graphics.IRenderableObject;
 import com.deedee.thelemia.graphics.enumerate.RenderRequestType;
 
 public class UpdateBufferEvent extends Event {
@@ -10,7 +11,9 @@ public class UpdateBufferEvent extends Event {
     private final Vector2 position;
 
     private final RenderRequestType renderRequestType;
+    @Null
     private int width, height;
+    @Null
     private float scale;
 
     public UpdateBufferEvent(IRenderableObject object, Vector2 position, int width, int height) {

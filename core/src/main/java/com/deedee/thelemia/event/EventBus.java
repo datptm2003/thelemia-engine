@@ -5,7 +5,7 @@ import java.util.*;
 public class EventBus {
     private static EventBus instance;
     private final Map<Class<?>, List<IEventListener>> listeners = new HashMap<>();
-    private final Queue<IEvent> eventQueue = new LinkedList<>();
+    private final Queue<Event> eventQueue = new LinkedList<>();
     private boolean isProcessing = false;
 
     private EventBus() {
@@ -23,7 +23,7 @@ public class EventBus {
         listeners.computeIfAbsent(eventType, k -> new ArrayList<>()).add(listener);
     }
 
-    public void post(IEvent event) {
+    public void post(Event event) {
         synchronized (eventQueue) {
             eventQueue.add(event);
         }
@@ -35,7 +35,7 @@ public class EventBus {
         isProcessing = true;
 
         while (true) {
-            IEvent event;
+            Event event;
             synchronized (eventQueue) {
                 event = eventQueue.poll();
             }

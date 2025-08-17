@@ -1,12 +1,11 @@
 package com.deedee.thelemia.graphics;
 
-import com.deedee.thelemia.event.IEvent;
+import com.deedee.thelemia.event.Event;
 import com.deedee.thelemia.event.IEventListener;
 import com.deedee.thelemia.event.common.ResetBufferEvent;
 import com.deedee.thelemia.event.common.UpdateBufferEvent;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.component.IGraphicsComponent;
-import com.deedee.thelemia.scene.component.TransformComponent;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public class RenderListener implements IEventListener {
     }
 
     @Override
-    public void onEvent(IEvent event) {
+    public void onEvent(Event event) {
         if (event instanceof UpdateBufferEvent) {
             UpdateBufferEvent updateBufferEvent = (UpdateBufferEvent) event;
             switch (updateBufferEvent.getRequestType()) {

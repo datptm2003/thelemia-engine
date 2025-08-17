@@ -3,7 +3,6 @@ package com.deedee.thelemia.graphics;
 import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.graphics.Renderer.ChildEntry;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deedee.thelemia.graphics.utils.IRenderableObject;
 
 import java.util.ArrayList;
 import java.util.List;

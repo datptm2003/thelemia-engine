@@ -3,7 +3,6 @@ package com.deedee.thelemia.graphics;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deedee.thelemia.graphics.utils.IRenderableObject;
 
 public interface IRenderer {
     void draw(IRenderableObject object, Vector2 position, Vector2 size);

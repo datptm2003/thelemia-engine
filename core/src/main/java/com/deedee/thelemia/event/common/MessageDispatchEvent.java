@@ -1,5 +1,6 @@
 package com.deedee.thelemia.event.common;
 
+import com.badlogic.gdx.utils.Null;
 import com.deedee.thelemia.ai.utils.Message;
 import com.deedee.thelemia.event.Event;
 import com.deedee.thelemia.scene.Entity;
@@ -8,7 +9,9 @@ import com.deedee.thelemia.ai.enumerate.DispatchScope;
 import java.util.List;
 
 public class MessageDispatchEvent extends Event {
+    @Null
     private Entity receiver;
+    @Null
     private List<Entity> receivers;
     private final Message message;
     private final DispatchScope scope;

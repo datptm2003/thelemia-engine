@@ -1,6 +1,6 @@
 package com.deedee.thelemia.time;
 
-import com.deedee.thelemia.event.IEvent;
+import com.deedee.thelemia.event.Event;
 import com.deedee.thelemia.event.IEventListener;
 
 public class TimeEventListener implements IEventListener {
@@ -11,7 +11,7 @@ public class TimeEventListener implements IEventListener {
     }
 
     @Override
-    public void onEvent(IEvent event) {
+    public void onEvent(Event event) {
 
     }
 }
