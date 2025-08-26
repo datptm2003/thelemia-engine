@@ -16,6 +16,9 @@ import com.deedee.thelemia.event.common.ResetBufferEvent;
 import com.deedee.thelemia.event.common.UpdateBufferEvent;
 import com.deedee.thelemia.scene.IGameSystem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Renderer implements IGameSystem, IRenderer {
     public static class ChildEntry<T extends IRenderableObject> {
         public String name;
@@ -37,10 +40,12 @@ public class Renderer implements IGameSystem, IRenderer {
     private final RenderListener listener = new RenderListener(this);
 
     private final Color DEFAULT_BACKGROUND = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+    private final List<ChildEntry<?>> frequentObjects = new ArrayList<>();
+
     private final Camera camera;
     private FrameBuffer fbo;
-
     private final SpriteBatch batch = new SpriteBatch();
+
     private final AssetManager assetManager = new AssetManager();
     private final ShaderManager shaderManager = new ShaderManager();
 
@@ -59,6 +64,10 @@ public class Renderer implements IGameSystem, IRenderer {
     public void update(float delta) {
         batch.setProjectionMatrix(this.camera.getProjectionMatrix());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        for (ChildEntry<?> entry : frequentObjects) {
+            entry.object.update(delta);
+            draw(entry.object, entry.position, 1.0f);
+        }
     }
     @Override
     public void dispose() {
@@ -73,9 +82,9 @@ public class Renderer implements IGameSystem, IRenderer {
     }
 
     @Override
-    public void draw(IRenderableObject object, Vector2 position, Vector2 size) {
+    public void draw(IRenderableObject object, Vector2 position, int width, int height) {
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, object.getWidth(), object.getHeight(), false);
-        object.getDrawable(batch, fbo, false).draw(batch, position.x, position.y, size.x, size.y);
+        object.getDrawable(batch, fbo, false).draw(batch, position.x, position.y, width, height);
     }
     @Override
     public void draw(IRenderableObject object, Vector2 position, float scale) {
@@ -84,6 +93,20 @@ public class Renderer implements IGameSystem, IRenderer {
         float width = object.getWidth() * scale;
         float height = object.getHeight() * scale;
         drawable.draw(batch, position.x, position.y, width, height);
+    }
+
+    @Override
+    public void addFrequentObjects(String name, IRenderableObject object, Vector2 position) {
+        frequentObjects.add(new ChildEntry<>(name, object, position));
+    }
+    @Override
+    public void removeFrequentObjects(String name) {
+        for (ChildEntry<?> entry : frequentObjects) {
+            if (entry.name.equals(name)) {
+                frequentObjects.remove(entry);
+                break;
+            }
+        }
     }
 
     @Override

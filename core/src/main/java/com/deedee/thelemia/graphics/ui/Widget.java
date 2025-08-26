@@ -56,7 +56,7 @@ public abstract class Widget<C extends GraphicsContext, S extends Style> impleme
     }
 
     @Override
-    public abstract Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean transparent);
+    public abstract Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean isTransparent);
 
     public C getContext() {
         return context;

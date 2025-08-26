@@ -10,5 +10,5 @@ public interface IRenderableObject extends IGameObject, IRenderable {
     int getWidth();
     int getHeight();
 
-    Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean transparent);
+    Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean isTransparent);
 }

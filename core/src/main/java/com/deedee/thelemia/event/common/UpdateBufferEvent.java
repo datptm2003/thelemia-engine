@@ -40,8 +40,11 @@ public class UpdateBufferEvent extends Event {
     public Vector2 getPosition() {
         return position;
     }
-    public Vector2 getSize() {
-        return new Vector2(width, height);
+    public int getWidth() {
+        return width;
+    }
+    public int getHeight() {
+        return height;
     }
     public float getScale() {
         return scale;

@@ -42,18 +42,18 @@ public class Button extends CompositeWidget<ButtonContext, ButtonStyle> implemen
     }
 
     @Override
-    public Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean transparent) {
+    public Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean isTransparent) {
         // Begin drawing to FBO
         fbo.begin();
 
-        if (transparent) {
+        if (isTransparent) {
             Gdx.gl.glClearColor(0, 0, 0, 0); // transparent
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         }
 
         batch.begin();
 
-        Drawable canvasDrawable = getCanvas().getDrawable(batch, fbo, transparent);
+        Drawable canvasDrawable = getCanvas().getDrawable(batch, fbo, isTransparent);
         if (canvasDrawable != null) {
             canvasDrawable.draw(batch, 0, 0, fbo.getWidth(), fbo.getHeight());
         }

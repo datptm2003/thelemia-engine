@@ -29,7 +29,7 @@ public class Label extends Widget<LabelContext, LabelStyle> {
     }
 
     @Override
-    public Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean transparent) {// Store original font scale to restore it later, preventing side effects
+    public Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean isTransparent) {// Store original font scale to restore it later, preventing side effects
         LabelContext labelContext = getContext();
         BitmapFont font = getStyle().font;
         Color color = getStyle().color;
@@ -49,7 +49,7 @@ public class Label extends Widget<LabelContext, LabelStyle> {
 
             fbo.begin();
 
-            if (transparent) {
+            if (isTransparent) {
                 Gdx.gl.glClearColor(0, 0, 0, 0); // transparent
                 Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             }

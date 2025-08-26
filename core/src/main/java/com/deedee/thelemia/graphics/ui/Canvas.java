@@ -32,13 +32,13 @@ public class Canvas extends Widget<CanvasContext, CanvasStyle> implements ICulla
     }
 
     @Override
-    public Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean clear) {
+    public Drawable getDrawable(SpriteBatch batch, FrameBuffer fbo, boolean isTransparent) {
         NinePatch background = getStyle().background;
 
         // Begin rendering to the FrameBuffer
         fbo.begin();
 
-        if (clear) {
+        if (isTransparent) {
             Gdx.gl.glClearColor(0, 0, 0, 0); // transparent
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         }
