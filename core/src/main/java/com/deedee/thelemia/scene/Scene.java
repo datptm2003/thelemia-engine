@@ -1,7 +1,5 @@
 package com.deedee.thelemia.scene;
 
-import com.deedee.thelemia.graphics.IRenderableObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,17 +37,6 @@ public abstract class Scene implements IScene {
     @Override
     public List<Entity> getAllEntities() {
         return entities;
-    }
-
-    @Override
-    public IRenderableObject getHitObjectByRaycast(int x, int y) {
-        for (int i = entities.size() - 1; i >= 0; i--) {
-            IRenderableObject object = entities.get(i).getHitObject(x, y);
-            if (object != null) {
-                return object;
-            }
-        }
-        return null;
     }
 
     @Override

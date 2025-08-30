@@ -1,7 +1,8 @@
 package com.deedee.thelemia.scene.component;
 
-import com.deedee.thelemia.graphics.sprite.Animation;
-import com.deedee.thelemia.graphics.sprite.SpriteGroup;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.deedee.thelemia.graphics.SpriteGroup;
 import com.deedee.thelemia.scene.Component;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
@@ -10,19 +11,12 @@ public class SpriteComponent extends Component implements IGraphicsComponent {
     private final SpriteGroup group;
     private boolean visible = true;
 
-    private Animation animation;
+    private Animation<TextureRegion> animation;
 
-    public SpriteComponent(Entity owner, SpriteGroup group, Animation animation) {
+    public SpriteComponent(Entity owner, SpriteGroup group, Animation<TextureRegion> animation) {
         super(owner);
         this.group = group;
         this.animation = animation;
-
-        this.group.create();
-    }
-    public SpriteComponent(Entity owner, SpriteGroup group) {
-        super(owner);
-        this.group = group;
-        this.animation = new Animation();
 
         this.group.create();
     }
@@ -38,7 +32,6 @@ public class SpriteComponent extends Component implements IGraphicsComponent {
         visible = true;
         enabled = true;
     }
-
     @Override
     public void dispose() {
         group.dispose();
@@ -49,7 +42,7 @@ public class SpriteComponent extends Component implements IGraphicsComponent {
         if (!visible) return;
 
         TransformComponent transform = owner.getComponentByType(TransformComponent.class);
-        group.render(transform.getPosition());
+        group.render();
     }
 
     @Override
@@ -70,10 +63,10 @@ public class SpriteComponent extends Component implements IGraphicsComponent {
         return group;
     }
 
-    public Animation getAnimation() {
+    public Animation<TextureRegion> getAnimation() {
         return animation;
     }
-    public void setAnimation(Animation animation) {
+    public void setAnimation(Animation<TextureRegion> animation) {
         this.animation = animation;
     }
 }

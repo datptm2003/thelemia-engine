@@ -1,49 +1,31 @@
 package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.ResetBufferEvent;
 import com.deedee.thelemia.event.common.UpdateBufferEvent;
 import com.deedee.thelemia.scene.IGameSystem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Renderer implements IGameSystem, IRenderer {
-    public static class ChildEntry<T extends IRenderableObject> {
-        public String name;
-        public T object;
-        public Vector2 position;
-
-        public ChildEntry(String name, T object, Vector2 position) {
-            this.name = name;
-            this.object = object;
-            this.position = position;
-        }
-        public ChildEntry(T object, Vector2 position) {
-            this.name = "";
-            this.object = object;
-            this.position = position;
-        }
-    }
-
     private final RenderListener listener = new RenderListener(this);
 
     private final Color DEFAULT_BACKGROUND = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-    private final List<ChildEntry<?>> frequentObjects = new ArrayList<>();
+    private final Map<String, Actor> frequentActors = new HashMap<>();
 
     private final Camera camera;
-    private FrameBuffer fbo;
     private final SpriteBatch batch = new SpriteBatch();
 
     private final AssetManager assetManager = new AssetManager();
@@ -64,15 +46,13 @@ public class Renderer implements IGameSystem, IRenderer {
     public void update(float delta) {
         batch.setProjectionMatrix(this.camera.getProjectionMatrix());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        for (ChildEntry<?> entry : frequentObjects) {
-            entry.object.update(delta);
-            draw(entry.object, entry.position, 1.0f);
+        for (Actor actor : frequentActors.values()) {
+            draw(actor, 1.0f, 1.0f);
         }
     }
     @Override
     public void dispose() {
         batch.dispose();
-        fbo.dispose();
         camera.dispose();
         shaderManager.dispose();
     }
@@ -82,45 +62,24 @@ public class Renderer implements IGameSystem, IRenderer {
     }
 
     @Override
-    public void draw(IRenderableObject object, Vector2 position, int width, int height) {
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, object.getWidth(), object.getHeight(), false);
-        object.getDrawable(batch, fbo, false).draw(batch, position.x, position.y, width, height);
+    public void draw(Actor actor, int width, int height, float parentAlpha) {
+        actor.setWidth(width);
+        actor.setHeight(height);
+        actor.draw(batch, parentAlpha);
     }
     @Override
-    public void draw(IRenderableObject object, Vector2 position, float scale) {
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, object.getWidth(), object.getHeight(), false);
-        Drawable drawable = object.getDrawable(batch, fbo, false);
-        float width = object.getWidth() * scale;
-        float height = object.getHeight() * scale;
-        drawable.draw(batch, position.x, position.y, width, height);
+    public void draw(Actor actor, float scale, float parentAlpha) {
+        actor.setScale(scale);
+        actor.draw(batch, parentAlpha);
     }
 
     @Override
-    public void addFrequentObjects(String name, IRenderableObject object, Vector2 position) {
-        frequentObjects.add(new ChildEntry<>(name, object, position));
+    public void addFrequentActor(String name, Actor actor) {
+        frequentActors.put(name, actor);
     }
     @Override
-    public void removeFrequentObjects(String name) {
-        for (ChildEntry<?> entry : frequentObjects) {
-            if (entry.name.equals(name)) {
-                frequentObjects.remove(entry);
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void addSkin(String name, Skin skin) {
-        assetManager.addUiSkin(name, skin);
-    }
-    @Override
-    public void addSkin(String name, String skinPath) {
-        FileHandle file = Gdx.files.internal(skinPath);
-        assetManager.addUiSkin(name, file);
-    }
-    @Override
-    public Skin getSkin(String name) {
-        return assetManager.getUiSkin(name);
+    public void removeFrequentActor(String name) {
+        frequentActors.remove(name);
     }
 
     @Override
@@ -149,4 +108,8 @@ public class Renderer implements IGameSystem, IRenderer {
     public SpriteBatch getBatch() {
         return batch;
     }
+    public AssetManager getAssetManager() {
+        return assetManager;
+    }
+
 }

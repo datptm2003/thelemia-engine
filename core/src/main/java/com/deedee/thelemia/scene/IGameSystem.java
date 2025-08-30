@@ -1,9 +1,9 @@
 package com.deedee.thelemia.scene;
 
+import com.badlogic.gdx.utils.Disposable;
 import com.deedee.thelemia.event.IEventListener;
-import com.deedee.thelemia.graphics.utils.IDisposable;
 
-public interface IGameSystem extends IDisposable {
+public interface IGameSystem extends Disposable {
     void subscribeListener();
     IEventListener getListener();
     void update(float delta);

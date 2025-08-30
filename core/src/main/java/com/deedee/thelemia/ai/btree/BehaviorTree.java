@@ -29,9 +29,12 @@ public class BehaviorTree implements IBehaviorTree {
     public ActionStatus execute() {
         return root.execute(blackboard);
     }
-
     @Override
     public void reset() {
+
+    }
+    @Override
+    public void release() {
 
     }
 

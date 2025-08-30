@@ -2,7 +2,6 @@ package com.deedee.thelemia.scene;
 
 import com.deedee.thelemia.ai.utils.MessageDispatcher;
 import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.ClickEvent;
 import com.deedee.thelemia.event.common.MessageDispatchEvent;
 
 public class SceneManager implements IGameSystem, ISceneManager {
@@ -16,7 +15,6 @@ public class SceneManager implements IGameSystem, ISceneManager {
 
     @Override
     public void subscribeListener() {
-        EventBus.getInstance().subscribe(ClickEvent.class, listener);
         EventBus.getInstance().subscribe(MessageDispatchEvent.class, listener);
     }
     @Override

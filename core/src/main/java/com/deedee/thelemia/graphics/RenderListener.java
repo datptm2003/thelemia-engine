@@ -23,10 +23,10 @@ public class RenderListener implements IEventListener {
             UpdateBufferEvent updateBufferEvent = (UpdateBufferEvent) event;
             switch (updateBufferEvent.getRequestType()) {
                 case BY_SIZE:
-                    gameSystem.draw(updateBufferEvent.getRenderableObject(), updateBufferEvent.getPosition(), updateBufferEvent.getWidth(), updateBufferEvent.getHeight());
+                    gameSystem.draw(updateBufferEvent.getActor(), updateBufferEvent.getWidth(), updateBufferEvent.getHeight(), 1.0f);
                     break;
                 case BY_SCALE:
-                    gameSystem.draw(updateBufferEvent.getRenderableObject(), updateBufferEvent.getPosition(), updateBufferEvent.getScale());
+                    gameSystem.draw(updateBufferEvent.getActor(), updateBufferEvent.getScale(), 1.0f);
                     break;
             }
 

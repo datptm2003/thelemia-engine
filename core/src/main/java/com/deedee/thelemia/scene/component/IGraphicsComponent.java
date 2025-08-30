@@ -1,14 +1,13 @@
 package com.deedee.thelemia.scene.component;
 
-import com.deedee.thelemia.graphics.Container;
-import com.deedee.thelemia.graphics.utils.IDisposable;
-import com.deedee.thelemia.graphics.IContainer;
+import com.badlogic.gdx.utils.Disposable;
+import com.deedee.thelemia.graphics.GraphicsContainer;
 import com.deedee.thelemia.scene.IComponent;
 
-public interface IGraphicsComponent extends IComponent, IDisposable {
+public interface IGraphicsComponent extends IComponent, Disposable {
     void render();
     boolean isVisible();
     void setVisible(boolean visible);
 
-    Container getContainer();
+    GraphicsContainer getContainer();
 }

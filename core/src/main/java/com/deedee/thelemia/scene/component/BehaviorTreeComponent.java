@@ -21,10 +21,13 @@ public class BehaviorTreeComponent extends Component implements IControlComponen
     public void update(float delta) {
         behaviorTree.execute();
     }
-
     @Override
     public void reset() {
         behaviorTree.reset();
+    }
+    @Override
+    public void release() {
+        behaviorTree.release();
     }
 
     @Override

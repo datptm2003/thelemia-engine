@@ -1,5 +1,6 @@
 package com.deedee.thelemia.scene;
 
+import com.badlogic.gdx.utils.Disposable;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 public interface IComponent {

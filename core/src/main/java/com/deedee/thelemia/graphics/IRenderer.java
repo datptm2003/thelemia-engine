@@ -2,18 +2,15 @@ package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public interface IRenderer {
-    void draw(IRenderableObject object, Vector2 position, int width, int height);
-    void draw(IRenderableObject object, Vector2 position, float scale);
+    void draw(Actor object, int width, int height, float parentAlpha);
+    void draw(Actor object, float scale, float parentAlpha);
 
-    void addFrequentObjects(String name, IRenderableObject object, Vector2 position);
-    void removeFrequentObjects(String name);
-
-    void addSkin(String name, Skin skin);
-    void addSkin(String name, String skinPath);
-    Skin getSkin(String name);
+    void addFrequentActor(String name, Actor object);
+    void removeFrequentActor(String name);
 
     void loadShader(String name, String vertexPath, String fragmentPath);
     void applyShader(String name);

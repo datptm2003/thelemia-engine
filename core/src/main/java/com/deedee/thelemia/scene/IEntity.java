@@ -1,6 +1,5 @@
 package com.deedee.thelemia.scene;
 
-import com.deedee.thelemia.graphics.IRenderableObject;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 import java.util.List;
@@ -12,6 +11,4 @@ public interface IEntity {
     <T extends Component> List<T> getComponentsByGroup(ComponentGroup group);
     List<Component> getAllComponents();
     void removeComponent(Class<? extends Component> componentType);
-
-    IRenderableObject getHitObject(int x, int y);
 }

@@ -1,6 +1,6 @@
 package com.deedee.thelemia.scene.component;
 
-import com.deedee.thelemia.graphics.ui.Fragment;
+import com.deedee.thelemia.graphics.Fragment;
 import com.deedee.thelemia.scene.Component;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
@@ -37,7 +37,7 @@ public class UIComponent extends Component implements IGraphicsComponent {
         if (!visible) return;
 
         TransformComponent transform = owner.getComponentByType(TransformComponent.class);
-        fragment.render(transform.getPosition());
+        fragment.render();
     }
 
     @Override
