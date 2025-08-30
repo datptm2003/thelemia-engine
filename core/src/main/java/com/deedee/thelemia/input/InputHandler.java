@@ -17,7 +17,6 @@ public class InputHandler implements IGameSystem, IInputHandler {
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
             activeTouches.add(pointer);
             touchPositions.put(pointer, new Vector2(screenX, screenY));
-//            EventBus.getInstance().post(new RedrawScreenEvent(null, new ArrayList<>()));
             return true;
         }
 

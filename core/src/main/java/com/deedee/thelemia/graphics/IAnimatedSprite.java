@@ -1,4 +1,4 @@
 package com.deedee.thelemia.graphics;
 
-public interface ISpriteGroup {
+public interface IAnimatedSprite {
 }

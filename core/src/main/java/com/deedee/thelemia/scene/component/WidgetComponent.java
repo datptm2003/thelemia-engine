@@ -1,18 +1,24 @@
 package com.deedee.thelemia.scene.component;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.graphics.Fragment;
 import com.deedee.thelemia.scene.Component;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
-public class UIComponent extends Component implements IGraphicsComponent {
+public class WidgetComponent extends Component implements IGraphicsComponent {
+    private final Stage stage;
     private final Fragment fragment;
     private boolean visible = true;
 
-    public UIComponent(Entity owner, Fragment fragment) {
+    public WidgetComponent(Entity owner, Stage stage, Fragment fragment) {
         super(owner);
+        this.stage = stage;
         this.fragment = fragment;
         this.fragment.create();
+
+        stage.addActor(fragment.getWidgetGroup());
     }
 
     @Override
@@ -29,6 +35,7 @@ public class UIComponent extends Component implements IGraphicsComponent {
 
     @Override
     public void dispose() {
+        fragment.getWidgetGroup().remove();
         fragment.dispose();
     }
 
@@ -37,7 +44,7 @@ public class UIComponent extends Component implements IGraphicsComponent {
         if (!visible) return;
 
         TransformComponent transform = owner.getComponentByType(TransformComponent.class);
-        fragment.render();
+        fragment.render(transform);
     }
 
     @Override
@@ -54,8 +61,11 @@ public class UIComponent extends Component implements IGraphicsComponent {
         return ComponentGroup.GRAPHICS;
     }
     @Override
-    public Fragment getContainer() {
+    public Fragment getGraphicsObject() {
         return fragment;
     }
 
+    public Stage getStage() {
+        return stage;
+    }
 }

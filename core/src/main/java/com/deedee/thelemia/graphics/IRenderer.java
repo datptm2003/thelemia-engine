@@ -4,13 +4,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.deedee.thelemia.scene.component.TransformComponent;
 
 public interface IRenderer {
-    void draw(Actor object, int width, int height, float parentAlpha);
-    void draw(Actor object, float scale, float parentAlpha);
+    void drawFragment(Fragment fragment, float parentAlpha);
 
-    void addFrequentActor(String name, Actor object);
-    void removeFrequentActor(String name);
+    void drawAnimatedSprite(AnimatedSprite sprite, TransformComponent transform);
 
     void loadShader(String name, String vertexPath, String fragmentPath);
     void applyShader(String name);

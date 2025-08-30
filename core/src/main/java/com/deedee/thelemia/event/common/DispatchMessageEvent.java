@@ -8,7 +8,7 @@ import com.deedee.thelemia.ai.enumerate.DispatchScope;
 
 import java.util.List;
 
-public class MessageDispatchEvent extends Event {
+public class DispatchMessageEvent extends Event {
     @Null
     private Entity receiver;
     @Null
@@ -16,17 +16,17 @@ public class MessageDispatchEvent extends Event {
     private final Message message;
     private final DispatchScope scope;
 
-    public MessageDispatchEvent(Entity receiver, Message message) {
+    public DispatchMessageEvent(Entity receiver, Message message) {
         this.receiver = receiver;
         this.message = message;
         this.scope = DispatchScope.SINGLE;
     }
-    public MessageDispatchEvent(List<Entity> receivers, Message message) {
+    public DispatchMessageEvent(List<Entity> receivers, Message message) {
         this.receivers = receivers;
         this.message = message;
         this.scope = DispatchScope.GROUP;
     }
-    public MessageDispatchEvent(Message message) {
+    public DispatchMessageEvent(Message message) {
         this.message = message;
         this.scope = DispatchScope.BROADCAST;
     }

@@ -1,31 +1,26 @@
 package com.deedee.thelemia.scene.component;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.deedee.thelemia.graphics.SpriteGroup;
+import com.deedee.thelemia.graphics.AnimatedSprite;
 import com.deedee.thelemia.scene.Component;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
-public class SpriteComponent extends Component implements IGraphicsComponent {
-    private final SpriteGroup group;
+public class AnimatedSpriteComponent extends Component implements IGraphicsComponent {
+    private final AnimatedSprite sprite;
     private boolean visible = true;
 
-    private Animation<TextureRegion> animation;
-
-    public SpriteComponent(Entity owner, SpriteGroup group, Animation<TextureRegion> animation) {
+    public AnimatedSpriteComponent(Entity owner, AnimatedSprite sprite) {
         super(owner);
-        this.group = group;
-        this.animation = animation;
+        this.sprite = sprite;
 
-        this.group.create();
+        this.sprite.create();
     }
 
     @Override
     public void update(float delta) {
         if (!enabled) return;
 
-        group.update(delta);
+        sprite.update(delta);
     }
     @Override
     public void reset() {
@@ -34,7 +29,7 @@ public class SpriteComponent extends Component implements IGraphicsComponent {
     }
     @Override
     public void dispose() {
-        group.dispose();
+        sprite.dispose();
     }
 
     @Override
@@ -42,7 +37,7 @@ public class SpriteComponent extends Component implements IGraphicsComponent {
         if (!visible) return;
 
         TransformComponent transform = owner.getComponentByType(TransformComponent.class);
-        group.render();
+        sprite.render(transform);
     }
 
     @Override
@@ -59,14 +54,7 @@ public class SpriteComponent extends Component implements IGraphicsComponent {
         return ComponentGroup.GRAPHICS;
     }
     @Override
-    public SpriteGroup getContainer() {
-        return group;
-    }
-
-    public Animation<TextureRegion> getAnimation() {
-        return animation;
-    }
-    public void setAnimation(Animation<TextureRegion> animation) {
-        this.animation = animation;
+    public AnimatedSprite getGraphicsObject() {
+        return sprite;
     }
 }

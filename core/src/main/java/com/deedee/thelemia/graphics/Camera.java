@@ -3,14 +3,18 @@ package com.deedee.thelemia.graphics;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.deedee.thelemia.core.IGameObject;
 
 public class Camera implements IGameObject, ICamera {
     private final OrthographicCamera camera;
+    private final Viewport viewport;
 
     public Camera(float width, float height) {
-        this.camera = new OrthographicCamera(width, height);
-        this.camera.setToOrtho(false, width, height);
+        camera = new OrthographicCamera(width, height);
+        camera.setToOrtho(false, width, height);
+        viewport = new ScreenViewport(camera);
     }
 
     @Override
@@ -45,8 +49,10 @@ public class Camera implements IGameObject, ICamera {
         return camera.combined;
     }
 
-
     public OrthographicCamera getInternalCamera() {
         return camera;
+    }
+    public Viewport getViewport() {
+        return viewport;
     }
 }

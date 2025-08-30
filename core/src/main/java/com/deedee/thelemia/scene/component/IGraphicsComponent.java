@@ -1,7 +1,7 @@
 package com.deedee.thelemia.scene.component;
 
 import com.badlogic.gdx.utils.Disposable;
-import com.deedee.thelemia.graphics.GraphicsContainer;
+import com.deedee.thelemia.graphics.GraphicsObject;
 import com.deedee.thelemia.scene.IComponent;
 
 public interface IGraphicsComponent extends IComponent, Disposable {
@@ -9,5 +9,5 @@ public interface IGraphicsComponent extends IComponent, Disposable {
     boolean isVisible();
     void setVisible(boolean visible);
 
-    GraphicsContainer getContainer();
+    GraphicsObject getGraphicsObject();
 }

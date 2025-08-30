@@ -2,7 +2,7 @@ package com.deedee.thelemia.scene;
 
 import com.deedee.thelemia.ai.utils.MessageDispatcher;
 import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.MessageDispatchEvent;
+import com.deedee.thelemia.event.common.DispatchMessageEvent;
 
 public class SceneManager implements IGameSystem, ISceneManager {
     private final SceneEventListener listener = new SceneEventListener(this);
@@ -15,7 +15,7 @@ public class SceneManager implements IGameSystem, ISceneManager {
 
     @Override
     public void subscribeListener() {
-        EventBus.getInstance().subscribe(MessageDispatchEvent.class, listener);
+        EventBus.getInstance().subscribe(DispatchMessageEvent.class, listener);
     }
     @Override
     public void update(float delta) {

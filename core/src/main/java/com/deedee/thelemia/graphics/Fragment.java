@@ -1,28 +1,27 @@
 package com.deedee.thelemia.graphics;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.deedee.thelemia.event.EventBus;
+import com.deedee.thelemia.event.common.RenderFragmentEvent;
+import com.deedee.thelemia.scene.component.TransformComponent;
 
-public class Fragment extends GraphicsContainer implements IFragment {
-    public Fragment(Skin skin) {
+public class Fragment extends GraphicsObject implements IFragment {
+    protected final WidgetGroup widgetGroup;
+    protected final float parentAlpha;
+
+    public Fragment(Skin skin, WidgetGroup widgetGroup, float parentAlpha) {
         super(skin);
+        this.widgetGroup = widgetGroup;
+        this.parentAlpha = parentAlpha;
     }
 
     @Override
-    public void add(String name, Actor widget) {
-        super.add(name, widget);
+    public void render(TransformComponent transform) {
+        EventBus.getInstance().post(new RenderFragmentEvent(this, transform, parentAlpha));
     }
 
-    @Override
-    public <T extends Widget> T getWidgetByName(String name, Class<T> type) {
-        if (entries.containsKey(name)) {
-            Actor actor = entries.get(name);
-            if (type.isInstance(actor)) {
-                return type.cast(actor);
-            }
-        }
-        return null;
+    public WidgetGroup getWidgetGroup() {
+        return widgetGroup;
     }
-
 }
