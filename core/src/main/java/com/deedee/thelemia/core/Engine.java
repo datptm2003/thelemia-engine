@@ -3,13 +3,11 @@ package com.deedee.thelemia.core;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.graphics.Camera;
 import com.deedee.thelemia.graphics.Renderer;
 import com.deedee.thelemia.input.InputHandler;
 import com.deedee.thelemia.physics.PhysicsConfig;
 import com.deedee.thelemia.physics.PhysicsEngine;
 import com.deedee.thelemia.scene.SceneManager;
-import com.deedee.thelemia.time.Timer;
 import com.deedee.thelemia.time.TimerManager;
 
 public class Engine extends ApplicationAdapter {

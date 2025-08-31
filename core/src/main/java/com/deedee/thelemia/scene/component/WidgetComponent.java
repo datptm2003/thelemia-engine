@@ -2,23 +2,22 @@ package com.deedee.thelemia.scene.component;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.deedee.thelemia.graphics.Fragment;
 import com.deedee.thelemia.scene.Component;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 public class WidgetComponent extends Component implements IGraphicsComponent {
-    private final Stage stage;
+    private final Table root;
     private final Fragment fragment;
     private boolean visible = true;
 
-    public WidgetComponent(Entity owner, Stage stage, Fragment fragment) {
+    public WidgetComponent(Entity owner, Table root, Fragment fragment) {
         super(owner);
-        this.stage = stage;
+        this.root = root;
         this.fragment = fragment;
         this.fragment.create();
-
-        stage.addActor(fragment.getWidgetGroup());
     }
 
     @Override
@@ -65,7 +64,7 @@ public class WidgetComponent extends Component implements IGraphicsComponent {
         return fragment;
     }
 
-    public Stage getStage() {
-        return stage;
+    public Table getRoot() {
+        return root;
     }
 }

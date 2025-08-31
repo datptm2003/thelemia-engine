@@ -7,12 +7,17 @@ import com.deedee.thelemia.event.common.RenderFragmentEvent;
 import com.deedee.thelemia.scene.component.TransformComponent;
 
 public class Fragment extends GraphicsObject implements IFragment {
-    protected final WidgetGroup widgetGroup;
+    protected WidgetGroup widgetGroup;
     protected final float parentAlpha;
 
     public Fragment(Skin skin, WidgetGroup widgetGroup, float parentAlpha) {
         super(skin);
         this.widgetGroup = widgetGroup;
+        this.parentAlpha = parentAlpha;
+    }
+    public Fragment(Skin skin, float parentAlpha) {
+        super(skin);
+        this.widgetGroup = null;
         this.parentAlpha = parentAlpha;
     }
 

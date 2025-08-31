@@ -10,6 +10,10 @@ public class Entity implements IEntity {
     protected final Map<Class<? extends Component>, Component> components = new HashMap<>();
     protected final Map<ComponentGroup, Boolean> componentGroups = new HashMap<>();
 
+    public Entity(String id) {
+        this.id = id;
+        init();
+    }
     public Entity() {
         this.id = UUID.randomUUID().toString();
         init();

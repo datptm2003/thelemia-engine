@@ -3,6 +3,7 @@ package com.deedee.thelemia.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.scene.IGameSystem;
 
 import java.util.*;
@@ -38,7 +39,8 @@ public class InputHandler implements IGameSystem, IInputHandler {
 
     public InputHandler() {
         subscribeListener();
-        Gdx.input.setInputProcessor(inputAdapter);
+//        Gdx.input.setInputProcessor(stage);
+//        Gdx.input.setInputProcessor(inputAdapter);
     }
 
     @Override

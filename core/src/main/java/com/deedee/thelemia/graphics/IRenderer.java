@@ -9,8 +9,10 @@ import com.deedee.thelemia.scene.component.TransformComponent;
 
 public interface IRenderer {
     void drawFragment(Fragment fragment, float parentAlpha);
-
     void drawAnimatedSprite(AnimatedSprite sprite, TransformComponent transform);
+
+//    void addRenderable(String name, GraphicsObject renderable);
+//    void removeRenderable(String name);
 
     void loadShader(String name, String vertexPath, String fragmentPath);
     void applyShader(String name);

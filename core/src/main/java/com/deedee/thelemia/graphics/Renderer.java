@@ -7,7 +7,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.event.EventBus;
@@ -21,6 +22,8 @@ public class Renderer implements IGameSystem, IRenderer {
     private final Color DEFAULT_BACKGROUND = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
     private final Stage stage = new Stage();
+    private final Table root = new Table();
+
     private final Camera camera;
     private final SpriteBatch batch = new SpriteBatch();
 
@@ -30,8 +33,13 @@ public class Renderer implements IGameSystem, IRenderer {
     public Renderer(int width, int height) {
         this.camera = new Camera(width, height);
         subscribeListener();
-        stage.setViewport(camera.getViewport());
         batch.setProjectionMatrix(camera.getProjectionMatrix());
+
+        stage.setViewport(camera.getViewport());
+        Gdx.input.setInputProcessor(stage);
+
+        root.setFillParent(true);
+        stage.addActor(root);
     }
 
     @Override
@@ -43,6 +51,8 @@ public class Renderer implements IGameSystem, IRenderer {
     public void update(float delta) {
         batch.setProjectionMatrix(this.camera.getProjectionMatrix());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.act(delta);
+        stage.draw();
     }
     @Override
     public void dispose() {
@@ -58,15 +68,22 @@ public class Renderer implements IGameSystem, IRenderer {
     @Override
     public void drawFragment(Fragment fragment, float parentAlpha) {
         WidgetGroup widget = fragment.getWidgetGroup();
-        widget.draw(batch, parentAlpha);
-    }
 
+        // TODO: Need re-implementation
+        batch.begin();
+        widget.draw(batch, parentAlpha);
+        batch.end();
+    }
     @Override
     public void drawAnimatedSprite(AnimatedSprite sprite, TransformComponent transform) {
         TextureRegion texture = sprite.getCurrentAnimation().getKeyFrame(sprite.getTimeframe());
         float width = transform.getScale().x * texture.getRegionWidth();
         float height = transform.getScale().y * texture.getRegionHeight();
+
+        // TODO: Need re-implementation
+        batch.begin();
         batch.draw(texture, transform.getPosition().x, transform.getPosition().y, width, height);
+        batch.end();
     }
 
     @Override
@@ -89,8 +106,8 @@ public class Renderer implements IGameSystem, IRenderer {
         else Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
     }
 
-    public Stage getStage() {
-        return stage;
+    public Table getRoot() {
+        return root;
     }
     public Camera getCamera() {
         return camera;

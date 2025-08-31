@@ -11,10 +11,11 @@ public class Camera implements IGameObject, ICamera {
     private final OrthographicCamera camera;
     private final Viewport viewport;
 
-    public Camera(float width, float height) {
+    public Camera(int width, int height) {
         camera = new OrthographicCamera(width, height);
         camera.setToOrtho(false, width, height);
         viewport = new ScreenViewport(camera);
+        viewport.update(width, height, true);
     }
 
     @Override
@@ -35,14 +36,17 @@ public class Camera implements IGameObject, ICamera {
     }
 
     @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+    }
+
+    @Override
     public void setPosition(Vector2 position) {
         camera.position.set(position.x, position.y, 0);
     }
     @Override
     public void setViewport(float width, float height) {
-        camera.viewportWidth = width;
-        camera.viewportHeight = height;
-        camera.update();
+        viewport.update((int) width, (int) height, true);
     }
     @Override
     public Matrix4 getProjectionMatrix() {
