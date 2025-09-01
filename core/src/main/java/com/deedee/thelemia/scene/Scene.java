@@ -1,5 +1,10 @@
 package com.deedee.thelemia.scene;
 
+import com.badlogic.gdx.InputAdapter;
+import com.deedee.thelemia.event.EventBus;
+import com.deedee.thelemia.event.common.ChangeInputAdapterEvent;
+import com.deedee.thelemia.input.InputListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,10 +14,17 @@ public class Scene implements IScene {
     protected final String name;
     protected final SceneManager sceneManager;
     protected final List<Entity> entities = new ArrayList<>();
+    protected final InputAdapter inputAdapter;
 
+    public Scene(String name, InputAdapter inputAdapter, SceneManager sceneManager) {
+        this.name = name;
+        this.inputAdapter = inputAdapter;
+        this.sceneManager = sceneManager;
+    }
     public Scene(String name, SceneManager sceneManager) {
         this.name = name;
         this.sceneManager = sceneManager;
+        this.inputAdapter = null;
     }
 
     @Override
@@ -44,7 +56,7 @@ public class Scene implements IScene {
 
     @Override
     public void show() {
-
+        EventBus.getInstance().post(new ChangeInputAdapterEvent(inputAdapter));
     }
     @Override
     public void update(float delta) {
@@ -52,7 +64,7 @@ public class Scene implements IScene {
     }
     @Override
     public void hide() {
-
+        EventBus.getInstance().post(new ChangeInputAdapterEvent(null));
     }
 
     @Override
@@ -66,5 +78,7 @@ public class Scene implements IScene {
     public SceneManager getSceneManager() {
         return sceneManager;
     }
-
+    public InputAdapter getInputAdapter() {
+        return inputAdapter;
+    }
 }

@@ -36,10 +36,9 @@ public class Renderer implements IGameSystem, IRenderer {
 
     private final List<AnimatedSpriteComponent> spriteComponents = new LinkedList<>();
 
-
-    public Renderer(int width, int height) {
-        this.camera = new Camera(width, height);
+    public Renderer() {
         subscribeListener();
+        this.camera = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.setProjectionMatrix(camera.getProjectionMatrix());
 
         stage.setViewport(camera.getViewport());
@@ -120,6 +119,9 @@ public class Renderer implements IGameSystem, IRenderer {
         spriteComponents.clear();
     }
 
+    public Stage getStage() {
+        return stage;
+    }
     public Table getRoot() {
         return root;
     }

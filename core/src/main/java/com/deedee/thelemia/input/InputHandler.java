@@ -2,77 +2,59 @@ package com.deedee.thelemia.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.deedee.thelemia.event.EventBus;
+import com.deedee.thelemia.event.common.ChangeInputAdapterEvent;
 import com.deedee.thelemia.scene.IGameSystem;
 
 import java.util.*;
 
 public class InputHandler implements IGameSystem, IInputHandler {
     private final InputListener listener = new InputListener(this);
-    private final Map<Integer, Vector2> touchPositions = new HashMap<>();
-    private final Set<Integer> activeTouches = new HashSet<>();
 
-    private final InputAdapter inputAdapter = new InputAdapter() {
-        @Override
-        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-            activeTouches.add(pointer);
-            touchPositions.put(pointer, new Vector2(screenX, screenY));
-            return true;
-        }
+    private final Stage stage;
+    private final InputMultiplexer multiplexer = new InputMultiplexer();
 
-        @Override
-        public boolean touchDragged(int screenX, int screenY, int pointer) {
-            if (activeTouches.contains(pointer)) {
-                touchPositions.put(pointer, new Vector2(screenX, screenY));
-            }
-            return true;
-        }
-
-        @Override
-        public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-            activeTouches.remove(pointer);
-            touchPositions.remove(pointer);
-            return true;
-        }
-    };
-
-    public InputHandler() {
+    public InputHandler(Stage stage) {
         subscribeListener();
-//        Gdx.input.setInputProcessor(stage);
-//        Gdx.input.setInputProcessor(inputAdapter);
+        this.stage = stage;
+        multiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     @Override
     public void subscribeListener() {
-
+        EventBus.getInstance().subscribe(ChangeInputAdapterEvent.class, listener);
     }
     @Override
     public void update(float delta) {
-        // Optional: Could clear transient states like "justTouched" flags if needed
+
     }
     @Override
     public void dispose() {
-        activeTouches.clear();
-        touchPositions.clear();
+
     }
     @Override
     public InputListener getListener() {
         return listener;
     }
 
-    @Override
-    public boolean isTouchDown(int pointer) {
-        // Modified: Now tracks if a specific pointer is active
-        return activeTouches.contains(pointer);
-    }
-    @Override
-    public Vector2 getTouchPosition(int pointer) {
-        // Modified: Returns the position or -1, -1 if the pointer is not active
-        return touchPositions.getOrDefault(pointer, new Vector2(-1, -1));
+    public void changeInputAdapter(InputAdapter nextInputAdapter) {
+        if (nextInputAdapter == null) {
+            multiplexer.clear();
+            multiplexer.addProcessor(stage);
+            Gdx.input.setInputProcessor(multiplexer);
+        } else {
+            multiplexer.clear();
+            multiplexer.addProcessor(stage);
+            multiplexer.addProcessor(nextInputAdapter);
+            Gdx.input.setInputProcessor(multiplexer);
+        }
     }
 
-    public InputAdapter getInputAdapter() {
-        return inputAdapter;
+    public InputMultiplexer getMultiplexer() {
+        return multiplexer;
     }
 }
