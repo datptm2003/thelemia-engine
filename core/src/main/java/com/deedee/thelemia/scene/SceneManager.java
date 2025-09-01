@@ -4,15 +4,14 @@ import com.deedee.thelemia.ai.utils.MessageDispatcher;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.DispatchMessageEvent;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class SceneManager implements IGameSystem, ISceneManager {
     private final SceneEventListener listener = new SceneEventListener(this);
 
     private final MessageDispatcher messageDispatcher = new MessageDispatcher();
-    private final Map<String, Scene> scenes = new HashMap<>();
-    private String currentScene;
+    private final List<Scene> scenes = new LinkedList<>();
+    private Scene currentScene;
 
     public SceneManager() {
         subscribeListener();
@@ -42,29 +41,44 @@ public class SceneManager implements IGameSystem, ISceneManager {
         if (currentScene != null) {
             unloadScene();
         }
-        currentScene = name;
-        getCurrentScene().show();
+        currentScene = getSceneByName(name);
+        currentScene.show();
     }
     @Override
     public void unloadScene() {
-        if (currentScene != null) {
-            getCurrentScene().dispose();
-            currentScene = null;
-        }
+        currentScene.hide();
+        currentScene = null;
     }
 
     @Override
-    public void addScene(String name, Scene scene) {
-        scenes.put(name, scene);
+    public Scene createNewScene(String name) {
+        if (getSceneByName(name) != null) {
+            return null;
+        }
+        Scene newScene = new Scene(name, this);
+        scenes.add(newScene);
+        return newScene;
     }
     @Override
     public Scene getSceneByName(String name) {
-        return scenes.get(name);
+        for (Scene scene : scenes) {
+            if (scene.getName().equals(name)) {
+                return scene;
+            }
+        }
+        return null;
     }
     @Override
     public Scene getCurrentScene() {
         if (currentScene == null) return null;
-        return scenes.get(currentScene);
+        return currentScene;
+    }
+    @Override
+    public void removeScene(String name) {
+        if (currentScene != null && currentScene.getName().equals(name)) {
+            unloadScene();
+        }
+        scenes.removeIf(scene -> scene.getName().equals(name));
     }
 
     @Override

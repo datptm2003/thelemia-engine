@@ -1,5 +1,8 @@
 package com.deedee.thelemia.scene.component;
 
+import com.deedee.thelemia.event.EventBus;
+import com.deedee.thelemia.event.common.RenderAnimatedSpriteEvent;
+import com.deedee.thelemia.event.common.RenderFragmentEvent;
 import com.deedee.thelemia.graphics.AnimatedSprite;
 import com.deedee.thelemia.scene.Component;
 import com.deedee.thelemia.scene.Entity;
@@ -36,8 +39,7 @@ public class AnimatedSpriteComponent extends Component implements IGraphicsCompo
     public void render() {
         if (!visible) return;
 
-        TransformComponent transform = owner.getComponentByType(TransformComponent.class);
-        sprite.render(transform);
+        EventBus.getInstance().post(new RenderAnimatedSpriteEvent(owner));
     }
 
     @Override

@@ -28,8 +28,8 @@ public abstract class GraphicsObject implements IGraphicsObject {
 
     }
 
-    @Override
-    public abstract void render(TransformComponent transform);
+//    @Override
+//    public abstract void render(TransformComponent transform);
 
     @Override
     public Skin getSkin() {

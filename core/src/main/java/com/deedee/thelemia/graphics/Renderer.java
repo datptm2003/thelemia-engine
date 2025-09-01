@@ -7,15 +7,19 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.ResetBufferEvent;
+import com.deedee.thelemia.event.common.RenderAnimatedSpriteEvent;
 import com.deedee.thelemia.event.common.RenderFragmentEvent;
+import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.IGameSystem;
+import com.deedee.thelemia.scene.component.AnimatedSpriteComponent;
 import com.deedee.thelemia.scene.component.TransformComponent;
+import com.deedee.thelemia.scene.component.WidgetComponent;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class Renderer implements IGameSystem, IRenderer {
     private final RenderListener listener = new RenderListener(this);
@@ -29,6 +33,9 @@ public class Renderer implements IGameSystem, IRenderer {
 
     private final AssetManager assetManager = new AssetManager();
     private final ShaderManager shaderManager = new ShaderManager();
+
+    private final List<Entity> animatableEntities = new LinkedList<>();
+
 
     public Renderer(int width, int height) {
         this.camera = new Camera(width, height);
@@ -45,12 +52,20 @@ public class Renderer implements IGameSystem, IRenderer {
     @Override
     public void subscribeListener() {
         EventBus.getInstance().subscribe(RenderFragmentEvent.class, listener);
-        EventBus.getInstance().subscribe(ResetBufferEvent.class, listener);
+        EventBus.getInstance().subscribe(RenderAnimatedSpriteEvent.class, listener);
     }
     @Override
     public void update(float delta) {
         batch.setProjectionMatrix(this.camera.getProjectionMatrix());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        for (Entity entity : animatableEntities) {
+            AnimatedSpriteComponent spriteComponent = entity.getComponentByType(AnimatedSpriteComponent.class);
+            if (spriteComponent == null) continue;
+
+            drawAnimatedSprite(spriteComponent.getGraphicsObject(), spriteComponent.getOwner().getComponentByType(TransformComponent.class));
+        }
+
         stage.act(delta);
         stage.draw();
     }
@@ -66,14 +81,17 @@ public class Renderer implements IGameSystem, IRenderer {
     }
 
     @Override
-    public void drawFragment(Fragment fragment, float parentAlpha) {
-        WidgetGroup widget = fragment.getWidgetGroup();
+    public void addWidget(Entity widgetEntity) {
+        WidgetComponent widgetComponent = widgetEntity.getComponentByType(WidgetComponent.class);
+        if (widgetComponent == null) return;
 
-        // TODO: Need re-implementation
-        batch.begin();
-        widget.draw(batch, parentAlpha);
-        batch.end();
+        root.add(widgetComponent.getGraphicsObject().getWidgetGroup());
     }
+    @Override
+    public void addAnimatableEntity(Entity animatableEntity) {
+        animatableEntities.add(animatableEntity);
+    }
+
     @Override
     public void drawAnimatedSprite(AnimatedSprite sprite, TransformComponent transform) {
         TextureRegion texture = sprite.getCurrentAnimation().getKeyFrame(sprite.getTimeframe());
@@ -104,6 +122,9 @@ public class Renderer implements IGameSystem, IRenderer {
     public void clearScreen(Color color) {
         if (color == null) Gdx.gl.glClearColor(DEFAULT_BACKGROUND.r, DEFAULT_BACKGROUND.g, DEFAULT_BACKGROUND.b, DEFAULT_BACKGROUND.a);
         else Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.dispose();
+        animatableEntities.clear();
     }
 
     public Table getRoot() {

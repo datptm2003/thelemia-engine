@@ -1,27 +1,21 @@
 package com.deedee.thelemia.event.common;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Null;
 import com.deedee.thelemia.event.Event;
 import com.deedee.thelemia.graphics.AnimatedSprite;
 import com.deedee.thelemia.graphics.enumerate.RenderRequestType;
+import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.component.TransformComponent;
 
 public class RenderAnimatedSpriteEvent extends Event {
-    private final AnimatedSprite sprite;
-    private final TransformComponent transform;
+    private final Entity animatedSpriteEntity;
 
-    public RenderAnimatedSpriteEvent(AnimatedSprite sprite, TransformComponent transform) {
+    public RenderAnimatedSpriteEvent(Entity animatedSpriteEntity) {
         super();
-        this.sprite = sprite;
-        this.transform = transform;
+        this.animatedSpriteEntity = animatedSpriteEntity;
     }
 
-    public AnimatedSprite getSprite() {
-        return sprite;
-    }
-    public TransformComponent getTransform() {
-        return transform;
+    public Entity getAnimatedSpriteEntity() {
+        return animatedSpriteEntity;
     }
 
     @Override

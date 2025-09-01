@@ -4,17 +4,17 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.deedee.thelemia.core.EngineConfig;
 import com.deedee.thelemia.core.Engine;
+import com.deedee.thelemia.graphics.AnimatedSprite;
 import com.deedee.thelemia.graphics.Fragment;
 import com.deedee.thelemia.physics.PhysicsConfig;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.Scene;
-import com.deedee.thelemia.scene.component.TransformComponent;
+import com.deedee.thelemia.scene.component.AnimatedSpriteComponent;
 import com.deedee.thelemia.scene.component.WidgetComponent;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -29,25 +29,28 @@ public class ThelemiaLauncher extends ApplicationAdapter {
         engine.create();
 
 //        Skin skin = new Skin(Gdx.files.internal("skins/metal-ui.json"));
+//        AnimatedSprite testAnimatedSprite = new AnimatedSprite(skin);
+//        testAnimatedSprite.load("textures/scareton.png", "test", 3, 3, 0.2f);
+//        testAnimatedSprite.setAnimation("test");
+//        Entity testAnimatedSpriteEntity = new Entity();
+//
 //        Fragment testFragment = getSimpleFragment(skin);
-//        Entity testEntity = new Entity("test");
+//        Entity testFragmentEntity = new Entity();
 //
-//        engine.getSceneManager().addScene("test", new Scene(engine.getSceneManager()) {
-//            @Override
-//            public void show() {
-//                super.show();
-//                WidgetComponent widgetComponent = new WidgetComponent(testEntity, engine.getRenderer().getRoot(), testFragment);
-//                testEntity.addComponent(widgetComponent);
-//                addEntity(testEntity);
-//            }
+//        WidgetComponent widgetComponent = new WidgetComponent(testFragmentEntity, engine.getRenderer().getRoot(), testFragment);
+//        testFragmentEntity.addComponent(widgetComponent);
 //
-//            @Override
-//            public void update(float delta) {
-//                super.update(delta);
-//                testFragment.update(delta);
-//                testFragment.render(testEntity.getComponentByType(TransformComponent.class));
-//            }
+//        AnimatedSpriteComponent animatedSpriteComponent = new AnimatedSpriteComponent(testAnimatedSpriteEntity, testAnimatedSprite);
+//        testAnimatedSpriteEntity.addComponent(animatedSpriteComponent);
+//
+//        Scene testScene = engine.getSceneManager().createNewScene("test");
+//        testScene.addEntity(testAnimatedSpriteEntity);
+//        testScene.addEntity(testFragmentEntity);
+//        testScene.onShow(() -> {
+//            widgetComponent.render();
+//            animatedSpriteComponent.render();
 //        });
+//
 //        engine.getSceneManager().loadScene("test");
     }
 
@@ -65,7 +68,6 @@ public class ThelemiaLauncher extends ApplicationAdapter {
 //                    @Override
 //                    public void changed(ChangeEvent event, Actor actor) {
 //                        System.out.println("Button clicked!");
-//                        textButton.remove();
 //                    }
 //                });
 //                TextButton textButton2 = new TextButton("Test2", skin);

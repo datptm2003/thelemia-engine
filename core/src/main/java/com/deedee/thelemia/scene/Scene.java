@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Scene implements IScene {
-    protected SceneManager sceneManager;
+public class Scene implements IScene {
+
+    protected final String name;
+    protected final SceneManager sceneManager;
     protected final List<Entity> entities = new ArrayList<>();
 
-    public Scene(SceneManager sceneManager) {
+    protected Runnable onShowCallback;
+    protected Runnable onHideCallback;
+
+    public Scene(String name, SceneManager sceneManager) {
+        this.name = name;
         this.sceneManager = sceneManager;
     }
 
@@ -41,8 +47,15 @@ public abstract class Scene implements IScene {
 
     @Override
     public void show() {
-        // Called when the scene is set
+        if (onShowCallback == null) return;
+        onShowCallback.run();
     }
+    @Override
+    public void hide() {
+        if (onHideCallback == null) return;
+        onHideCallback.run();
+    }
+
     @Override
     public void update(float delta) {
         for (Entity entity : entities) {
@@ -52,27 +65,21 @@ public abstract class Scene implements IScene {
         }
     }
     @Override
-    public void render() {
-
-    }
-    @Override
-    public void resize(int width, int height) {
-        // Override as needed
-    }
-    @Override
-    public void pause() {
-
-    }
-    @Override
-    public void resume() {
-
-    }
-    @Override
-    public void hide() {
-
-    }
-    @Override
     public void dispose() {
         entities.clear();
+    }
+
+    public String getName() {
+        return name;
+    }
+    public SceneManager getSceneManager() {
+        return sceneManager;
+    }
+
+    public void onShow(Runnable callback) {
+        onShowCallback = callback;
+    }
+    public void onHide(Runnable callback) {
+        onHideCallback = callback;
     }
 }

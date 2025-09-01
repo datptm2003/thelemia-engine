@@ -10,19 +10,20 @@ import com.deedee.thelemia.event.common.RenderAnimatedSpriteEvent;
 import com.deedee.thelemia.scene.component.TransformComponent;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class AnimatedSprite extends GraphicsObject implements IAnimatedSprite {
     private final Map<String, Animation<TextureRegion>> animations = new HashMap<>();
     private String currentAnimation = null;
     private float timeframe = 0f;
 
-    public AnimatedSprite(Skin skin, String filePath, Map<Integer, String> nameMap, int cols, float frameDuration) {
+    public AnimatedSprite(Skin skin) {
         super(skin);
-        load(filePath, nameMap, cols, frameDuration);
     }
 
-    private void load(String filePath, Map<Integer, String> nameMap, int cols, float frameDuration) {
+    public void loadAll(String filePath, Map<Integer, String> nameMap, int cols, float frameDuration) {
         Texture sheet = new Texture(Gdx.files.internal(filePath));
         sheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
@@ -45,28 +46,64 @@ public class AnimatedSprite extends GraphicsObject implements IAnimatedSprite {
 
         }
     }
+    public void load(String filePath, String name, int rows, int cols, float frameDuration) {
+        if (rows <= 0 || cols <= 0) {
+            throw new IllegalArgumentException("rows and cols must be > 0");
+        }
+
+        Texture sheet = new Texture(Gdx.files.internal(filePath));
+        sheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        // Split into rows x cols
+        TextureRegion[][] tmp = TextureRegion.split(
+            sheet,
+            sheet.getWidth() / cols,
+            sheet.getHeight() / rows
+        );
+
+        // Flatten rows into one long frame array: row0 col0..colN, row1 col0..colN, ...
+        int totalFrames = rows * cols;
+        TextureRegion[] frames = new TextureRegion[totalFrames];
+        int idx = 0;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                frames[idx++] = tmp[r][c];
+            }
+        }
+
+        Animation<TextureRegion> animation = new Animation<>(frameDuration, frames);
+        animation.setPlayMode(Animation.PlayMode.LOOP); // typical for sprites; remove/change if needed
+
+        animations.put(name, animation);
+    }
 
     @Override
     public void update(float delta) {
         timeframe += delta;
     }
-    @Override
-    public void render(TransformComponent transform) {
-        if (currentAnimation == null) return;
-
-        EventBus.getInstance().post(new RenderAnimatedSpriteEvent(this, transform));
-    }
+//    @Override
+//    public void render(TransformComponent transform) {
+//        if (currentAnimation == null) return;
+//
+//        EventBus.getInstance().post(new RenderAnimatedSpriteEvent(this, transform));
+//    }
     @Override
     public void dispose() {
         super.dispose();
+        Set<Texture> disposed = new HashSet<>();
         for (Animation<TextureRegion> anim : animations.values()) {
-            if (anim.getKeyFrames().length > 0) {
-                Texture tex = anim.getKeyFrames()[0].getTexture();
-                tex.dispose();
+            TextureRegion[] keyFrames = anim.getKeyFrames();
+            if (keyFrames.length > 0) {
+                Texture tex = keyFrames[0].getTexture();
+                if (!disposed.contains(tex)) {
+                    tex.dispose();
+                    disposed.add(tex);
+                }
             }
         }
         animations.clear();
     }
+
 
     public void setAnimation(String key) {
         if (animations.containsKey(key)) {

@@ -3,6 +3,8 @@ package com.deedee.thelemia.scene.component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.deedee.thelemia.event.EventBus;
+import com.deedee.thelemia.event.common.RenderFragmentEvent;
 import com.deedee.thelemia.graphics.Fragment;
 import com.deedee.thelemia.scene.Component;
 import com.deedee.thelemia.scene.Entity;
@@ -42,8 +44,7 @@ public class WidgetComponent extends Component implements IGraphicsComponent {
     public void render() {
         if (!visible) return;
 
-        TransformComponent transform = owner.getComponentByType(TransformComponent.class);
-        fragment.render(transform);
+        EventBus.getInstance().post(new RenderFragmentEvent(owner, 1.0f));
     }
 
     @Override

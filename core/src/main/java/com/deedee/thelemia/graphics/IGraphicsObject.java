@@ -7,6 +7,6 @@ import com.deedee.thelemia.core.IGameObject;
 import com.deedee.thelemia.scene.component.TransformComponent;
 
 public interface IGraphicsObject extends IGameObject {
-    void render(TransformComponent transform);
+//    void render(TransformComponent transform);
     Skin getSkin();
 }

@@ -8,5 +8,6 @@ public interface IComponent {
     void reset();
     boolean isEnabled();
     void setEnabled(boolean enabled);
+    Entity getOwner();
     ComponentGroup getGroup();
 }
