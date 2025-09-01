@@ -5,9 +5,10 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.deedee.thelemia.core.GameObject;
 import com.deedee.thelemia.core.IGameObject;
 
-public class Camera implements IGameObject, ICamera {
+public class Camera extends GameObject implements ICamera {
     private final OrthographicCamera camera;
     private final Viewport viewport;
 
@@ -20,19 +21,23 @@ public class Camera implements IGameObject, ICamera {
 
     @Override
     public void create() {
-
+        super.create();
     }
     @Override
     public void start() {
-
+        super.start();
     }
     @Override
     public void update(float delta) {
         camera.update();
     }
     @Override
+    public void stop() {
+        super.stop();
+    }
+    @Override
     public void dispose() {
-
+        super.dispose();
     }
 
     @Override

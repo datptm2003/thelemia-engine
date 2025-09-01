@@ -20,12 +20,6 @@ public class AnimatedSpriteComponent extends Component implements IGraphicsCompo
     }
 
     @Override
-    public void update(float delta) {
-        if (!enabled) return;
-
-        sprite.update(delta);
-    }
-    @Override
     public void reset() {
         visible = true;
         enabled = true;
@@ -33,13 +27,6 @@ public class AnimatedSpriteComponent extends Component implements IGraphicsCompo
     @Override
     public void dispose() {
         sprite.dispose();
-    }
-
-    @Override
-    public void render() {
-        if (!visible) return;
-
-        EventBus.getInstance().post(new RenderAnimatedSpriteEvent(owner));
     }
 
     @Override

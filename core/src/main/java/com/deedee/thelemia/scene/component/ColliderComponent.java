@@ -14,10 +14,6 @@ public class ColliderComponent extends Component implements IPhysicsComponent {
     }
 
     @Override
-    public void update(float delta) {
-
-    }
-    @Override
     public void reset() {
 
     }

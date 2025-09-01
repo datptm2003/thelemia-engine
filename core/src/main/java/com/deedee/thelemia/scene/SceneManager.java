@@ -21,10 +21,11 @@ public class SceneManager implements IGameSystem, ISceneManager {
     public void subscribeListener() {
         EventBus.getInstance().subscribe(DispatchMessageEvent.class, listener);
     }
+
     @Override
     public void update(float delta) {
         if (currentScene != null) {
-            getCurrentScene().update(delta);
+            currentScene.update(delta);
         }
     }
     @Override
@@ -51,13 +52,12 @@ public class SceneManager implements IGameSystem, ISceneManager {
     }
 
     @Override
-    public Scene createNewScene(String name) {
-        if (getSceneByName(name) != null) {
-            return null;
+    public boolean addScene(Scene newScene) {
+        if (getSceneByName(newScene.getName()) != null) {
+            return false;
         }
-        Scene newScene = new Scene(name, this);
         scenes.add(newScene);
-        return newScene;
+        return true;
     }
     @Override
     public Scene getSceneByName(String name) {

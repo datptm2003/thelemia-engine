@@ -13,7 +13,6 @@ import com.deedee.thelemia.time.TimerManager;
 public class Engine extends ApplicationAdapter {
     private final EngineConfig config;
     private final PhysicsConfig physicsConfig;
-    private final LifecycleListener lifecycleListener;
 
     private Renderer renderer;
     private InputHandler inputHandler;
@@ -24,7 +23,6 @@ public class Engine extends ApplicationAdapter {
     public Engine(EngineConfig config, PhysicsConfig physicsConfig) {
         this.config = config;
         this.physicsConfig = physicsConfig;
-        lifecycleListener = new LifecycleListener();
     }
 
     @Override
@@ -72,9 +70,6 @@ public class Engine extends ApplicationAdapter {
 
     public EngineConfig getConfig() {
         return config;
-    }
-    public LifecycleListener getLifecycleListener() {
-        return lifecycleListener;
     }
     public Renderer getRenderer() {
         return renderer;

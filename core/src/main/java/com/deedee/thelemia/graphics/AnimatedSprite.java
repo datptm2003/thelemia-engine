@@ -78,15 +78,27 @@ public class AnimatedSprite extends GraphicsObject implements IAnimatedSprite {
     }
 
     @Override
+    public void create() {
+        super.create();
+    }
+    @Override
+    public void start() {
+        super.start();
+    }
+
+    @Override
     public void update(float delta) {
+        if (currentAnimation == null) return;
+        if (!isStarted) start();
+        if (isStopped) stop();
+
         timeframe += delta;
     }
-//    @Override
-//    public void render(TransformComponent transform) {
-//        if (currentAnimation == null) return;
-//
-//        EventBus.getInstance().post(new RenderAnimatedSpriteEvent(this, transform));
-//    }
+
+    @Override
+    public void stop() {
+        super.stop();
+    }
     @Override
     public void dispose() {
         super.dispose();

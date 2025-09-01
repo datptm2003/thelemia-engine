@@ -6,7 +6,7 @@ public interface ISceneManager {
     void loadScene(String name);
     void unloadScene();
 
-    Scene createNewScene(String name);
+    boolean addScene(Scene newScene);
     Scene getSceneByName(String name);
     Scene getCurrentScene();
     void removeScene(String name);

@@ -16,11 +16,11 @@ public class RenderListener implements IEventListener {
     public void onEvent(Event event) {
         if (event instanceof RenderFragmentEvent) {
             RenderFragmentEvent renderFragmentEvent = (RenderFragmentEvent) event;
-            gameSystem.addWidget(renderFragmentEvent.getFragmentEntity());
+            gameSystem.addWidget(renderFragmentEvent.getWidgetComponent());
 
         } else if (event instanceof RenderAnimatedSpriteEvent) {
             RenderAnimatedSpriteEvent renderAnimatedSpriteEvent = (RenderAnimatedSpriteEvent) event;
-            gameSystem.addAnimatableEntity(renderAnimatedSpriteEvent.getAnimatedSpriteEntity());
+            gameSystem.addSprite(renderAnimatedSpriteEvent.getAnimatedSpriteComponent());
 
         }
     }

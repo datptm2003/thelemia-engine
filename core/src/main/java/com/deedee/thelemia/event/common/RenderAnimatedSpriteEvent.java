@@ -1,21 +1,18 @@
 package com.deedee.thelemia.event.common;
 
 import com.deedee.thelemia.event.Event;
-import com.deedee.thelemia.graphics.AnimatedSprite;
-import com.deedee.thelemia.graphics.enumerate.RenderRequestType;
-import com.deedee.thelemia.scene.Entity;
-import com.deedee.thelemia.scene.component.TransformComponent;
+import com.deedee.thelemia.scene.component.AnimatedSpriteComponent;
 
 public class RenderAnimatedSpriteEvent extends Event {
-    private final Entity animatedSpriteEntity;
+    private final AnimatedSpriteComponent spriteComponent;
 
-    public RenderAnimatedSpriteEvent(Entity animatedSpriteEntity) {
+    public RenderAnimatedSpriteEvent(AnimatedSpriteComponent spriteComponent) {
         super();
-        this.animatedSpriteEntity = animatedSpriteEntity;
+        this.spriteComponent = spriteComponent;
     }
 
-    public Entity getAnimatedSpriteEntity() {
-        return animatedSpriteEntity;
+    public AnimatedSpriteComponent getAnimatedSpriteComponent() {
+        return spriteComponent;
     }
 
     @Override

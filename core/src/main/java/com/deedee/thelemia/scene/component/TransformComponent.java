@@ -16,10 +16,6 @@ public class TransformComponent extends Component implements ICoreComponent {
     }
 
     @Override
-    public void update(float delta) {
-
-    }
-    @Override
     public void reset() {
 
     }

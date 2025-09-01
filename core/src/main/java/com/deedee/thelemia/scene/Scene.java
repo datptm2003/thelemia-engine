@@ -10,9 +10,6 @@ public class Scene implements IScene {
     protected final SceneManager sceneManager;
     protected final List<Entity> entities = new ArrayList<>();
 
-    protected Runnable onShowCallback;
-    protected Runnable onHideCallback;
-
     public Scene(String name, SceneManager sceneManager) {
         this.name = name;
         this.sceneManager = sceneManager;
@@ -47,23 +44,17 @@ public class Scene implements IScene {
 
     @Override
     public void show() {
-        if (onShowCallback == null) return;
-        onShowCallback.run();
+
+    }
+    @Override
+    public void update(float delta) {
+
     }
     @Override
     public void hide() {
-        if (onHideCallback == null) return;
-        onHideCallback.run();
+
     }
 
-    @Override
-    public void update(float delta) {
-        for (Entity entity : entities) {
-            for (Component component : entity.getAllComponents()) {
-                component.update(delta);
-            }
-        }
-    }
     @Override
     public void dispose() {
         entities.clear();
@@ -76,10 +67,4 @@ public class Scene implements IScene {
         return sceneManager;
     }
 
-    public void onShow(Runnable callback) {
-        onShowCallback = callback;
-    }
-    public void onHide(Runnable callback) {
-        onHideCallback = callback;
-    }
 }

@@ -21,12 +21,26 @@ public class Fragment extends GraphicsObject implements IFragment {
         this.parentAlpha = parentAlpha;
     }
 
-//    @Override
-//    public void render(TransformComponent transform) {
-//        EventBus.getInstance().post(new RenderFragmentEvent(this, transform, parentAlpha));
-//    }
+    @Override
+    public void create() {
+        super.create();
+    }
+    @Override
+    public void start() {
+        super.start();
+    }
+    @Override
+    public void update(float delta) {
+        if (!isStarted) start();
+        if (isStopped) stop();
 
-    public WidgetGroup getWidgetGroup() {
+    }
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
+
+    public WidgetGroup getWidget() {
         return widgetGroup;
     }
 }

@@ -34,7 +34,7 @@ public class Renderer implements IGameSystem, IRenderer {
     private final AssetManager assetManager = new AssetManager();
     private final ShaderManager shaderManager = new ShaderManager();
 
-    private final List<Entity> animatableEntities = new LinkedList<>();
+    private final List<AnimatedSpriteComponent> spriteComponents = new LinkedList<>();
 
 
     public Renderer(int width, int height) {
@@ -59,10 +59,7 @@ public class Renderer implements IGameSystem, IRenderer {
         batch.setProjectionMatrix(this.camera.getProjectionMatrix());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        for (Entity entity : animatableEntities) {
-            AnimatedSpriteComponent spriteComponent = entity.getComponentByType(AnimatedSpriteComponent.class);
-            if (spriteComponent == null) continue;
-
+        for (AnimatedSpriteComponent spriteComponent : spriteComponents) {
             drawAnimatedSprite(spriteComponent.getGraphicsObject(), spriteComponent.getOwner().getComponentByType(TransformComponent.class));
         }
 
@@ -81,15 +78,12 @@ public class Renderer implements IGameSystem, IRenderer {
     }
 
     @Override
-    public void addWidget(Entity widgetEntity) {
-        WidgetComponent widgetComponent = widgetEntity.getComponentByType(WidgetComponent.class);
-        if (widgetComponent == null) return;
-
-        root.add(widgetComponent.getGraphicsObject().getWidgetGroup());
+    public void addWidget(WidgetComponent widgetComponent) {
+        root.add(widgetComponent.getGraphicsObject().getWidget());
     }
     @Override
-    public void addAnimatableEntity(Entity animatableEntity) {
-        animatableEntities.add(animatableEntity);
+    public void addSprite(AnimatedSpriteComponent spriteComponent) {
+        spriteComponents.add(spriteComponent);
     }
 
     @Override
@@ -98,7 +92,6 @@ public class Renderer implements IGameSystem, IRenderer {
         float width = transform.getScale().x * texture.getRegionWidth();
         float height = transform.getScale().y * texture.getRegionHeight();
 
-        // TODO: Need re-implementation
         batch.begin();
         batch.draw(texture, transform.getPosition().x, transform.getPosition().y, width, height);
         batch.end();
@@ -124,7 +117,7 @@ public class Renderer implements IGameSystem, IRenderer {
         else Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.dispose();
-        animatableEntities.clear();
+        spriteComponents.clear();
     }
 
     public Table getRoot() {

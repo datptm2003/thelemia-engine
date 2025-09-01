@@ -5,7 +5,6 @@ import com.deedee.thelemia.graphics.GraphicsObject;
 import com.deedee.thelemia.scene.IComponent;
 
 public interface IGraphicsComponent extends IComponent, Disposable {
-    void render();
     boolean isVisible();
     void setVisible(boolean visible);
 

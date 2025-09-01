@@ -23,12 +23,6 @@ public class WidgetComponent extends Component implements IGraphicsComponent {
     }
 
     @Override
-    public void update(float delta) {
-        if (!enabled) return;
-
-        fragment.update(delta);
-    }
-    @Override
     public void reset() {
         visible = true;
         enabled = true;
@@ -36,15 +30,8 @@ public class WidgetComponent extends Component implements IGraphicsComponent {
 
     @Override
     public void dispose() {
-        fragment.getWidgetGroup().remove();
+        fragment.getWidget().remove();
         fragment.dispose();
-    }
-
-    @Override
-    public void render() {
-        if (!visible) return;
-
-        EventBus.getInstance().post(new RenderFragmentEvent(owner, 1.0f));
     }
 
     @Override

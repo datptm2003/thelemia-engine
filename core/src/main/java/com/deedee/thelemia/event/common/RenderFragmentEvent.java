@@ -7,19 +7,20 @@ import com.deedee.thelemia.graphics.GraphicsObject;
 import com.deedee.thelemia.graphics.enumerate.RenderRequestType;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.component.TransformComponent;
+import com.deedee.thelemia.scene.component.WidgetComponent;
 
 public class RenderFragmentEvent extends Event {
-    private final Entity fragmentEntity;
+    private final WidgetComponent widgetComponent;
     private final float parentAlpha;
 
-    public RenderFragmentEvent(Entity fragmentEntity, float parentAlpha) {
+    public RenderFragmentEvent(WidgetComponent widgetComponent, float parentAlpha) {
         super();
-        this.fragmentEntity = fragmentEntity;
+        this.widgetComponent = widgetComponent;
         this.parentAlpha = parentAlpha;
     }
 
-    public Entity getFragmentEntity() {
-        return fragmentEntity;
+    public WidgetComponent getWidgetComponent() {
+        return widgetComponent;
     }
     public float getParentAlpha() {
         return parentAlpha;
