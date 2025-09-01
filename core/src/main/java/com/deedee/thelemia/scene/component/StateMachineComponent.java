@@ -18,13 +18,12 @@ public class StateMachineComponent extends Component implements IControlComponen
     }
 
     @Override
-    public void update(float delta) {
-        stateMachine.update();
-    }
-
-    @Override
     public void reset() {
         stateMachine.reset();
+    }
+    @Override
+    public void release() {
+        stateMachine.release();
     }
 
     @Override

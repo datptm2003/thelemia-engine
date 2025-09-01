@@ -3,8 +3,13 @@ package com.deedee.thelemia.scene;
 import com.deedee.thelemia.ai.utils.MessageDispatcher;
 
 public interface ISceneManager {
-    void loadScene(Scene scene);
+    void loadScene(String name);
     void unloadScene();
-    IScene getCurrentScene();
+
+    boolean addScene(Scene newScene);
+    Scene getSceneByName(String name);
+    Scene getCurrentScene();
+    void removeScene(String name);
+
     MessageDispatcher getMessageDispatcher();
 }

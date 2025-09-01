@@ -2,13 +2,8 @@ package com.deedee.thelemia.graphics;
 
 import com.deedee.thelemia.event.Event;
 import com.deedee.thelemia.event.IEventListener;
-import com.deedee.thelemia.event.common.ResetBufferEvent;
-import com.deedee.thelemia.event.common.UpdateBufferEvent;
-import com.deedee.thelemia.scene.Entity;
-import com.deedee.thelemia.scene.component.IGraphicsComponent;
-import com.deedee.thelemia.scene.enumerate.ComponentGroup;
-
-import java.util.List;
+import com.deedee.thelemia.event.common.RenderAnimatedSpriteEvent;
+import com.deedee.thelemia.event.common.RenderFragmentEvent;
 
 public class RenderListener implements IEventListener {
     private final Renderer gameSystem;
@@ -19,29 +14,13 @@ public class RenderListener implements IEventListener {
 
     @Override
     public void onEvent(Event event) {
-        if (event instanceof UpdateBufferEvent) {
-            UpdateBufferEvent updateBufferEvent = (UpdateBufferEvent) event;
-            switch (updateBufferEvent.getRequestType()) {
-                case BY_SIZE:
-                    gameSystem.draw(updateBufferEvent.getRenderableObject(), updateBufferEvent.getPosition(), updateBufferEvent.getWidth(), updateBufferEvent.getHeight());
-                    break;
-                case BY_SCALE:
-                    gameSystem.draw(updateBufferEvent.getRenderableObject(), updateBufferEvent.getPosition(), updateBufferEvent.getScale());
-                    break;
-            }
+        if (event instanceof RenderFragmentEvent) {
+            RenderFragmentEvent renderFragmentEvent = (RenderFragmentEvent) event;
+            gameSystem.addWidget(renderFragmentEvent.getWidgetComponent());
 
-        } else if (event instanceof ResetBufferEvent) {
-            ResetBufferEvent resetBufferEvent = (ResetBufferEvent) event;
-            gameSystem.clearScreen(resetBufferEvent.getBackgroundColor());
-
-            for (Entity entity : resetBufferEvent.getRenderableEntities()) {
-                if (!entity.hasComponentGroup(ComponentGroup.GRAPHICS)) continue;
-
-                List<? extends IGraphicsComponent> graphicsComponents = entity.getComponentsByGroup(ComponentGroup.GRAPHICS);
-                for (IGraphicsComponent component : graphicsComponents) {
-                    component.render();
-                }
-            }
+        } else if (event instanceof RenderAnimatedSpriteEvent) {
+            RenderAnimatedSpriteEvent renderAnimatedSpriteEvent = (RenderAnimatedSpriteEvent) event;
+            gameSystem.addSprite(renderAnimatedSpriteEvent.getAnimatedSpriteComponent());
 
         }
     }

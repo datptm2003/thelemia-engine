@@ -2,10 +2,7 @@ package com.deedee.thelemia.scene;
 
 import com.deedee.thelemia.event.Event;
 import com.deedee.thelemia.event.IEventListener;
-import com.deedee.thelemia.event.common.ClickEvent;
-import com.deedee.thelemia.event.common.MessageDispatchEvent;
-import com.deedee.thelemia.graphics.utils.IClickable;
-import com.deedee.thelemia.graphics.IRenderableObject;
+import com.deedee.thelemia.event.common.DispatchMessageEvent;
 
 public class SceneEventListener implements IEventListener {
     private final SceneManager gameSystem;
@@ -16,15 +13,8 @@ public class SceneEventListener implements IEventListener {
 
     @Override
     public void onEvent(Event event) {
-        if (event instanceof ClickEvent) {
-            ClickEvent clickEvent = (ClickEvent) event;
-            IRenderableObject hitObject = gameSystem.getCurrentScene().getHitObjectByRaycast(clickEvent.getX(), clickEvent.getY());
-            if (hitObject instanceof IClickable) {
-                ((IClickable) hitObject).onClick(clickEvent.getX(), clickEvent.getY());
-            }
-
-        } else if (event instanceof MessageDispatchEvent) {
-            MessageDispatchEvent dispatchEvent = (MessageDispatchEvent) event;
+        if (event instanceof DispatchMessageEvent) {
+            DispatchMessageEvent dispatchEvent = (DispatchMessageEvent) event;
             switch (dispatchEvent.getScope()) {
                 case SINGLE:
                     gameSystem.getMessageDispatcher().dispatch(dispatchEvent.getSingleReceiver(), dispatchEvent.getMessage());

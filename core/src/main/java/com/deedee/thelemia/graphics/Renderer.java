@@ -1,78 +1,73 @@
 package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.ResetBufferEvent;
-import com.deedee.thelemia.event.common.UpdateBufferEvent;
+import com.deedee.thelemia.event.common.RenderAnimatedSpriteEvent;
+import com.deedee.thelemia.event.common.RenderFragmentEvent;
+import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.IGameSystem;
+import com.deedee.thelemia.scene.component.AnimatedSpriteComponent;
+import com.deedee.thelemia.scene.component.TransformComponent;
+import com.deedee.thelemia.scene.component.WidgetComponent;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Renderer implements IGameSystem, IRenderer {
-    public static class ChildEntry<T extends IRenderableObject> {
-        public String name;
-        public T object;
-        public Vector2 position;
-
-        public ChildEntry(String name, T object, Vector2 position) {
-            this.name = name;
-            this.object = object;
-            this.position = position;
-        }
-        public ChildEntry(T object, Vector2 position) {
-            this.name = "";
-            this.object = object;
-            this.position = position;
-        }
-    }
-
     private final RenderListener listener = new RenderListener(this);
-
     private final Color DEFAULT_BACKGROUND = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-    private final List<ChildEntry<?>> frequentObjects = new ArrayList<>();
+
+    private final Stage stage = new Stage();
+    private final Table root = new Table();
 
     private final Camera camera;
-    private FrameBuffer fbo;
     private final SpriteBatch batch = new SpriteBatch();
 
     private final AssetManager assetManager = new AssetManager();
     private final ShaderManager shaderManager = new ShaderManager();
 
-    public Renderer(int width, int height) {
-        this.camera = new Camera(width, height);
+    private final List<AnimatedSpriteComponent> spriteComponents = new LinkedList<>();
+
+    public Renderer() {
         subscribeListener();
+        this.camera = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.setProjectionMatrix(camera.getProjectionMatrix());
+
+        stage.setViewport(camera.getViewport());
+        Gdx.input.setInputProcessor(stage);
+
+        root.setFillParent(true);
+        stage.addActor(root);
     }
 
     @Override
     public void subscribeListener() {
-        EventBus.getInstance().subscribe(UpdateBufferEvent.class, listener);
-        EventBus.getInstance().subscribe(ResetBufferEvent.class, listener);
+        EventBus.getInstance().subscribe(RenderFragmentEvent.class, listener);
+        EventBus.getInstance().subscribe(RenderAnimatedSpriteEvent.class, listener);
     }
     @Override
     public void update(float delta) {
         batch.setProjectionMatrix(this.camera.getProjectionMatrix());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        for (ChildEntry<?> entry : frequentObjects) {
-            entry.object.update(delta);
-            draw(entry.object, entry.position, 1.0f);
+
+        for (AnimatedSpriteComponent spriteComponent : spriteComponents) {
+            drawAnimatedSprite(spriteComponent.getGraphicsObject(), spriteComponent.getOwner().getComponentByType(TransformComponent.class));
         }
+
+        stage.act(delta);
+        stage.draw();
     }
     @Override
     public void dispose() {
         batch.dispose();
-        fbo.dispose();
         camera.dispose();
         shaderManager.dispose();
     }
@@ -82,45 +77,23 @@ public class Renderer implements IGameSystem, IRenderer {
     }
 
     @Override
-    public void draw(IRenderableObject object, Vector2 position, int width, int height) {
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, object.getWidth(), object.getHeight(), false);
-        object.getDrawable(batch, fbo, false).draw(batch, position.x, position.y, width, height);
+    public void addWidget(WidgetComponent widgetComponent) {
+        root.add(widgetComponent.getGraphicsObject().getWidget());
     }
     @Override
-    public void draw(IRenderableObject object, Vector2 position, float scale) {
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, object.getWidth(), object.getHeight(), false);
-        Drawable drawable = object.getDrawable(batch, fbo, false);
-        float width = object.getWidth() * scale;
-        float height = object.getHeight() * scale;
-        drawable.draw(batch, position.x, position.y, width, height);
+    public void addSprite(AnimatedSpriteComponent spriteComponent) {
+        spriteComponents.add(spriteComponent);
     }
 
     @Override
-    public void addFrequentObjects(String name, IRenderableObject object, Vector2 position) {
-        frequentObjects.add(new ChildEntry<>(name, object, position));
-    }
-    @Override
-    public void removeFrequentObjects(String name) {
-        for (ChildEntry<?> entry : frequentObjects) {
-            if (entry.name.equals(name)) {
-                frequentObjects.remove(entry);
-                break;
-            }
-        }
-    }
+    public void drawAnimatedSprite(AnimatedSprite sprite, TransformComponent transform) {
+        TextureRegion texture = sprite.getCurrentAnimation().getKeyFrame(sprite.getTimeframe());
+        float width = transform.getScale().x * texture.getRegionWidth();
+        float height = transform.getScale().y * texture.getRegionHeight();
 
-    @Override
-    public void addSkin(String name, Skin skin) {
-        assetManager.addUiSkin(name, skin);
-    }
-    @Override
-    public void addSkin(String name, String skinPath) {
-        FileHandle file = Gdx.files.internal(skinPath);
-        assetManager.addUiSkin(name, file);
-    }
-    @Override
-    public Skin getSkin(String name) {
-        return assetManager.getUiSkin(name);
+        batch.begin();
+        batch.draw(texture, transform.getPosition().x, transform.getPosition().y, width, height);
+        batch.end();
     }
 
     @Override
@@ -141,12 +114,25 @@ public class Renderer implements IGameSystem, IRenderer {
     public void clearScreen(Color color) {
         if (color == null) Gdx.gl.glClearColor(DEFAULT_BACKGROUND.r, DEFAULT_BACKGROUND.g, DEFAULT_BACKGROUND.b, DEFAULT_BACKGROUND.a);
         else Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.dispose();
+        spriteComponents.clear();
     }
 
+    public Stage getStage() {
+        return stage;
+    }
+    public Table getRoot() {
+        return root;
+    }
     public Camera getCamera() {
         return camera;
     }
     public SpriteBatch getBatch() {
         return batch;
     }
+    public AssetManager getAssetManager() {
+        return assetManager;
+    }
+
 }

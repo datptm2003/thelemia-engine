@@ -34,7 +34,6 @@ public class StateMachine implements IStateMachine {
         currentState.update();
         globalState.update();
     }
-
     @Override
     public void reset() {
         if (currentState != null) {
@@ -46,6 +45,10 @@ public class StateMachine implements IStateMachine {
         } else {
             currentState = null;
         }
+    }
+    @Override
+    public void release() {
+
     }
 
     protected void changeState(State newState) {

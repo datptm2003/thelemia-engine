@@ -1,17 +1,30 @@
 package com.deedee.thelemia.scene;
 
-import com.deedee.thelemia.graphics.IRenderableObject;
+import com.badlogic.gdx.InputAdapter;
+import com.deedee.thelemia.event.EventBus;
+import com.deedee.thelemia.event.common.ChangeInputAdapterEvent;
+import com.deedee.thelemia.input.InputListener;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Scene implements IScene {
-    protected SceneManager sceneManager;
-    protected final List<Entity> entities = new ArrayList<>();
+public class Scene implements IScene {
 
-    public Scene(SceneManager sceneManager) {
+    protected final String name;
+    protected final SceneManager sceneManager;
+    protected final List<Entity> entities = new ArrayList<>();
+    protected final InputAdapter inputAdapter;
+
+    public Scene(String name, InputAdapter inputAdapter, SceneManager sceneManager) {
+        this.name = name;
+        this.inputAdapter = inputAdapter;
         this.sceneManager = sceneManager;
+    }
+    public Scene(String name, SceneManager sceneManager) {
+        this.name = name;
+        this.sceneManager = sceneManager;
+        this.inputAdapter = null;
     }
 
     @Override
@@ -42,50 +55,30 @@ public abstract class Scene implements IScene {
     }
 
     @Override
-    public IRenderableObject getHitObjectByRaycast(int x, int y) {
-        for (int i = entities.size() - 1; i >= 0; i--) {
-            IRenderableObject object = entities.get(i).getHitObject(x, y);
-            if (object != null) {
-                return object;
-            }
-        }
-        return null;
-    }
-
-    @Override
     public void show() {
-        // Called when the scene is set
+        EventBus.getInstance().post(new ChangeInputAdapterEvent(inputAdapter));
     }
     @Override
     public void update(float delta) {
-        for (Entity entity : entities) {
-            for (Component component : entity.getAllComponents()) {
-                component.update(delta);
-            }
-        }
-    }
-    @Override
-    public void render() {
-
-    }
-    @Override
-    public void resize(int width, int height) {
-        // Override as needed
-    }
-    @Override
-    public void pause() {
-
-    }
-    @Override
-    public void resume() {
 
     }
     @Override
     public void hide() {
-
+        EventBus.getInstance().post(new ChangeInputAdapterEvent(null));
     }
+
     @Override
     public void dispose() {
         entities.clear();
+    }
+
+    public String getName() {
+        return name;
+    }
+    public SceneManager getSceneManager() {
+        return sceneManager;
+    }
+    public InputAdapter getInputAdapter() {
+        return inputAdapter;
     }
 }
