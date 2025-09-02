@@ -22,11 +22,11 @@ public class RenderListener implements IEventListener {
 
         } else if (event instanceof RenderAnimatedSpriteEvent) {
             RenderAnimatedSpriteEvent renderAnimatedSpriteEvent = (RenderAnimatedSpriteEvent) event;
-            gameSystem.addSprite(renderAnimatedSpriteEvent.getAnimatedSpriteComponent());
+            gameSystem.addAnimatedSprite(renderAnimatedSpriteEvent.getAnimatedSpriteComponent());
 
         } else if (event instanceof ChangeMapEvent) {
             ChangeMapEvent changeMapEvent = (ChangeMapEvent) event;
-            gameSystem.changeTileMap(changeMapEvent.getNextTileMap());
+            gameSystem.changeTileMap(changeMapEvent.getNextTileMapComponent(), 1.0f);
 
         } else if (event instanceof RenderParticlesEvent) {
             RenderParticlesEvent renderParticlesEvent = (RenderParticlesEvent) event;

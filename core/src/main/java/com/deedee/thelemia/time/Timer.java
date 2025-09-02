@@ -37,5 +37,15 @@ public class Timer implements ITimer {
     public void reset() { timeLeft = duration; finished = false; }
     @Override
     public boolean isFinished() { return finished; }
+
+    public float getTimeLeft() {
+        return timeLeft;
+    }
+    public float getDuration() {
+        return duration;
+    }
+    public boolean isRepeat() {
+        return repeat;
+    }
 }
 

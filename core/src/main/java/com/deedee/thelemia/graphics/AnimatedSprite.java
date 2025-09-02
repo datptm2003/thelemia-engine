@@ -18,6 +18,7 @@ public class AnimatedSprite extends GraphicsObject implements IAnimatedSprite {
     private final Map<String, Animation<TextureRegion>> animations = new HashMap<>();
     private String currentAnimation = null;
     private float timeframe = 0f;
+    private boolean loaded = false;
 
     public AnimatedSprite(Skin skin) {
         super(skin);
@@ -45,6 +46,7 @@ public class AnimatedSprite extends GraphicsObject implements IAnimatedSprite {
             animations.put(name, animation);
 
         }
+        loaded = true;
     }
     public void load(String filePath, String name, int rows, int cols, float frameDuration) {
         if (rows <= 0 || cols <= 0) {
@@ -75,6 +77,7 @@ public class AnimatedSprite extends GraphicsObject implements IAnimatedSprite {
         animation.setPlayMode(Animation.PlayMode.LOOP); // typical for sprites; remove/change if needed
 
         animations.put(name, animation);
+        loaded = true;
     }
 
     @Override
@@ -132,5 +135,9 @@ public class AnimatedSprite extends GraphicsObject implements IAnimatedSprite {
     }
     public float getTimeframe() {
         return timeframe;
+    }
+
+    public boolean isLoaded() {
+        return loaded;
     }
 }

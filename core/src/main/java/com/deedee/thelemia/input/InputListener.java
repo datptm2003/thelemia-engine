@@ -2,7 +2,7 @@ package com.deedee.thelemia.input;
 
 import com.deedee.thelemia.event.Event;
 import com.deedee.thelemia.event.IEventListener;
-import com.deedee.thelemia.event.common.ChangeInputAdapterEvent;
+import com.deedee.thelemia.event.common.ChangeInputControllerEvent;
 
 public class InputListener implements IEventListener {
     private final InputHandler gameSystem;
@@ -13,9 +13,9 @@ public class InputListener implements IEventListener {
 
     @Override
     public void onEvent(Event event) {
-        if (event instanceof ChangeInputAdapterEvent) {
-            ChangeInputAdapterEvent changeInputAdapterEvent = (ChangeInputAdapterEvent) event;
-            gameSystem.changeInputAdapter(changeInputAdapterEvent.getNextInputAdapter());
+        if (event instanceof ChangeInputControllerEvent) {
+            ChangeInputControllerEvent changeInputControllerEvent = (ChangeInputControllerEvent) event;
+            gameSystem.changeInputController(changeInputControllerEvent.getNextInputController());
         }
     }
 

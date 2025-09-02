@@ -2,8 +2,8 @@ package com.deedee.thelemia.scene;
 
 import com.badlogic.gdx.InputAdapter;
 import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.ChangeInputAdapterEvent;
-import com.deedee.thelemia.input.InputListener;
+import com.deedee.thelemia.event.common.ChangeInputControllerEvent;
+import com.deedee.thelemia.input.InputController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,17 +14,17 @@ public class Scene implements IScene {
     protected final String name;
     protected final SceneManager sceneManager;
     protected final List<Entity> entities = new ArrayList<>();
-    protected final InputAdapter inputAdapter;
+    protected final InputController<? extends InputAdapter> inputController;
 
-    public Scene(String name, InputAdapter inputAdapter, SceneManager sceneManager) {
+    public Scene(String name, InputController<?> inputController, SceneManager sceneManager) {
         this.name = name;
-        this.inputAdapter = inputAdapter;
+        this.inputController = inputController;
         this.sceneManager = sceneManager;
     }
     public Scene(String name, SceneManager sceneManager) {
         this.name = name;
         this.sceneManager = sceneManager;
-        this.inputAdapter = null;
+        this.inputController = null;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class Scene implements IScene {
 
     @Override
     public void show() {
-        EventBus.getInstance().post(new ChangeInputAdapterEvent(inputAdapter));
+        EventBus.getInstance().post(new ChangeInputControllerEvent(inputController));
     }
     @Override
     public void update(float delta) {
@@ -64,7 +64,7 @@ public class Scene implements IScene {
     }
     @Override
     public void hide() {
-        EventBus.getInstance().post(new ChangeInputAdapterEvent(null));
+        EventBus.getInstance().post(new ChangeInputControllerEvent(null));
     }
 
     @Override
@@ -78,7 +78,7 @@ public class Scene implements IScene {
     public SceneManager getSceneManager() {
         return sceneManager;
     }
-    public InputAdapter getInputAdapter() {
-        return inputAdapter;
+    public InputController<?> getInputController() {
+        return inputController;
     }
 }

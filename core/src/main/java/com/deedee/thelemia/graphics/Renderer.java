@@ -15,12 +15,8 @@ import com.deedee.thelemia.event.common.ChangeMapEvent;
 import com.deedee.thelemia.event.common.RenderAnimatedSpriteEvent;
 import com.deedee.thelemia.event.common.RenderFragmentEvent;
 import com.deedee.thelemia.event.common.RenderParticlesEvent;
-import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.IGameSystem;
-import com.deedee.thelemia.scene.component.AnimatedSpriteComponent;
-import com.deedee.thelemia.scene.component.ParticlesComponent;
-import com.deedee.thelemia.scene.component.TransformComponent;
-import com.deedee.thelemia.scene.component.WidgetComponent;
+import com.deedee.thelemia.scene.component.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -73,7 +69,11 @@ public class Renderer implements IGameSystem, IRenderer {
         }
 
         for (AnimatedSpriteComponent spriteComponent : spriteComponents) {
-            drawAnimatedSprite(spriteComponent.getGraphicsObject(), spriteComponent.getOwner().getComponentByType(TransformComponent.class));
+            AnimatedSprite sprite = spriteComponent.getGraphicsObject();
+            if (!sprite.isLoaded()) continue;
+
+            sprite.update(delta);
+            drawAnimatedSprite(spriteComponent);
         }
         for (ParticlesComponent particlesComponent : particlesComponents) {
             Particles particles = particlesComponent.getGraphicsObject();
@@ -102,17 +102,27 @@ public class Renderer implements IGameSystem, IRenderer {
         root.add(widgetComponent.getGraphicsObject().getWidget());
     }
     @Override
-    public void addSprite(AnimatedSpriteComponent spriteComponent) {
+    public void addAnimatedSprite(AnimatedSpriteComponent spriteComponent) {
         spriteComponents.add(spriteComponent);
     }
     @Override
     public void addParticles(ParticlesComponent particlesComponent) {
         particlesComponents.add(particlesComponent);
     }
+    @Override
+    public void changeTileMap(TileMapComponent tileMapComponent, float unitScale) {
+        if (mapRenderer != null) mapRenderer.dispose();
+
+        TileMap tileMap = tileMapComponent.getGraphicsObject();
+        mapRenderer = new OrthogonalTiledMapRenderer(tileMap.getTiledMap(), unitScale, batch);
+    }
 
     @Override
-    public void drawAnimatedSprite(AnimatedSprite sprite, TransformComponent transform) {
+    public void drawAnimatedSprite(AnimatedSpriteComponent spriteComponent) {
+        AnimatedSprite sprite = spriteComponent.getGraphicsObject();
         TextureRegion texture = sprite.getCurrentAnimation().getKeyFrame(sprite.getTimeframe());
+        TransformComponent transform = spriteComponent.getOwner().getComponentByType(TransformComponent.class);
+
         float width = transform.getScale().x * texture.getRegionWidth();
         float height = transform.getScale().y * texture.getRegionHeight();
 
@@ -165,12 +175,8 @@ public class Renderer implements IGameSystem, IRenderer {
     public AssetManager getAssetManager() {
         return assetManager;
     }
-
     public OrthogonalTiledMapRenderer getMapRenderer() {
         return mapRenderer;
-    }
-    public void changeTileMap(TileMap tileMap) {
-        mapRenderer = new OrthogonalTiledMapRenderer(tileMap.getTiledMap(), 1.0f, batch);
     }
 
 }

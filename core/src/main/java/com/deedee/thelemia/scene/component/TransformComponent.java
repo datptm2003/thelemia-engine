@@ -35,15 +35,17 @@ public class TransformComponent extends Component implements ICoreComponent {
     public Vector2 getPosition() {
         return position;
     }
-    public void setPosition(Vector2 position) {
-        this.position = position;
+    public void setPosition(float x, float y) {
+        this.position.x = x;
+        this.position.y = y;
     }
 
     public Vector2 getScale() {
         return scale;
     }
-    public void setScale(Vector2 scale) {
-        this.scale = scale;
+    public void setScale(float width, float height) {
+        this.scale.x = width;
+        this.scale.y = height;
     }
 
     public float getRotation() {

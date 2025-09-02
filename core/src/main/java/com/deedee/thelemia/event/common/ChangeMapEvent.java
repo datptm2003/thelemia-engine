@@ -5,17 +5,20 @@ import com.deedee.thelemia.graphics.TileMap;
 import com.deedee.thelemia.scene.component.TileMapComponent;
 
 public class ChangeMapEvent extends Event {
-    private final TileMap nextTileMap;
+    private final TileMapComponent nextTileMapComponent;
+    private final float unitScale;
 
-    public ChangeMapEvent(TileMap nextTileMap) {
-        this.nextTileMap = nextTileMap;
+    public ChangeMapEvent(TileMapComponent nextTilemapComponent, float unitScale) {
+        this.nextTileMapComponent = nextTilemapComponent;
+        this.unitScale = 1.0f;
     }
     public ChangeMapEvent(TileMapComponent nextTilemapComponent) {
-        this.nextTileMap = nextTilemapComponent.getGraphicsObject();
+        this.nextTileMapComponent = nextTilemapComponent;
+        this.unitScale = 1.0f;
     }
 
-    public TileMap getNextTileMap() {
-        return nextTileMap;
+    public TileMapComponent getNextTileMapComponent() {
+        return nextTileMapComponent;
     }
 
     @Override

@@ -3,7 +3,8 @@ package com.deedee.thelemia;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
@@ -12,24 +13,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.deedee.thelemia.core.Engine;
 import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.ChangeMapEvent;
-import com.deedee.thelemia.event.common.RenderAnimatedSpriteEvent;
-import com.deedee.thelemia.event.common.RenderFragmentEvent;
-import com.deedee.thelemia.event.common.RenderParticlesEvent;
+import com.deedee.thelemia.event.common.*;
 import com.deedee.thelemia.graphics.AnimatedSprite;
 import com.deedee.thelemia.graphics.Fragment;
 import com.deedee.thelemia.graphics.Particles;
 import com.deedee.thelemia.graphics.TileMap;
+import com.deedee.thelemia.input.InputController;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.Scene;
-import com.deedee.thelemia.scene.component.AnimatedSpriteComponent;
-import com.deedee.thelemia.scene.component.ParticlesComponent;
-import com.deedee.thelemia.scene.component.TileMapComponent;
-import com.deedee.thelemia.scene.component.WidgetComponent;
+import com.deedee.thelemia.scene.component.*;
+import com.deedee.thelemia.time.Timer;
 
 public class DebugSample {
     private static class CustomInputAdapter extends InputAdapter {
-        Entity player;
+        private final Entity player;
         public CustomInputAdapter(Entity player) {
             this.player = player;
         }
@@ -37,22 +34,73 @@ public class DebugSample {
         @Override
         public boolean keyDown(int keycode) {
             switch (keycode) {
-                case Input.Keys.UP:
-                    System.out.println("UP");
-                    break;
-                case Input.Keys.DOWN:
-                    System.out.println("DOWN");
-                    break;
-                case Input.Keys.LEFT:
-                    System.out.println("LEFT");
-                    break;
-                case Input.Keys.RIGHT:
-                    System.out.println("RIGHT");
-                    break;
+                case Input.Keys.SPACE:
+                    return true;
                 default:
                     return false;
             }
-            return true;
+        }
+    }
+
+    private static class CustomInputController extends InputController<CustomInputAdapter> {
+        // Tweak these values to taste:
+        private static final float MAX_SPEED = 300f;         // pixels per second
+        private static final float ACCELERATION = 4000f;     // "how fast we reach max speed" (units/sec^2)
+        // The lerp factor controls smoothness — higher = snappier, lower = softer stop/start.
+        // We'll compute a per-frame alpha from this (not a raw constant).
+        // You can think of ACCELERATION/MAX_SPEED as a base for the lerp alpha.
+
+        private final Vector2 velocity = new Vector2();
+
+        public CustomInputController(CustomInputAdapter inputAdapter) {
+            super(inputAdapter);
+        }
+
+        @Override
+        public void update(float delta) {
+            // call super first (so input state is updated inside InputController if it does that)
+            super.update(delta);
+
+            // Get the player entity from the input adapter (same design as your snippet)
+            CustomInputAdapter adapter = getInputAdapter(); // assume InputController exposes this
+            if (adapter == null) return;
+
+            Entity player = adapter.player;
+            if (player == null) return;
+
+            TransformComponent transform = player.getComponentByType(TransformComponent.class);
+            if (transform == null) return;
+
+            // Build desired direction from key state
+            float dirX = 0f;
+            float dirY = 0f;
+
+            if (isKeyPressed(Input.Keys.LEFT) || isKeyPressed(Input.Keys.A))  dirX -= 5f;
+            if (isKeyPressed(Input.Keys.RIGHT) || isKeyPressed(Input.Keys.D)) dirX += 5f;
+            if (isKeyPressed(Input.Keys.UP) || isKeyPressed(Input.Keys.W))    dirY += 5f;
+            if (isKeyPressed(Input.Keys.DOWN) || isKeyPressed(Input.Keys.S))  dirY -= 5f;
+
+            Vector2 desiredDir = new Vector2(dirX, dirY);
+            if (desiredDir.len2() > 1e-6f) {
+                desiredDir.nor(); // normalize so diagonal isn't faster
+            } else {
+                desiredDir.setZero();
+            }
+
+            // Desired velocity = direction * max speed
+            Vector2 desiredVel = desiredDir.scl(MAX_SPEED);
+
+            // Compute per-frame lerp alpha from acceleration.
+            // We want alpha in [0,1]; larger ACCELERATION -> faster approach to desiredVel.
+            float alpha = MathUtils.clamp((ACCELERATION * delta) / MAX_SPEED, 0f, 1f);
+
+            // Smoothly move current velocity toward desired velocity
+            velocity.lerp(desiredVel, alpha);
+
+            // Apply movement
+            float newX = transform.getPosition().x + velocity.x * delta;
+            float newY = transform.getPosition().y + velocity.y * delta;
+            transform.setPosition(newX, newY);
         }
     }
 
@@ -91,34 +139,7 @@ public class DebugSample {
         ParticlesComponent particlesComponent = new ParticlesComponent(testParticlesEntity, testParticles);
         testParticlesEntity.addComponent(particlesComponent);
 
-        Scene testScene = new Scene("test", new CustomInputAdapter(testAnimatedSpriteEntity), engine.getSceneManager()) {
-            @Override
-            public void show() {
-                super.show();
-                Entity testFragmentEntity = getEntityById("fragment");
-                Entity testAnimatedSpriteEntity = getEntityById("animation");
-                Entity testTileMapEntity = getEntityById("tilemap");
-                Entity testParticlesEntity = getEntityById("particles");
-
-                WidgetComponent widgetComponent = testFragmentEntity.getComponentByType(WidgetComponent.class);
-                AnimatedSpriteComponent animatedSpriteComponent = testAnimatedSpriteEntity.getComponentByType(AnimatedSpriteComponent.class);
-                TileMapComponent tileMapComponent = testTileMapEntity.getComponentByType(TileMapComponent.class);
-                ParticlesComponent testParticlesComponent = testParticlesEntity.getComponentByType(ParticlesComponent.class);
-
-                EventBus.getInstance().post(new RenderFragmentEvent(widgetComponent, 1.0f));
-                EventBus.getInstance().post(new RenderAnimatedSpriteEvent(animatedSpriteComponent));
-                EventBus.getInstance().post(new ChangeMapEvent(tileMapComponent));
-                EventBus.getInstance().post(new RenderParticlesEvent(testParticlesComponent, 350, 530, true));
-            }
-
-            @Override
-            public void update(float delta) {
-                Entity testAnimatedSpriteEntity = getEntityById("animation");
-                AnimatedSpriteComponent animatedSpriteComponent = testAnimatedSpriteEntity.getComponentByType(AnimatedSpriteComponent.class);
-
-                animatedSpriteComponent.getGraphicsObject().update(delta);
-            }
-        };
+        Scene testScene = getSampleScene(testAnimatedSpriteEntity);
 
         testScene.addEntity(testAnimatedSpriteEntity);
         testScene.addEntity(testFragmentEntity);
@@ -127,6 +148,35 @@ public class DebugSample {
 
         engine.getSceneManager().addScene(testScene);
         engine.getSceneManager().loadScene("test");
+    }
+
+    private Scene getSampleScene(Entity testAnimatedSpriteEntity) {
+        CustomInputAdapter testInputAdapter = new CustomInputAdapter(testAnimatedSpriteEntity);
+
+        return new Scene("test", new CustomInputController(testInputAdapter), engine.getSceneManager()) {
+            @Override
+            public void show() {
+                super.show();
+                Entity testFragmentEntity = getEntityById("fragment");
+                Entity testAnimatedSpriteEntity1 = getEntityById("animation");
+                Entity testTileMapEntity = getEntityById("tilemap");
+                Entity testParticlesEntity = getEntityById("particles");
+
+                WidgetComponent widgetComponent = testFragmentEntity.getComponentByType(WidgetComponent.class);
+                AnimatedSpriteComponent animatedSpriteComponent = testAnimatedSpriteEntity1.getComponentByType(AnimatedSpriteComponent.class);
+                TileMapComponent tileMapComponent = testTileMapEntity.getComponentByType(TileMapComponent.class);
+                ParticlesComponent testParticlesComponent = testParticlesEntity.getComponentByType(ParticlesComponent.class);
+
+                EventBus.getInstance().post(new RenderFragmentEvent(widgetComponent, 1.0f));
+                EventBus.getInstance().post(new RenderAnimatedSpriteEvent(animatedSpriteComponent));
+                EventBus.getInstance().post(new ChangeMapEvent(tileMapComponent));
+
+                Timer particlesTimer = new Timer(5.0f, false, () -> {
+                    EventBus.getInstance().post(new RenderParticlesEvent(testParticlesComponent, 350, 530, false));
+                });
+                EventBus.getInstance().post(new AddTimerEvent(particlesTimer));
+            }
+        };
     }
 
     private Fragment getSimpleFragment(Skin skin) {

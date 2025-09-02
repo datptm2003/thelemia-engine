@@ -1,21 +1,18 @@
 package com.deedee.thelemia.input;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.ChangeInputAdapterEvent;
+import com.deedee.thelemia.event.common.ChangeInputControllerEvent;
 import com.deedee.thelemia.scene.IGameSystem;
-
-import java.util.*;
 
 public class InputHandler implements IGameSystem, IInputHandler {
     private final InputListener listener = new InputListener(this);
 
     private final Stage stage;
     private final InputMultiplexer multiplexer = new InputMultiplexer();
+    private InputController<?> currentInputController;
 
     public InputHandler(Stage stage) {
         subscribeListener();
@@ -26,11 +23,13 @@ public class InputHandler implements IGameSystem, IInputHandler {
 
     @Override
     public void subscribeListener() {
-        EventBus.getInstance().subscribe(ChangeInputAdapterEvent.class, listener);
+        EventBus.getInstance().subscribe(ChangeInputControllerEvent.class, listener);
     }
     @Override
     public void update(float delta) {
-
+        if (currentInputController != null) {
+            currentInputController.update(delta);
+        }
     }
     @Override
     public void dispose() {
@@ -41,17 +40,18 @@ public class InputHandler implements IGameSystem, IInputHandler {
         return listener;
     }
 
-    public void changeInputAdapter(InputAdapter nextInputAdapter) {
-        if (nextInputAdapter == null) {
+    public void changeInputController(InputController<?> nextInputController) {
+        if (nextInputController == null) {
             multiplexer.clear();
             multiplexer.addProcessor(stage);
             Gdx.input.setInputProcessor(multiplexer);
         } else {
             multiplexer.clear();
             multiplexer.addProcessor(stage);
-            multiplexer.addProcessor(nextInputAdapter);
+            multiplexer.addProcessor(nextInputController);
             Gdx.input.setInputProcessor(multiplexer);
         }
+        currentInputController = nextInputController;
     }
 
     public InputMultiplexer getMultiplexer() {
