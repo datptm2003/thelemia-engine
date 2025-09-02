@@ -7,14 +7,18 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.event.EventBus;
+import com.deedee.thelemia.event.common.ChangeMapEvent;
 import com.deedee.thelemia.event.common.RenderAnimatedSpriteEvent;
 import com.deedee.thelemia.event.common.RenderFragmentEvent;
+import com.deedee.thelemia.event.common.RenderParticlesEvent;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.IGameSystem;
 import com.deedee.thelemia.scene.component.AnimatedSpriteComponent;
+import com.deedee.thelemia.scene.component.ParticlesComponent;
 import com.deedee.thelemia.scene.component.TransformComponent;
 import com.deedee.thelemia.scene.component.WidgetComponent;
 
@@ -33,8 +37,10 @@ public class Renderer implements IGameSystem, IRenderer {
 
     private final AssetManager assetManager = new AssetManager();
     private final ShaderManager shaderManager = new ShaderManager();
+    private OrthogonalTiledMapRenderer mapRenderer;
 
     private final List<AnimatedSpriteComponent> spriteComponents = new LinkedList<>();
+    private final List<ParticlesComponent> particlesComponents = new LinkedList<>();
 
     public Renderer() {
         subscribeListener();
@@ -52,14 +58,29 @@ public class Renderer implements IGameSystem, IRenderer {
     public void subscribeListener() {
         EventBus.getInstance().subscribe(RenderFragmentEvent.class, listener);
         EventBus.getInstance().subscribe(RenderAnimatedSpriteEvent.class, listener);
+        EventBus.getInstance().subscribe(ChangeMapEvent.class, listener);
+        EventBus.getInstance().subscribe(RenderParticlesEvent.class, listener);
     }
     @Override
     public void update(float delta) {
         batch.setProjectionMatrix(this.camera.getProjectionMatrix());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        camera.update(delta);
+        if (mapRenderer != null) {
+            mapRenderer.setView(camera.getInternalCamera());
+            mapRenderer.render();
+        }
+
         for (AnimatedSpriteComponent spriteComponent : spriteComponents) {
             drawAnimatedSprite(spriteComponent.getGraphicsObject(), spriteComponent.getOwner().getComponentByType(TransformComponent.class));
+        }
+        for (ParticlesComponent particlesComponent : particlesComponents) {
+            Particles particles = particlesComponent.getGraphicsObject();
+            if (!particles.isLoaded()) continue;
+
+            particles.update(delta);
+            drawParticles(particlesComponent);
         }
 
         stage.act(delta);
@@ -84,6 +105,10 @@ public class Renderer implements IGameSystem, IRenderer {
     public void addSprite(AnimatedSpriteComponent spriteComponent) {
         spriteComponents.add(spriteComponent);
     }
+    @Override
+    public void addParticles(ParticlesComponent particlesComponent) {
+        particlesComponents.add(particlesComponent);
+    }
 
     @Override
     public void drawAnimatedSprite(AnimatedSprite sprite, TransformComponent transform) {
@@ -93,6 +118,12 @@ public class Renderer implements IGameSystem, IRenderer {
 
         batch.begin();
         batch.draw(texture, transform.getPosition().x, transform.getPosition().y, width, height);
+        batch.end();
+    }
+    @Override
+    public void drawParticles(ParticlesComponent particlesComponent) {
+        batch.begin();
+        particlesComponent.getGraphicsObject().draw(batch);
         batch.end();
     }
 
@@ -133,6 +164,13 @@ public class Renderer implements IGameSystem, IRenderer {
     }
     public AssetManager getAssetManager() {
         return assetManager;
+    }
+
+    public OrthogonalTiledMapRenderer getMapRenderer() {
+        return mapRenderer;
+    }
+    public void changeTileMap(TileMap tileMap) {
+        mapRenderer = new OrthogonalTiledMapRenderer(tileMap.getTiledMap(), 1.0f, batch);
     }
 
 }
