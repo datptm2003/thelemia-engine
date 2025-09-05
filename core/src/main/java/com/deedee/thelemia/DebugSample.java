@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.deedee.thelemia.audio.effect.FadeInEffect;
+import com.deedee.thelemia.audio.effect.FadeOutEffect;
+import com.deedee.thelemia.audio.effect.RandomGlitchEffect;
 import com.deedee.thelemia.core.Engine;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.*;
@@ -113,6 +116,7 @@ public class DebugSample {
     public void setup() {
         Skin skin = new Skin(Gdx.files.internal("skins/metal-ui.json"));
 
+        // Entity setup
         AnimatedSprite testAnimatedSprite = new AnimatedSprite(skin);
         testAnimatedSprite.load("textures/scareton.png", "test", 3, 3, 0.2f);
         testAnimatedSprite.setAnimation("test");
@@ -127,6 +131,7 @@ public class DebugSample {
         Particles testParticles = new Particles(skin, "particles/explosion/explosion.p");
         Entity testParticlesEntity = new Entity("particles");
 
+        // Component setup
         WidgetComponent widgetComponent = new WidgetComponent(testFragmentEntity, engine.getRenderer().getRoot(), testFragment);
         testFragmentEntity.addComponent(widgetComponent);
 
@@ -171,7 +176,7 @@ public class DebugSample {
                 EventBus.getInstance().post(new RenderAnimatedSpriteEvent(animatedSpriteComponent));
                 EventBus.getInstance().post(new ChangeMapEvent(tileMapComponent));
 
-                Timer particlesTimer = new Timer(5.0f, false, () -> {
+                Timer particlesTimer = new Timer(5f, false, () -> {
                     EventBus.getInstance().post(new RenderParticlesEvent(testParticlesComponent, 350, 530, false));
                 });
                 EventBus.getInstance().post(new AddTimerEvent(particlesTimer));

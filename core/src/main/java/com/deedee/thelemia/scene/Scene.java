@@ -1,19 +1,18 @@
 package com.deedee.thelemia.scene;
 
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.ChangeInputControllerEvent;
 import com.deedee.thelemia.input.InputController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Scene implements IScene {
-
     protected final String name;
     protected final SceneManager sceneManager;
     protected final List<Entity> entities = new ArrayList<>();
+    protected final List<String> sounds = new ArrayList<>();
     protected final InputController<? extends InputAdapter> inputController;
 
     public Scene(String name, InputController<?> inputController, SceneManager sceneManager) {
@@ -55,8 +54,24 @@ public class Scene implements IScene {
     }
 
     @Override
+    public void addSound(String alias) {
+        sounds.add(alias);
+    }
+    @Override
+    public Sound getSound(String alias) {
+        return sceneManager.getAssetStorage().get(alias, Sound.class);
+    }
+    @Override
+    public void removeSound(String alias) {
+        sounds.remove(alias);
+    }
+
+    @Override
     public void show() {
         EventBus.getInstance().post(new ChangeInputControllerEvent(inputController));
+        for (String alias : sounds) {
+            sceneManager.getAssetStorage().load(alias, Sound.class);
+        }
     }
     @Override
     public void update(float delta) {
@@ -65,6 +80,9 @@ public class Scene implements IScene {
     @Override
     public void hide() {
         EventBus.getInstance().post(new ChangeInputControllerEvent(null));
+        for (String alias : sounds) {
+            sceneManager.getAssetStorage().unload(alias);
+        }
     }
 
     @Override
@@ -80,5 +98,8 @@ public class Scene implements IScene {
     }
     public InputController<?> getInputController() {
         return inputController;
+    }
+    public List<String> getAllSounds() {
+        return sounds;
     }
 }

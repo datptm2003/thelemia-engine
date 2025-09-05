@@ -18,6 +18,7 @@ import com.deedee.thelemia.event.common.RenderParticlesEvent;
 import com.deedee.thelemia.scene.IGameSystem;
 import com.deedee.thelemia.scene.component.*;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,12 +32,11 @@ public class Renderer implements IGameSystem, IRenderer {
     private final Camera camera;
     private final SpriteBatch batch = new SpriteBatch();
 
-    private final AssetManager assetManager = new AssetManager();
     private final ShaderManager shaderManager = new ShaderManager();
     private OrthogonalTiledMapRenderer mapRenderer;
 
-    private final List<AnimatedSpriteComponent> spriteComponents = new LinkedList<>();
-    private final List<ParticlesComponent> particlesComponents = new LinkedList<>();
+    private final List<AnimatedSpriteComponent> spriteComponents = new ArrayList<>();
+    private final List<ParticlesComponent> particlesComponents = new ArrayList<>();
 
     public Renderer() {
         subscribeListener();
@@ -171,9 +171,6 @@ public class Renderer implements IGameSystem, IRenderer {
     }
     public SpriteBatch getBatch() {
         return batch;
-    }
-    public AssetManager getAssetManager() {
-        return assetManager;
     }
     public OrthogonalTiledMapRenderer getMapRenderer() {
         return mapRenderer;

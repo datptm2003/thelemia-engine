@@ -2,7 +2,7 @@ package com.deedee.thelemia.core;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.deedee.thelemia.audio.AudioEmitter;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.graphics.Renderer;
 import com.deedee.thelemia.input.InputHandler;
@@ -16,6 +16,7 @@ public class Engine extends ApplicationAdapter {
     private final PhysicsConfig physicsConfig;
 
     private Renderer renderer;
+    private AudioEmitter audioEmitter;
     private InputHandler inputHandler;
     private PhysicsEngine physicsEngine;
     private SceneManager sceneManager;
@@ -30,6 +31,7 @@ public class Engine extends ApplicationAdapter {
     public void create() {
         // Initialization logic for the engine
         renderer = new Renderer();
+        audioEmitter = new AudioEmitter();
         inputHandler = new InputHandler(renderer.getStage());
         physicsEngine = new PhysicsEngine(physicsConfig);
         sceneManager = new SceneManager();
@@ -40,6 +42,7 @@ public class Engine extends ApplicationAdapter {
         // Rendering logic for the engine
         float delta = Gdx.graphics.getDeltaTime();
         renderer.update(delta);
+        audioEmitter.update(delta);
         inputHandler.update(delta);
         physicsEngine.update(delta);
         sceneManager.update(delta);
@@ -63,6 +66,7 @@ public class Engine extends ApplicationAdapter {
     public void dispose() {
         // Dispose logic for the engine
         renderer.dispose();
+        audioEmitter.dispose();
         inputHandler.dispose();
         physicsEngine.dispose();
         sceneManager.dispose();
@@ -74,6 +78,9 @@ public class Engine extends ApplicationAdapter {
     }
     public Renderer getRenderer() {
         return renderer;
+    }
+    public AudioEmitter getAudioEmitter() {
+        return audioEmitter;
     }
     public InputHandler getInputHandler() {
         return inputHandler;

@@ -12,4 +12,5 @@ public interface ISceneManager {
     void removeScene(String name);
 
     MessageDispatcher getMessageDispatcher();
+    AssetStorage getAssetStorage();
 }

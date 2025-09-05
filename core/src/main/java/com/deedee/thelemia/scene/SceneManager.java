@@ -10,7 +10,8 @@ public class SceneManager implements IGameSystem, ISceneManager {
     private final SceneEventListener listener = new SceneEventListener(this);
 
     private final MessageDispatcher messageDispatcher = new MessageDispatcher();
-    private final List<Scene> scenes = new LinkedList<>();
+    private final AssetStorage assetStorage = new AssetStorage();
+    private final List<Scene> scenes = new ArrayList<>();
     private Scene currentScene;
 
     public SceneManager() {
@@ -84,5 +85,9 @@ public class SceneManager implements IGameSystem, ISceneManager {
     @Override
     public MessageDispatcher getMessageDispatcher() {
         return messageDispatcher;
+    }
+    @Override
+    public AssetStorage getAssetStorage() {
+        return assetStorage;
     }
 }

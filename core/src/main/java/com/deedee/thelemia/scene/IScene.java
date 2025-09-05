@@ -1,5 +1,7 @@
 package com.deedee.thelemia.scene;
 
+import com.badlogic.gdx.audio.Sound;
+
 import java.util.List;
 
 public interface IScene {
@@ -8,6 +10,10 @@ public interface IScene {
     Entity getEntityById(String id);
     List<Entity> getEntitiesByType(Class<? extends Entity> type);
     List<Entity> getAllEntities();
+
+    void addSound(String alias);
+    Sound getSound(String alias);
+    void removeSound(String alias);
 
     void show();
     void hide();
