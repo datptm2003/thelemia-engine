@@ -7,6 +7,7 @@ public class AddTimerEvent extends Event {
     private final Timer timer;
 
     public AddTimerEvent(Timer timer) {
+        super();
         this.timer = timer;
     }
 

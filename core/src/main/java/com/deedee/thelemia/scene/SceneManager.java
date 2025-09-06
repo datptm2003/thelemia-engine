@@ -6,7 +6,7 @@ import com.deedee.thelemia.event.common.DispatchMessageEvent;
 
 import java.util.*;
 
-public class SceneManager implements IGameSystem, ISceneManager {
+public class SceneManager extends GameSystem implements ISceneManager {
     private final SceneEventListener listener = new SceneEventListener(this);
 
     private final MessageDispatcher messageDispatcher = new MessageDispatcher();

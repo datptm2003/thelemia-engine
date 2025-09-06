@@ -1,25 +1,27 @@
 package com.deedee.thelemia.event.common;
 
 import com.badlogic.gdx.audio.Music;
-import com.deedee.thelemia.audio.IMusicEffect;
+import com.deedee.thelemia.audio.MusicEffect;
 import com.deedee.thelemia.audio.enumerate.AudioControl;
 import com.deedee.thelemia.event.Event;
 
 public class ControlMusicEvent extends Event {
     private final AudioControl control;
     private final Music music;
-    private final IMusicEffect effect;
+    private final MusicEffect effect;
     private final float volume;
     private final boolean loop;
 
     public ControlMusicEvent(AudioControl control, Music music, float volume, boolean loop) {
+        super();
         this.control = control;
         this.music = music;
         this.effect = null;
         this.volume = volume;
         this.loop = loop;
     }
-    public ControlMusicEvent(AudioControl control, Music music, IMusicEffect effect, float volume, boolean loop) {
+    public ControlMusicEvent(AudioControl control, Music music, MusicEffect effect, float volume, boolean loop) {
+        super();
         this.control = control;
         this.music = music;
         this.effect = effect;
@@ -27,13 +29,15 @@ public class ControlMusicEvent extends Event {
         this.loop = loop;
     }
     public ControlMusicEvent(AudioControl control, Music music) {
+        super();
         this.control = control;
         this.music = music;
         this.effect = null;
         this.volume = 1f;
         this.loop = false;
     }
-    public ControlMusicEvent(AudioControl control, Music music, IMusicEffect effect) {
+    public ControlMusicEvent(AudioControl control, Music music, MusicEffect effect) {
+        super();
         this.control = control;
         this.music = music;
         this.effect = effect;
@@ -53,7 +57,7 @@ public class ControlMusicEvent extends Event {
     public boolean isLoop() {
         return loop;
     }
-    public IMusicEffect getEffect() {
+    public MusicEffect getEffect() {
         return effect;
     }
 

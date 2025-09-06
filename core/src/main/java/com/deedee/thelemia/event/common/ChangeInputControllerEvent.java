@@ -8,6 +8,7 @@ public class ChangeInputControllerEvent extends Event {
     private final InputController<? extends InputAdapter> nextInputController;
 
     public ChangeInputControllerEvent(InputController<?> nextInputController) {
+        super();
         this.nextInputController = nextInputController;
     }
 

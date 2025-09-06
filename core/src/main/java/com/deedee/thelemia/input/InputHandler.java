@@ -5,9 +5,9 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.ChangeInputControllerEvent;
-import com.deedee.thelemia.scene.IGameSystem;
+import com.deedee.thelemia.scene.GameSystem;
 
-public class InputHandler implements IGameSystem, IInputHandler {
+public class InputHandler extends GameSystem implements IInputHandler {
     private final InputListener listener = new InputListener(this);
 
     private final Stage stage;

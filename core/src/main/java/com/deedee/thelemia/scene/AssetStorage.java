@@ -3,6 +3,7 @@ package com.deedee.thelemia.scene;
 import com.badlogic.gdx.assets.AssetManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AssetStorage implements IAssetStorage {
@@ -30,12 +31,24 @@ public class AssetStorage implements IAssetStorage {
         manager.load(file, type);
     }
     @Override
+    public <T> void loadGroup(List<String> aliases, Class<T> type) {
+        for (String a : aliases) {
+            load(a, type);
+        }
+    }
+
+    @Override
     public void unload(String alias) {
         String file = aliases.get(alias);
         if (file == null) return;
 
         manager.unload(file);
-        aliases.remove(alias);
+    }
+    @Override
+    public void unloadGroup(List<String> aliases) {
+        for (String a : aliases) {
+            unload(a);
+        }
     }
     @Override
     public void unloadAll() {

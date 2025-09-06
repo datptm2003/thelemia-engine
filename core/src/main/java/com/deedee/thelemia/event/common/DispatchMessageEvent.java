@@ -17,16 +17,19 @@ public class DispatchMessageEvent extends Event {
     private final DispatchScope scope;
 
     public DispatchMessageEvent(Entity receiver, Message message) {
+        super();
         this.receiver = receiver;
         this.message = message;
         this.scope = DispatchScope.SINGLE;
     }
     public DispatchMessageEvent(List<Entity> receivers, Message message) {
+        super();
         this.receivers = receivers;
         this.message = message;
         this.scope = DispatchScope.GROUP;
     }
     public DispatchMessageEvent(Message message) {
+        super();
         this.message = message;
         this.scope = DispatchScope.BROADCAST;
     }

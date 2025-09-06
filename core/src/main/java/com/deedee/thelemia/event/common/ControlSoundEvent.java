@@ -12,6 +12,7 @@ public class ControlSoundEvent extends Event {
     private final float pan;
 
     public ControlSoundEvent(AudioControl control, Sound sound, float volume, float pitch, float pan) {
+        super();
         this.control = control;
         this.sound = sound;
         this.volume = volume;
@@ -19,6 +20,7 @@ public class ControlSoundEvent extends Event {
         this.pan = pan;
     }
     public ControlSoundEvent(AudioControl control, Sound sound, float volume) {
+        super();
         this.control = control;
         this.sound = sound;
         this.volume = volume;

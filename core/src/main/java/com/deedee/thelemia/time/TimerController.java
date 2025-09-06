@@ -3,13 +3,13 @@ package com.deedee.thelemia.time;
 import com.badlogic.gdx.utils.Array;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.AddTimerEvent;
-import com.deedee.thelemia.scene.IGameSystem;
+import com.deedee.thelemia.scene.GameSystem;
 
-public class TimerManager implements IGameSystem, ITimerManager {
+public class TimerController extends GameSystem implements ITimerManager {
     private final TimeEventListener listener = new TimeEventListener(this);
     private final Array<Timer> timers = new Array<>();
 
-    public TimerManager() {
+    public TimerController() {
         subscribeListener();
     }
 

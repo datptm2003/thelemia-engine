@@ -1,27 +1,41 @@
 package com.deedee.thelemia.physics;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.deedee.thelemia.scene.IGameSystem;
+import com.deedee.thelemia.event.EventBus;
+import com.deedee.thelemia.event.common.CreateRigidBodyEvent;
+import com.deedee.thelemia.event.common.DestroyRigidBodyEvent;
+import com.deedee.thelemia.scene.GameSystem;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class PhysicsEngine implements IGameSystem, IPhysicsEngine {
+public class PhysicsEngine extends GameSystem implements IPhysicsEngine {
     private static class InternalContactListener implements ContactListener {
         @Override
         public void beginContact(Contact contact) {
-            CollisionVisitor visitorA = (CollisionVisitor) contact.getFixtureA().getBody().getUserData();
-            CollisionVisitor visitorB = (CollisionVisitor) contact.getFixtureB().getBody().getUserData();
+            RigidBody bodyA = (RigidBody) contact.getFixtureA().getBody().getUserData();
+            RigidBody bodyB = (RigidBody) contact.getFixtureB().getBody().getUserData();
 
-            if (visitorA == null || visitorB == null) return;
+            if (bodyA == null || bodyB == null) {
+                return;
+            }
 
-            visitorA.onCollide(visitorB);
-            visitorB.onCollide(visitorA);
+            bodyA.onBeginCollision(bodyB);
+            bodyB.onBeginCollision(bodyA);
         }
 
         @Override
         public void endContact(Contact contact) {
+            RigidBody bodyA = (RigidBody) contact.getFixtureA().getBody().getUserData();
+            RigidBody bodyB = (RigidBody) contact.getFixtureB().getBody().getUserData();
 
+            if (bodyA == null || bodyB == null) {
+                return;
+            }
+
+            bodyA.onEndCollision(bodyB);
+            bodyB.onEndCollision(bodyA);
         }
         @Override
         public void preSolve(Contact contact, Manifold oldManifold) {
@@ -33,11 +47,10 @@ public class PhysicsEngine implements IGameSystem, IPhysicsEngine {
         }
     }
 
-
     private final PhysicsEventListener listener = new PhysicsEventListener(this);
 
     private final World world;
-    private final List<PhysicsBody> bodies = new ArrayList<>();
+    private final Map<String, RigidBody> bodies = new HashMap<>();
 
     public PhysicsEngine(PhysicsConfig config) {
         this.world = new World(config.getGravity(), true);
@@ -45,24 +58,39 @@ public class PhysicsEngine implements IGameSystem, IPhysicsEngine {
         subscribeListener();
     }
 
-    public PhysicsBody createBody(BodyDef definition, CollisionVisitor visitor) {
-        Body body = world.createBody(definition);
-        PhysicsBody physicsBody = new PhysicsBody(body, visitor);
-        bodies.add(physicsBody);
-        return physicsBody;
+    @Override
+    public void createBody(BodyDef bodyDef, List<FixtureDef> fixtureDefs, BodyData bodyData) {
+        Body body = world.createBody(bodyDef);
+        for (FixtureDef fixtureDef : fixtureDefs) {
+            body.createFixture(fixtureDef);
+        }
+        RigidBody rigidBody = new RigidBody(body, bodyData);
+        bodies.put(bodyData.getName(), rigidBody);
+    }
+    @Override
+    public RigidBody getRigidBody(String name) {
+        return bodies.get(name);
+    }
+    @Override
+    public void destroyBody(String name) {
+        RigidBody body = bodies.get(name);
+        world.destroyBody(body.getInternalBody());
+        bodies.remove(name);
     }
 
     @Override
     public void subscribeListener() {
-
+        EventBus.getInstance().subscribe(CreateRigidBodyEvent.class, listener);
+        EventBus.getInstance().subscribe(DestroyRigidBodyEvent.class, listener);
     }
+
     @Override
     public void update(float delta) {
         world.step(delta, 6, 2);
     }
     @Override
     public void dispose() {
-        for (PhysicsBody body : bodies) {
+        for (RigidBody body : bodies.values()) {
             world.destroyBody(body.getInternalBody());
         }
         world.dispose();
@@ -76,7 +104,7 @@ public class PhysicsEngine implements IGameSystem, IPhysicsEngine {
     public World getWorld() {
         return world;
     }
-    public List<PhysicsBody> getAllBodies() {
-        return bodies;
+    public List<RigidBody> getAllRigidBodies() {
+        return (List<RigidBody>) bodies.values();
     }
 }

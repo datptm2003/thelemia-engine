@@ -2,25 +2,25 @@ package com.deedee.thelemia.core;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.audio.AudioEmitter;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.graphics.Renderer;
 import com.deedee.thelemia.input.InputHandler;
 import com.deedee.thelemia.physics.PhysicsConfig;
 import com.deedee.thelemia.physics.PhysicsEngine;
+import com.deedee.thelemia.scene.GameSystem;
 import com.deedee.thelemia.scene.SceneManager;
-import com.deedee.thelemia.time.TimerManager;
+import com.deedee.thelemia.time.TimerController;
+
+import java.util.*;
 
 public class Engine extends ApplicationAdapter {
     private final EngineConfig config;
     private final PhysicsConfig physicsConfig;
 
-    private Renderer renderer;
-    private AudioEmitter audioEmitter;
-    private InputHandler inputHandler;
-    private PhysicsEngine physicsEngine;
-    private SceneManager sceneManager;
-    private TimerManager timerManager;
+    private final Map<Class<? extends GameSystem>, GameSystem> defaultSystems = new HashMap<>();
+    private final List<GameSystem> optionalSystems = new ArrayList<>();
 
     public Engine(EngineConfig config, PhysicsConfig physicsConfig) {
         this.config = config;
@@ -29,24 +29,25 @@ public class Engine extends ApplicationAdapter {
 
     @Override
     public void create() {
-        // Initialization logic for the engine
-        renderer = new Renderer();
-        audioEmitter = new AudioEmitter();
-        inputHandler = new InputHandler(renderer.getStage());
-        physicsEngine = new PhysicsEngine(physicsConfig);
-        sceneManager = new SceneManager();
-        timerManager = new TimerManager();
+        Stage globalStage = new Stage();
+
+        defaultSystems.put(Renderer.class, new Renderer(globalStage));
+        defaultSystems.put(AudioEmitter.class, new AudioEmitter());
+        defaultSystems.put(InputHandler.class, new InputHandler(globalStage));
+        defaultSystems.put(PhysicsEngine.class, new PhysicsEngine(physicsConfig));
+        defaultSystems.put(SceneManager.class, new SceneManager());
+        defaultSystems.put(TimerController.class, new TimerController());
     }
     @Override
     public void render() {
         // Rendering logic for the engine
         float delta = Gdx.graphics.getDeltaTime();
-        renderer.update(delta);
-        audioEmitter.update(delta);
-        inputHandler.update(delta);
-        physicsEngine.update(delta);
-        sceneManager.update(delta);
-        timerManager.update(delta);
+        for (GameSystem system : defaultSystems.values()) {
+            system.update(delta);
+        }
+        for (GameSystem system : optionalSystems) {
+            system.update(delta);
+        }
 
         EventBus.getInstance().process();
     }
@@ -65,30 +66,45 @@ public class Engine extends ApplicationAdapter {
     @Override
     public void dispose() {
         // Dispose logic for the engine
-        renderer.dispose();
-        audioEmitter.dispose();
-        inputHandler.dispose();
-        physicsEngine.dispose();
-        sceneManager.dispose();
-        timerManager.dispose();
+        for (GameSystem system : defaultSystems.values()) {
+            system.dispose();
+        }
+        for (GameSystem system : optionalSystems) {
+            system.dispose();
+        }
+
+    }
+
+    public void addSystem(GameSystem system) {
+        optionalSystems.add(system);
+    }
+    public void removeSystem(GameSystem system) {
+        optionalSystems.remove(system);
     }
 
     public EngineConfig getConfig() {
         return config;
     }
+    public PhysicsConfig getPhysicsConfig() {
+        return physicsConfig;
+    }
+
     public Renderer getRenderer() {
-        return renderer;
+        return (Renderer) defaultSystems.get(Renderer.class);
     }
     public AudioEmitter getAudioEmitter() {
-        return audioEmitter;
+        return (AudioEmitter) defaultSystems.get(AudioEmitter.class);
     }
     public InputHandler getInputHandler() {
-        return inputHandler;
+        return (InputHandler) defaultSystems.get(InputHandler.class);
+    }
+    public PhysicsEngine getPhysicsEngine() {
+        return (PhysicsEngine) defaultSystems.get(PhysicsEngine.class);
     }
     public SceneManager getSceneManager() {
-        return sceneManager;
+        return (SceneManager) defaultSystems.get(SceneManager.class);
     }
-    public TimerManager getTimerManager() {
-        return timerManager;
+    public TimerController getTimerManager() {
+        return (TimerController) defaultSystems.get(TimerController.class);
     }
 }

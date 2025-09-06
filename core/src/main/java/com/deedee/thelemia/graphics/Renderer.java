@@ -1,13 +1,13 @@
 package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.event.EventBus;
@@ -15,18 +15,18 @@ import com.deedee.thelemia.event.common.ChangeMapEvent;
 import com.deedee.thelemia.event.common.RenderAnimatedSpriteEvent;
 import com.deedee.thelemia.event.common.RenderFragmentEvent;
 import com.deedee.thelemia.event.common.RenderParticlesEvent;
-import com.deedee.thelemia.scene.IGameSystem;
+import com.deedee.thelemia.scene.GameSystem;
 import com.deedee.thelemia.scene.component.*;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
-public class Renderer implements IGameSystem, IRenderer {
+public class Renderer extends GameSystem implements IRenderer {
     private final RenderListener listener = new RenderListener(this);
     private final Color DEFAULT_BACKGROUND = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
-    private final Stage stage = new Stage();
+    private final Stage stage;
     private final Table root = new Table();
 
     private final Camera camera;
@@ -38,13 +38,15 @@ public class Renderer implements IGameSystem, IRenderer {
     private final List<AnimatedSpriteComponent> spriteComponents = new ArrayList<>();
     private final List<ParticlesComponent> particlesComponents = new ArrayList<>();
 
-    public Renderer() {
+    public Renderer(Stage stage) {
+        this.stage = stage;
         subscribeListener();
-        this.camera = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        camera = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.setProjectionMatrix(camera.getProjectionMatrix());
 
         stage.setViewport(camera.getViewport());
-        Gdx.input.setInputProcessor(stage);
+//        Gdx.input.setInputProcessor(stage);
 
         root.setFillParent(true);
         stage.addActor(root);
@@ -123,11 +125,17 @@ public class Renderer implements IGameSystem, IRenderer {
         TextureRegion texture = sprite.getCurrentAnimation().getKeyFrame(sprite.getTimeframe());
         TransformComponent transform = spriteComponent.getOwner().getComponentByType(TransformComponent.class);
 
-        float width = transform.getScale().x * texture.getRegionWidth();
-        float height = transform.getScale().y * texture.getRegionHeight();
+        if (texture == null) return;
+
+        Vector2 position = transform.getPosition();
+        Vector2 origin = transform.getOrigin();
+        Vector2 scale = transform.getScale();
+        float rotation = transform.getRotation();
+        float width = texture.getRegionWidth();
+        float height = texture.getRegionHeight();
 
         batch.begin();
-        batch.draw(texture, transform.getPosition().x, transform.getPosition().y, width, height);
+        batch.draw(texture, position.x, position.y, origin.x, origin.y, width, height, scale.x, scale.y, rotation);
         batch.end();
     }
     @Override

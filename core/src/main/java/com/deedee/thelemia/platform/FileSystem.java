@@ -3,7 +3,7 @@ package com.deedee.thelemia.platform;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
-public class FileHandler {
+public class FileSystem {
 
     public String readFile(String path) {
         FileHandle file = Gdx.files.local(path);

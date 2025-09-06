@@ -1,22 +1,18 @@
 package com.deedee.thelemia.audio;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.deedee.thelemia.audio.enumerate.EffectType;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.ControlMusicEvent;
 import com.deedee.thelemia.event.common.ControlSoundEvent;
-import com.deedee.thelemia.scene.IGameSystem;
+import com.deedee.thelemia.scene.GameSystem;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class AudioEmitter implements IGameSystem, IAudioEmitter {
+public class AudioEmitter extends GameSystem implements IAudioEmitter {
     private final AudioEventListener listener = new AudioEventListener(this);
 
     public AudioEmitter() {
-
+        subscribeListener();
     }
 
     @Override
@@ -72,7 +68,7 @@ public class AudioEmitter implements IGameSystem, IAudioEmitter {
         return true;
     }
     @Override
-    public boolean playMusic(Music music, IMusicEffect effect, float volume, boolean loop) {
+    public boolean playMusic(Music music, MusicEffect effect, float volume, boolean loop) {
         if (!effect.validate(music, EffectType.ON_START)) return false;
 
         music.setVolume(volume);
@@ -91,7 +87,7 @@ public class AudioEmitter implements IGameSystem, IAudioEmitter {
         return true;
     }
     @Override
-    public boolean stopMusic(Music music, IMusicEffect effect) {
+    public boolean stopMusic(Music music, MusicEffect effect) {
         if (!effect.validate(music, EffectType.ON_STOP)) return false;
 
         effect.apply(music);
@@ -106,7 +102,7 @@ public class AudioEmitter implements IGameSystem, IAudioEmitter {
         return true;
     }
     @Override
-    public boolean pauseMusic(Music music, IMusicEffect effect) {
+    public boolean pauseMusic(Music music, MusicEffect effect) {
         if (!effect.validate(music, EffectType.ON_PAUSE)) return false;
 
         effect.apply(music);
@@ -131,14 +127,14 @@ public class AudioEmitter implements IGameSystem, IAudioEmitter {
     }
 
     @Override
-    public boolean resumeMusic(Music music, IMusicEffect effect) {
+    public boolean resumeMusic(Music music, MusicEffect effect) {
         if (!effect.validate(music, EffectType.ON_RESUME)) return false;
 
         effect.apply(music);
         return true;
     }
     @Override
-    public boolean resumeMusic(Music music, IMusicEffect effect, float volume, boolean loop) {
+    public boolean resumeMusic(Music music, MusicEffect effect, float volume, boolean loop) {
         if (!effect.validate(music, EffectType.ON_RESUME)) return false;
 
         music.setVolume(volume);
@@ -148,7 +144,7 @@ public class AudioEmitter implements IGameSystem, IAudioEmitter {
     }
 
     @Override
-    public boolean applyPlayingEffect(Music music, IMusicEffect effect) {
+    public boolean applyPlayingEffect(Music music, MusicEffect effect) {
         if (!effect.validate(music, EffectType.ON_PLAYING)) return false;
 
         effect.apply(music);

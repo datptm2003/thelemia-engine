@@ -3,10 +3,10 @@ package com.deedee.thelemia.audio.effect;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
-import com.deedee.thelemia.audio.IMusicEffect;
+import com.deedee.thelemia.audio.MusicEffect;
 import com.deedee.thelemia.audio.enumerate.EffectType;
 
-public class FadeInEffect implements IMusicEffect {
+public class FadeInEffect extends MusicEffect {
     private final float duration;
 
     public FadeInEffect(float duration) {

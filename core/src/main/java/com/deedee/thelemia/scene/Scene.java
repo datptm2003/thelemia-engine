@@ -69,9 +69,7 @@ public class Scene implements IScene {
     @Override
     public void show() {
         EventBus.getInstance().post(new ChangeInputControllerEvent(inputController));
-        for (String alias : sounds) {
-            sceneManager.getAssetStorage().load(alias, Sound.class);
-        }
+        sceneManager.getAssetStorage().loadGroup(sounds, Sound.class);
     }
     @Override
     public void update(float delta) {
@@ -80,9 +78,7 @@ public class Scene implements IScene {
     @Override
     public void hide() {
         EventBus.getInstance().post(new ChangeInputControllerEvent(null));
-        for (String alias : sounds) {
-            sceneManager.getAssetStorage().unload(alias);
-        }
+        sceneManager.getAssetStorage().unloadGroup(sounds);
     }
 
     @Override

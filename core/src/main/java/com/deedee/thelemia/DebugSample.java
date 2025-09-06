@@ -34,14 +34,8 @@ public class DebugSample {
             this.player = player;
         }
 
-        @Override
-        public boolean keyDown(int keycode) {
-            switch (keycode) {
-                case Input.Keys.SPACE:
-                    return true;
-                default:
-                    return false;
-            }
+        public Entity getPlayer() {
+            return player;
         }
     }
 
@@ -82,6 +76,16 @@ public class DebugSample {
             if (isKeyPressed(Input.Keys.RIGHT) || isKeyPressed(Input.Keys.D)) dirX += 5f;
             if (isKeyPressed(Input.Keys.UP) || isKeyPressed(Input.Keys.W))    dirY += 5f;
             if (isKeyPressed(Input.Keys.DOWN) || isKeyPressed(Input.Keys.S))  dirY -= 5f;
+
+            if (isKeyPressed(Input.Keys.Q)) {
+                transform.setScale(transform.getScale().x * 0.8f, transform.getScale().y * 0.8f);
+            }
+            if (isKeyPressed(Input.Keys.E)) {
+                transform.setScale(transform.getScale().x * 1.25f, transform.getScale().y * 1.25f);
+            }
+            if (isKeyPressed(Input.Keys.SPACE)) {
+                transform.setRotation(transform.getRotation() + 45f);
+            }
 
             Vector2 desiredDir = new Vector2(dirX, dirY);
             if (desiredDir.len2() > 1e-6f) {

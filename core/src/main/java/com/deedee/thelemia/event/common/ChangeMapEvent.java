@@ -9,6 +9,7 @@ public class ChangeMapEvent extends Event {
     private final float unitScale;
 
     public ChangeMapEvent(TileMapComponent nextTilemapComponent, float unitScale) {
+        super();
         this.nextTileMapComponent = nextTilemapComponent;
         this.unitScale = 1.0f;
     }

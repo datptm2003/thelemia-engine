@@ -9,6 +9,7 @@ public class RenderParticlesEvent extends Event {
     private final ParticlesComponent particlesComponent;
 
     public RenderParticlesEvent(ParticlesComponent particlesComponent, int x, int y, boolean loop) {
+        super();
         this.particlesComponent = particlesComponent;
         this.particlesComponent.getGraphicsObject().setPosition(x, y);
         this.particlesComponent.getGraphicsObject().setLoop(loop);

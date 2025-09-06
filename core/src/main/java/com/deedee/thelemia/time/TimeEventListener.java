@@ -5,9 +5,9 @@ import com.deedee.thelemia.event.IEventListener;
 import com.deedee.thelemia.event.common.AddTimerEvent;
 
 public class TimeEventListener implements IEventListener {
-    private final TimerManager gameSystem;
+    private final TimerController gameSystem;
 
-    public TimeEventListener(TimerManager system) {
+    public TimeEventListener(TimerController system) {
         this.gameSystem = system;
     }
 
