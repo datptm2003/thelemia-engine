@@ -16,11 +16,14 @@ public class PhysicsEventListener implements IEventListener {
     public void onEvent(Event event) {
         if (event instanceof CreateRigidBodyEvent) {
             CreateRigidBodyEvent createRigidBodyEvent = (CreateRigidBodyEvent) event;
-            gameSystem.createBody(createRigidBodyEvent.getBodyDef(), createRigidBodyEvent.getFixtureDefs(), createRigidBodyEvent.getBodyData());
+            RigidBody rigidBody = gameSystem.createBody(createRigidBodyEvent.getBodyDef(), createRigidBodyEvent.getFixtureDefs(), createRigidBodyEvent.getBodyData());
+            createRigidBodyEvent.getResultMap().put(createRigidBodyEvent.getBodyData().getName(), rigidBody);
 
         } else if (event instanceof DestroyRigidBodyEvent) {
             DestroyRigidBodyEvent destroyRigidBodyEvent = (DestroyRigidBodyEvent) event;
-            gameSystem.destroyBody(destroyRigidBodyEvent.getName());
+            for (String name : destroyRigidBodyEvent.getNames()) {
+                gameSystem.destroyBody(name);
+            }
 
         }
     }

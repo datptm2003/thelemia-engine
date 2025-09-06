@@ -29,13 +29,11 @@ public class Engine extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Stage globalStage = new Stage();
-
-        defaultSystems.put(Renderer.class, new Renderer(globalStage));
-        defaultSystems.put(AudioEmitter.class, new AudioEmitter());
-        defaultSystems.put(InputHandler.class, new InputHandler(globalStage));
-        defaultSystems.put(PhysicsEngine.class, new PhysicsEngine(physicsConfig));
         defaultSystems.put(SceneManager.class, new SceneManager());
+        defaultSystems.put(InputHandler.class, new InputHandler()); // Must initialize before Renderer
+        defaultSystems.put(Renderer.class, new Renderer());
+        defaultSystems.put(AudioEmitter.class, new AudioEmitter());
+        defaultSystems.put(PhysicsEngine.class, new PhysicsEngine(physicsConfig));
         defaultSystems.put(TimerController.class, new TimerController());
     }
     @Override

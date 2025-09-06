@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import java.util.List;
 
 public interface IPhysicsEngine {
-    void createBody(BodyDef bodyDef, List<FixtureDef> fixtureDefs, BodyData bodyData);
+    RigidBody createBody(BodyDef bodyDef, List<FixtureDef> fixtureDefs, BodyData bodyData);
     RigidBody getRigidBody(String name);
     void destroyBody(String name);
 }

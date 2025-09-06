@@ -59,13 +59,14 @@ public class PhysicsEngine extends GameSystem implements IPhysicsEngine {
     }
 
     @Override
-    public void createBody(BodyDef bodyDef, List<FixtureDef> fixtureDefs, BodyData bodyData) {
+    public RigidBody createBody(BodyDef bodyDef, List<FixtureDef> fixtureDefs, BodyData bodyData) {
         Body body = world.createBody(bodyDef);
         for (FixtureDef fixtureDef : fixtureDefs) {
             body.createFixture(fixtureDef);
         }
         RigidBody rigidBody = new RigidBody(body, bodyData);
         bodies.put(bodyData.getName(), rigidBody);
+        return rigidBody;
     }
     @Override
     public RigidBody getRigidBody(String name) {

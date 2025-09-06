@@ -2,16 +2,24 @@ package com.deedee.thelemia.event.common;
 
 import com.deedee.thelemia.event.Event;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DestroyRigidBodyEvent extends Event {
-    private final String name;
+    private final List<String> names = new ArrayList<>();
 
     public DestroyRigidBodyEvent(String name) {
         super();
-        this.name = name;
+        this.names.add(name);
+    }
+    public DestroyRigidBodyEvent(List<String> names) {
+        super();
+        this.names.addAll(names);
     }
 
-    public String getName() {
-        return name;
+    public List<String> getNames() {
+        return names;
+
     }
 
     @Override

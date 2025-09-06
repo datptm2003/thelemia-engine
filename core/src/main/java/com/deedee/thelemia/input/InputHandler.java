@@ -4,26 +4,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.event.EventBus;
+import com.deedee.thelemia.event.common.AssignStageEvent;
 import com.deedee.thelemia.event.common.ChangeInputControllerEvent;
 import com.deedee.thelemia.scene.GameSystem;
 
 public class InputHandler extends GameSystem implements IInputHandler {
     private final InputListener listener = new InputListener(this);
 
-    private final Stage stage;
+    private Stage stage;
     private final InputMultiplexer multiplexer = new InputMultiplexer();
     private InputController<?> currentInputController;
 
-    public InputHandler(Stage stage) {
+    public InputHandler() {
         subscribeListener();
-        this.stage = stage;
-        multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
     }
 
     @Override
     public void subscribeListener() {
         EventBus.getInstance().subscribe(ChangeInputControllerEvent.class, listener);
+        EventBus.getInstance().subscribe(AssignStageEvent.class, listener);
     }
     @Override
     public void update(float delta) {
@@ -41,17 +41,17 @@ public class InputHandler extends GameSystem implements IInputHandler {
     }
 
     public void changeInputController(InputController<?> nextInputController) {
-        if (nextInputController == null) {
-            multiplexer.clear();
+        multiplexer.clear();
+        if (stage != null) {
             multiplexer.addProcessor(stage);
-            Gdx.input.setInputProcessor(multiplexer);
-        } else {
-            multiplexer.clear();
-            multiplexer.addProcessor(stage);
+        }
+        if (nextInputController != null) {
             multiplexer.addProcessor(nextInputController);
-            Gdx.input.setInputProcessor(multiplexer);
         }
         currentInputController = nextInputController;
+    }
+    public void assignStage(Stage stage) {
+        this.stage = stage;
     }
 
     public InputMultiplexer getMultiplexer() {

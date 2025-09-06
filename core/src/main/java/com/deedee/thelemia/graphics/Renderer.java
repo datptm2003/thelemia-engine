@@ -11,10 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.ChangeMapEvent;
-import com.deedee.thelemia.event.common.RenderAnimatedSpriteEvent;
-import com.deedee.thelemia.event.common.RenderFragmentEvent;
-import com.deedee.thelemia.event.common.RenderParticlesEvent;
+import com.deedee.thelemia.event.common.*;
 import com.deedee.thelemia.scene.GameSystem;
 import com.deedee.thelemia.scene.component.*;
 
@@ -38,18 +35,16 @@ public class Renderer extends GameSystem implements IRenderer {
     private final List<AnimatedSpriteComponent> spriteComponents = new ArrayList<>();
     private final List<ParticlesComponent> particlesComponents = new ArrayList<>();
 
-    public Renderer(Stage stage) {
-        this.stage = stage;
+    public Renderer() {
+        camera = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        stage = new Stage(camera.getViewport(), batch);
         subscribeListener();
 
-        camera = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.setProjectionMatrix(camera.getProjectionMatrix());
-
-        stage.setViewport(camera.getViewport());
-//        Gdx.input.setInputProcessor(stage);
-
         root.setFillParent(true);
         stage.addActor(root);
+
+        EventBus.getInstance().post(new AssignStageEvent(stage));
     }
 
     @Override
@@ -61,7 +56,7 @@ public class Renderer extends GameSystem implements IRenderer {
     }
     @Override
     public void update(float delta) {
-        batch.setProjectionMatrix(this.camera.getProjectionMatrix());
+        batch.setProjectionMatrix(camera.getProjectionMatrix());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update(delta);
@@ -92,6 +87,7 @@ public class Renderer extends GameSystem implements IRenderer {
     public void dispose() {
         batch.dispose();
         camera.dispose();
+        stage.dispose();
         shaderManager.dispose();
     }
     @Override
@@ -164,7 +160,7 @@ public class Renderer extends GameSystem implements IRenderer {
         if (color == null) Gdx.gl.glClearColor(DEFAULT_BACKGROUND.r, DEFAULT_BACKGROUND.g, DEFAULT_BACKGROUND.b, DEFAULT_BACKGROUND.a);
         else Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.dispose();
+        stage.clear();
         spriteComponents.clear();
     }
 
