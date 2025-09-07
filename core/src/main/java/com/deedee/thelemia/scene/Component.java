@@ -17,4 +17,9 @@ public abstract class Component implements IComponent {
         this.enabled = enabled;
     }
 
+    @Override
+    public Entity getOwner() {
+        return owner;
+    }
+
 }

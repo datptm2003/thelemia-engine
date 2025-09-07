@@ -1,80 +1,122 @@
 package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.ResetBufferEvent;
-import com.deedee.thelemia.event.common.UpdateBufferEvent;
-import com.deedee.thelemia.scene.IGameSystem;
+import com.deedee.thelemia.event.common.*;
+import com.deedee.thelemia.scene.GameSystem;
+import com.deedee.thelemia.scene.component.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Renderer implements IGameSystem, IRenderer {
-    public static class ChildEntry<T extends IRenderableObject> {
-        public String name;
-        public T object;
-        public Vector2 position;
-
-        public ChildEntry(String name, T object, Vector2 position) {
-            this.name = name;
-            this.object = object;
-            this.position = position;
-        }
-        public ChildEntry(T object, Vector2 position) {
-            this.name = "";
-            this.object = object;
-            this.position = position;
-        }
-    }
-
+public class Renderer extends GameSystem implements IRenderer {
     private final RenderListener listener = new RenderListener(this);
+    private final Color defaultBackground;
 
-    private final Color DEFAULT_BACKGROUND = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-    private final List<ChildEntry<?>> frequentObjects = new ArrayList<>();
+    private final Stage stage;
+    private final Table root = new Table();
 
     private final Camera camera;
-    private FrameBuffer fbo;
     private final SpriteBatch batch = new SpriteBatch();
 
-    private final AssetManager assetManager = new AssetManager();
     private final ShaderManager shaderManager = new ShaderManager();
+    private OrthogonalTiledMapRenderer mapRenderer;
 
-    public Renderer(int width, int height) {
-        this.camera = new Camera(width, height);
+    private final List<AnimatedSpriteComponent> spriteComponents = new ArrayList<>();
+    private final List<ParticlesComponent> particlesComponents = new ArrayList<>();
+    private Transition nextTransition;
+
+    public Renderer(Color backgroundColor) {
+        this.defaultBackground = backgroundColor;
+        camera = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        stage = new Stage(camera.getViewport(), batch);
         subscribeListener();
+
         batch.setProjectionMatrix(camera.getProjectionMatrix());
+        root.setFillParent(true);
+        stage.addActor(root);
+
+        EventBus.getInstance().post(new AssignStageEvent(stage));
+    }
+    public Renderer() {
+        this.defaultBackground = Color.WHITE;
+        camera = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        stage = new Stage(camera.getViewport(), batch);
+        subscribeListener();
+
+        batch.setProjectionMatrix(camera.getProjectionMatrix());
+        root.setFillParent(true);
+        stage.addActor(root);
+
+        EventBus.getInstance().post(new AssignStageEvent(stage));
     }
 
     @Override
     public void subscribeListener() {
-        EventBus.getInstance().subscribe(UpdateBufferEvent.class, listener);
-        EventBus.getInstance().subscribe(ResetBufferEvent.class, listener);
+        EventBus.getInstance().subscribe(RenderFragmentEvent.class, listener);
+        EventBus.getInstance().subscribe(RenderAnimatedSpriteEvent.class, listener);
+        EventBus.getInstance().subscribe(ChangeMapEvent.class, listener);
+        EventBus.getInstance().subscribe(RenderParticlesEvent.class, listener);
+        EventBus.getInstance().subscribe(ChangeTransitionEvent.class, listener);
+        EventBus.getInstance().subscribe(FinishTransitionEvent.class, listener);
+        EventBus.getInstance().subscribe(ApplyShaderEvent.class, listener);
+        EventBus.getInstance().subscribe(ResetShaderEvent.class, listener);
     }
     @Override
     public void update(float delta) {
-        batch.setProjectionMatrix(this.camera.getProjectionMatrix());
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        for (ChildEntry<?> entry : frequentObjects) {
-            entry.object.update(delta);
-            draw(entry.object, entry.position, 1.0f);
+        clearScreen(null);
+
+        camera.update(delta);
+        batch.setProjectionMatrix(camera.getProjectionMatrix());
+
+        if (mapRenderer != null) {
+            mapRenderer.setView(camera.getInternalCamera());
+            mapRenderer.render();
         }
+
+        // Flush the sprite batch
+        batch.begin();
+
+        for (AnimatedSpriteComponent spriteComponent : spriteComponents) {
+            AnimatedSprite sprite = spriteComponent.getGraphicsObject();
+            if (!sprite.isLoaded()) continue;
+
+            sprite.update(delta);
+            drawAnimatedSprite(spriteComponent);
+        }
+        for (ParticlesComponent particlesComponent : particlesComponents) {
+            Particles particles = particlesComponent.getGraphicsObject();
+            if (!particles.isLoaded()) continue;
+
+            particles.update(delta);
+            drawParticles(particlesComponent);
+        }
+
+        if (nextTransition != null && !nextTransition.isFinished()) {
+            nextTransition.draw(batch);
+        }
+
+        batch.end();
+
+        stage.act(delta);
+        stage.draw();
     }
     @Override
     public void dispose() {
         batch.dispose();
-        fbo.dispose();
         camera.dispose();
+        stage.dispose();
         shaderManager.dispose();
+        if (mapRenderer != null) mapRenderer.dispose();
     }
     @Override
     public RenderListener getListener() {
@@ -82,45 +124,47 @@ public class Renderer implements IGameSystem, IRenderer {
     }
 
     @Override
-    public void draw(IRenderableObject object, Vector2 position, int width, int height) {
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, object.getWidth(), object.getHeight(), false);
-        object.getDrawable(batch, fbo, false).draw(batch, position.x, position.y, width, height);
+    public void addWidget(WidgetComponent widgetComponent) {
+        root.add(widgetComponent.getGraphicsObject().getWidget());
     }
     @Override
-    public void draw(IRenderableObject object, Vector2 position, float scale) {
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, object.getWidth(), object.getHeight(), false);
-        Drawable drawable = object.getDrawable(batch, fbo, false);
-        float width = object.getWidth() * scale;
-        float height = object.getHeight() * scale;
-        drawable.draw(batch, position.x, position.y, width, height);
+    public void addAnimatedSprite(AnimatedSpriteComponent spriteComponent) {
+        spriteComponents.add(spriteComponent);
+    }
+    @Override
+    public void addParticles(ParticlesComponent particlesComponent) {
+        particlesComponents.add(particlesComponent);
+    }
+    @Override
+    public void changeTileMap(TileMapComponent tileMapComponent, float unitScale) {
+        if (mapRenderer != null) mapRenderer.dispose();
+
+        TileMap tileMap = tileMapComponent.getGraphicsObject();
+        mapRenderer = new OrthogonalTiledMapRenderer(tileMap.getTiledMap(), unitScale, batch);
     }
 
     @Override
-    public void addFrequentObjects(String name, IRenderableObject object, Vector2 position) {
-        frequentObjects.add(new ChildEntry<>(name, object, position));
+    public void drawAnimatedSprite(AnimatedSpriteComponent spriteComponent) {
+        AnimatedSprite sprite = spriteComponent.getGraphicsObject();
+        TransformComponent transform = spriteComponent.getOwner().getComponentByType(TransformComponent.class);
+
+        Vector2 position = transform.getPosition();
+        Vector2 origin = transform.getOrigin();
+        Vector2 scale = transform.getScale();
+        float rotation = transform.getRotation();
+
+        sprite.draw(batch, position.x, position.y, origin.x, origin.y, scale.x, scale.y, rotation);
     }
     @Override
-    public void removeFrequentObjects(String name) {
-        for (ChildEntry<?> entry : frequentObjects) {
-            if (entry.name.equals(name)) {
-                frequentObjects.remove(entry);
-                break;
-            }
-        }
+    public void drawParticles(ParticlesComponent particlesComponent) {
+        particlesComponent.getGraphicsObject().draw(batch);
     }
 
-    @Override
-    public void addSkin(String name, Skin skin) {
-        assetManager.addUiSkin(name, skin);
+    public void changeNextTransition(Transition nextTransition) {
+        this.nextTransition = nextTransition;
     }
-    @Override
-    public void addSkin(String name, String skinPath) {
-        FileHandle file = Gdx.files.internal(skinPath);
-        assetManager.addUiSkin(name, file);
-    }
-    @Override
-    public Skin getSkin(String name) {
-        return assetManager.getUiSkin(name);
+    public void finishCurrentTransition() {
+        if (nextTransition != null) nextTransition.finish();
     }
 
     @Override
@@ -139,14 +183,28 @@ public class Renderer implements IGameSystem, IRenderer {
 
     @Override
     public void clearScreen(Color color) {
-        if (color == null) Gdx.gl.glClearColor(DEFAULT_BACKGROUND.r, DEFAULT_BACKGROUND.g, DEFAULT_BACKGROUND.b, DEFAULT_BACKGROUND.a);
-        else Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
+        if (color == null) {
+            Gdx.gl.glClearColor(defaultBackground.r, defaultBackground.g, defaultBackground.b, defaultBackground.a);
+        } else {
+            Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
+        }
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
+    public Stage getStage() {
+        return stage;
+    }
+    public Table getRoot() {
+        return root;
+    }
     public Camera getCamera() {
         return camera;
     }
     public SpriteBatch getBatch() {
         return batch;
     }
+    public OrthogonalTiledMapRenderer getMapRenderer() {
+        return mapRenderer;
+    }
+
 }

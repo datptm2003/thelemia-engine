@@ -2,13 +2,7 @@ package com.deedee.thelemia.graphics;
 
 import com.deedee.thelemia.event.Event;
 import com.deedee.thelemia.event.IEventListener;
-import com.deedee.thelemia.event.common.ResetBufferEvent;
-import com.deedee.thelemia.event.common.UpdateBufferEvent;
-import com.deedee.thelemia.scene.Entity;
-import com.deedee.thelemia.scene.component.IGraphicsComponent;
-import com.deedee.thelemia.scene.enumerate.ComponentGroup;
-
-import java.util.List;
+import com.deedee.thelemia.event.common.*;
 
 public class RenderListener implements IEventListener {
     private final Renderer gameSystem;
@@ -19,30 +13,39 @@ public class RenderListener implements IEventListener {
 
     @Override
     public void onEvent(Event event) {
-        if (event instanceof UpdateBufferEvent) {
-            UpdateBufferEvent updateBufferEvent = (UpdateBufferEvent) event;
-            switch (updateBufferEvent.getRequestType()) {
-                case BY_SIZE:
-                    gameSystem.draw(updateBufferEvent.getRenderableObject(), updateBufferEvent.getPosition(), updateBufferEvent.getWidth(), updateBufferEvent.getHeight());
-                    break;
-                case BY_SCALE:
-                    gameSystem.draw(updateBufferEvent.getRenderableObject(), updateBufferEvent.getPosition(), updateBufferEvent.getScale());
-                    break;
+        if (event instanceof RenderFragmentEvent) {
+            RenderFragmentEvent renderFragmentEvent = (RenderFragmentEvent) event;
+            gameSystem.addWidget(renderFragmentEvent.getWidgetComponent());
+
+        } else if (event instanceof RenderAnimatedSpriteEvent) {
+            RenderAnimatedSpriteEvent renderAnimatedSpriteEvent = (RenderAnimatedSpriteEvent) event;
+            gameSystem.addAnimatedSprite(renderAnimatedSpriteEvent.getAnimatedSpriteComponent());
+
+        } else if (event instanceof ChangeMapEvent) {
+            ChangeMapEvent changeMapEvent = (ChangeMapEvent) event;
+            gameSystem.changeTileMap(changeMapEvent.getNextTileMapComponent(), 1.0f);
+
+        } else if (event instanceof RenderParticlesEvent) {
+            RenderParticlesEvent renderParticlesEvent = (RenderParticlesEvent) event;
+            gameSystem.addParticles(renderParticlesEvent.getParticlesComponent());
+
+        } else if (event instanceof ChangeTransitionEvent) {
+            ChangeTransitionEvent changeTransitionEvent = (ChangeTransitionEvent) event;
+            Transition nextTransition = changeTransitionEvent.getNextTransition();
+            gameSystem.changeNextTransition(nextTransition);
+            if (nextTransition != null) {
+                nextTransition.start();
             }
 
-        } else if (event instanceof ResetBufferEvent) {
-            ResetBufferEvent resetBufferEvent = (ResetBufferEvent) event;
-            gameSystem.clearScreen(resetBufferEvent.getBackgroundColor());
+        } else if (event instanceof FinishTransitionEvent) {
+            gameSystem.finishCurrentTransition();
 
-            for (Entity entity : resetBufferEvent.getRenderableEntities()) {
-                if (!entity.hasComponentGroup(ComponentGroup.GRAPHICS)) continue;
+        } else if (event instanceof ApplyShaderEvent) {
+            ApplyShaderEvent applyShaderEvent = (ApplyShaderEvent) event;
+            gameSystem.applyShader(applyShaderEvent.getShaderName());
 
-                List<? extends IGraphicsComponent> graphicsComponents = entity.getComponentsByGroup(ComponentGroup.GRAPHICS);
-                for (IGraphicsComponent component : graphicsComponents) {
-                    component.render();
-                }
-            }
-
+        } else if (event instanceof ResetShaderEvent) {
+            gameSystem.resetShader();
         }
     }
 }

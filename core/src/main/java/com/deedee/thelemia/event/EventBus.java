@@ -19,7 +19,7 @@ public class EventBus {
         return instance;
     }
 
-    public void subscribe(Class<?> eventType, IEventListener listener) {
+    public void subscribe(Class<? extends Event> eventType, IEventListener listener) {
         listeners.computeIfAbsent(eventType, k -> new ArrayList<>()).add(listener);
     }
 

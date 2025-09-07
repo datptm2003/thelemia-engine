@@ -8,17 +8,13 @@ import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 public class TransformComponent extends Component implements ICoreComponent {
     private Vector2 origin = new Vector2(0.0f, 0.0f);
     private Vector2 position = new Vector2(0.0f,0.0f);
-    private float scale = 1.0f;
+    private Vector2 scale = new Vector2(1.0f, 1.0f);
     private float rotation = 0.0f;
 
     public TransformComponent(Entity owner) {
         super(owner);
     }
 
-    @Override
-    public void update(float delta) {
-
-    }
     @Override
     public void reset() {
 
@@ -39,15 +35,17 @@ public class TransformComponent extends Component implements ICoreComponent {
     public Vector2 getPosition() {
         return position;
     }
-    public void setPosition(Vector2 position) {
-        this.position = position;
+    public void setPosition(float x, float y) {
+        this.position.x = x;
+        this.position.y = y;
     }
 
-    public float getScale() {
+    public Vector2 getScale() {
         return scale;
     }
-    public void setScale(float scale) {
-        this.scale = scale;
+    public void setScale(float width, float height) {
+        this.scale.x = width;
+        this.scale.y = height;
     }
 
     public float getRotation() {

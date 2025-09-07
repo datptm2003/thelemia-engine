@@ -1,5 +1,12 @@
 package com.deedee.thelemia.physics;
 
-public interface IPhysicsEngine {
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 
+import java.util.List;
+
+public interface IPhysicsEngine {
+    RigidBody createBody(BodyDef bodyDef, List<FixtureDef> fixtureDefs, BodyData bodyData);
+    RigidBody getRigidBody(String name);
+    void destroyBody(String name);
 }

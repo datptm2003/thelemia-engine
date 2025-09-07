@@ -1,19 +1,19 @@
 package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.deedee.thelemia.scene.component.AnimatedSpriteComponent;
+import com.deedee.thelemia.scene.component.ParticlesComponent;
+import com.deedee.thelemia.scene.component.TileMapComponent;
+import com.deedee.thelemia.scene.component.WidgetComponent;
 
 public interface IRenderer {
-    void draw(IRenderableObject object, Vector2 position, int width, int height);
-    void draw(IRenderableObject object, Vector2 position, float scale);
+    void addWidget(WidgetComponent widgetComponent);
+    void addAnimatedSprite(AnimatedSpriteComponent spriteComponent);
+    void addParticles(ParticlesComponent particlesComponent);
+    void changeTileMap(TileMapComponent tileMapComponent, float unitScale);
 
-    void addFrequentObjects(String name, IRenderableObject object, Vector2 position);
-    void removeFrequentObjects(String name);
-
-    void addSkin(String name, Skin skin);
-    void addSkin(String name, String skinPath);
-    Skin getSkin(String name);
+    void drawAnimatedSprite(AnimatedSpriteComponent spriteComponent);
+    void drawParticles(ParticlesComponent particlesComponent);
 
     void loadShader(String name, String vertexPath, String fragmentPath);
     void applyShader(String name);
