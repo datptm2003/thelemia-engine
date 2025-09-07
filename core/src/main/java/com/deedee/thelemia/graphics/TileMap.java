@@ -15,6 +15,7 @@ import com.deedee.thelemia.event.common.CreateRigidBodyEvent;
 import com.deedee.thelemia.event.common.DestroyRigidBodyEvent;
 import com.deedee.thelemia.physics.TileBodyData;
 import com.deedee.thelemia.physics.RigidBody;
+import com.deedee.thelemia.utils.Carrier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,7 +143,7 @@ public class TileMap extends GraphicsObject implements ITileMap {
         TileBodyData tileBodyData = new TileBodyData(layerName, tileX, tileY, collisionConfig.categoryMask, collisionConfig.collisionMask, collisionConfig.isSensor);
 
         // Create the rigid body using event system
-        EventBus.getInstance().post(new CreateRigidBodyEvent(tileColliders, bodyDef, fixtureDefs, tileBodyData));
+        EventBus.getInstance().post(new CreateRigidBodyEvent(new Carrier<>(tileColliders), bodyDef, fixtureDefs, tileBodyData));
 
         // Clean up shape
         shape.dispose();

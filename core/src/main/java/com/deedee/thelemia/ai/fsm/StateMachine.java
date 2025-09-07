@@ -27,6 +27,7 @@ public class StateMachine implements IStateMachine {
         this.initialState = initialState;
         this.currentState = initialState;
         this.globalState = globalState;
+        currentState.updateGlobalState(globalState);
     }
 
     @Override

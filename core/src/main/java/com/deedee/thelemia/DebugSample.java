@@ -183,7 +183,7 @@ public class DebugSample {
                 Timer particlesTimer = new Timer(5f, false, () -> {
                     EventBus.getInstance().post(new RenderParticlesEvent(testParticlesComponent, 350, 530, false));
                 });
-                EventBus.getInstance().post(new AddTimerEvent(particlesTimer));
+                EventBus.getInstance().post(new AddTimerEvent("test", particlesTimer));
             }
         };
     }

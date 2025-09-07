@@ -27,6 +27,8 @@ public class BehaviorTree implements IBehaviorTree {
 
     @Override
     public ActionStatus execute() {
+        if (root == null) return ActionStatus.FAILED;
+
         return root.execute(blackboard);
     }
     @Override

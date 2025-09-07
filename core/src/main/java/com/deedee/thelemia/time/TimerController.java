@@ -1,13 +1,16 @@
 package com.deedee.thelemia.time;
 
-import com.badlogic.gdx.utils.Array;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.AddTimerEvent;
+import com.deedee.thelemia.event.common.RemoveTimerEvent;
 import com.deedee.thelemia.scene.GameSystem;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class TimerController extends GameSystem implements ITimerManager {
     private final TimeEventListener listener = new TimeEventListener(this);
-    private final Array<Timer> timers = new Array<>();
+    private final Map<String, Timer> timers = new HashMap<>();
 
     public TimerController() {
         subscribeListener();
@@ -16,20 +19,19 @@ public class TimerController extends GameSystem implements ITimerManager {
     @Override
     public void subscribeListener() {
         EventBus.getInstance().subscribe(AddTimerEvent.class, listener);
+        EventBus.getInstance().subscribe(RemoveTimerEvent.class, listener);
     }
     @Override
     public void update(float delta) {
-        for (int i = timers.size - 1; i >= 0; i--) {
-            ITimer timer = timers.get(i);
-            timer.update(delta);
-            if (timer.isFinished()) {
-                timers.removeIndex(i);
+        for (Timer timer : timers.values()) {
+            if (!timer.isFinished()) {
+                timer.update(delta);
             }
         }
     }
     @Override
     public void dispose() {
-
+        clearAll();
     }
     @Override
     public TimeEventListener getListener() {
@@ -37,9 +39,14 @@ public class TimerController extends GameSystem implements ITimerManager {
     }
 
     @Override
-    public void addTimer(Timer timer) {
-        timers.add(timer);
+    public void addTimer(String id, Timer timer) {
+        timers.put(id, timer);
     }
+    @Override
+    public void removeTimer(String id) {
+        timers.remove(id);
+    }
+
     @Override
     public void clearAll() {
         timers.clear();

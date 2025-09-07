@@ -3,6 +3,7 @@ package com.deedee.thelemia.time;
 import com.deedee.thelemia.event.Event;
 import com.deedee.thelemia.event.IEventListener;
 import com.deedee.thelemia.event.common.AddTimerEvent;
+import com.deedee.thelemia.event.common.RemoveTimerEvent;
 
 public class TimeEventListener implements IEventListener {
     private final TimerController gameSystem;
@@ -15,7 +16,11 @@ public class TimeEventListener implements IEventListener {
     public void onEvent(Event event) {
         if (event instanceof AddTimerEvent) {
             AddTimerEvent addTimerEvent = (AddTimerEvent) event;
-            gameSystem.addTimer(addTimerEvent.getTimer());
+            gameSystem.addTimer(addTimerEvent.getId(), addTimerEvent.getTimer());
+
+        } else if (event instanceof RemoveTimerEvent) {
+            RemoveTimerEvent removeTimerEvent = (RemoveTimerEvent) event;
+            gameSystem.removeTimer(removeTimerEvent.getId());
         }
     }
 }
