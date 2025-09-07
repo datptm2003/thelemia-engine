@@ -16,7 +16,8 @@ public class SceneManager extends GameSystem implements ISceneManager {
     private final List<Scene> scenes = new ArrayList<>();
 
     private Scene currentScene;
-    private Transition currentTransition;
+    private Transition currentInTransition;
+    private Transition currentOutTransition;
     private Scene pendingNextScene;
 
     public SceneManager() {
@@ -30,21 +31,12 @@ public class SceneManager extends GameSystem implements ISceneManager {
 
     @Override
     public void update(float delta) {
-        if (currentTransition != null) {
-            currentTransition.update(delta);
-            if (currentTransition.isFinished()) {
-                if (currentScene != null) {
-                    unloadScene();
-                }
-                currentScene = pendingNextScene;
-                if (currentScene != null) {
-                    currentScene.show();
-                }
-                currentTransition = null;
-                pendingNextScene = null;
-                EventBus.getInstance().post(new ChangeTransitionEvent(null));
-            }
-        } else if (currentScene != null) {
+        if (currentOutTransition != null) {
+            updateOutTransition(delta);
+        } else if (currentInTransition != null) {
+            updateInTransition(delta);
+        }
+        if (currentScene != null) {
             currentScene.update(delta);
         }
     }
@@ -57,13 +49,51 @@ public class SceneManager extends GameSystem implements ISceneManager {
         return listener;
     }
 
-    @Override
-    public void loadScene(String name, Transition transition) {
-        currentTransition = transition;
-        pendingNextScene = getSceneByName(name);
-        EventBus.getInstance().post(new ChangeTransitionEvent(transition));
+    private void updateOutTransition(float delta) {
+        currentOutTransition.update(delta);
+        if (currentOutTransition.isFinished()) {
+            if (currentScene != null) {
+                unloadScene();
+            }
 
-        if (currentTransition == null) {
+            currentScene = pendingNextScene;
+            if (currentScene != null) {
+                currentScene.show();
+            }
+            currentOutTransition = null;
+            pendingNextScene = null;
+
+            EventBus.getInstance().post(new ChangeTransitionEvent(currentInTransition));
+        }
+    }
+    private void updateInTransition(float delta) {
+        currentInTransition.update(delta);
+
+        if (currentInTransition.isFinished()) {
+            currentInTransition = null;
+            EventBus.getInstance().post(new ChangeTransitionEvent(null));
+        }
+    }
+
+    @Override
+    public void loadScene(String name) {
+        if (currentScene != null) {
+            unloadScene();
+        }
+        currentScene = getSceneByName(name);
+        if (currentScene != null) {
+            currentScene.show();
+        }
+
+    }
+    @Override
+    public void loadScene(String name, Transition outTransition, Transition inTransition) {
+        currentOutTransition = outTransition;
+        currentInTransition = inTransition;
+        pendingNextScene = getSceneByName(name);
+        EventBus.getInstance().post(new ChangeTransitionEvent(outTransition));
+
+        if (currentOutTransition == null) {
             if (currentScene != null) {
                 unloadScene();
             }
@@ -78,7 +108,7 @@ public class SceneManager extends GameSystem implements ISceneManager {
     @Override
     public void unloadScene() {
         currentScene.hide();
-//        currentScene = null;
+        currentScene = null;
     }
 
     @Override

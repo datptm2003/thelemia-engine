@@ -3,6 +3,7 @@ package com.deedee.thelemia.graphics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.deedee.thelemia.event.EventBus;
@@ -119,12 +120,21 @@ public class AnimatedSprite extends GraphicsObject implements IAnimatedSprite {
         animations.clear();
     }
 
-
     public void setAnimation(String key) {
         if (animations.containsKey(key)) {
             currentAnimation = key;
             timeframe = 0f; // reset on switch
         }
+    }
+
+    public void draw(SpriteBatch batch, float x, float y, float originX, float originY, float scaleX, float scaleY, float rotation) {
+        if (currentAnimation == null) return;
+
+        TextureRegion region = getCurrentAnimation().getKeyFrame(timeframe);
+        float width = region.getRegionWidth();
+        float height = region.getRegionHeight();
+
+        batch.draw(region, x, y, originX, originY, width, height, scaleX, scaleY, rotation);
     }
 
     public Animation<TextureRegion> getCurrentAnimation() {

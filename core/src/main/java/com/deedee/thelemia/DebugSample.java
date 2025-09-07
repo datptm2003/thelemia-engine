@@ -116,6 +116,7 @@ public class DebugSample {
 
     public DebugSample(Engine engine) {
         this.engine = engine;
+        engine.getRenderer().loadShader("test", "shaders/vertex.glsl", "shaders/negative.glsl");
     }
 
     public void setup() {
@@ -160,7 +161,7 @@ public class DebugSample {
         engine.getSceneManager().addScene(testScene1);
         engine.getSceneManager().addScene(testScene2);
 
-        engine.getSceneManager().loadScene("test1", null);
+        engine.getSceneManager().loadScene("test1");
     }
 
     private Scene getSampleScene1(Entity testAnimatedSpriteEntity) {
@@ -179,9 +180,11 @@ public class DebugSample {
                 EventBus.getInstance().post(new RenderAnimatedSpriteEvent(animatedSpriteComponent));
                 Timer particlesTimer = new Timer(2f, false, () -> {
                     EventBus.getInstance().post(new RenderParticlesEvent(testParticlesComponent, 350, 530, false));
+                    EventBus.getInstance().post(new ApplyShaderEvent("test"));
                 });
                 Timer changeSceneTimer = new Timer(5f, false, () -> {
-                    engine.getSceneManager().loadScene("test2", new FadeTransition(1f, false));
+                    EventBus.getInstance().post(new ResetShaderEvent());
+                    engine.getSceneManager().loadScene("test2", new FadeTransition(1f, false), new FadeTransition(1f, true));
                 });
                 EventBus.getInstance().post(new AddTimerEvent("test1", particlesTimer));
                 EventBus.getInstance().post(new AddTimerEvent("test2", changeSceneTimer));

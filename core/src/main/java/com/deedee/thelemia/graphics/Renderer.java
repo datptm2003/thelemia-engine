@@ -17,7 +17,6 @@ import com.deedee.thelemia.scene.component.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class Renderer extends GameSystem implements IRenderer {
     private final RenderListener listener = new RenderListener(this);
@@ -69,6 +68,8 @@ public class Renderer extends GameSystem implements IRenderer {
         EventBus.getInstance().subscribe(RenderParticlesEvent.class, listener);
         EventBus.getInstance().subscribe(ChangeTransitionEvent.class, listener);
         EventBus.getInstance().subscribe(FinishTransitionEvent.class, listener);
+        EventBus.getInstance().subscribe(ApplyShaderEvent.class, listener);
+        EventBus.getInstance().subscribe(ResetShaderEvent.class, listener);
     }
     @Override
     public void update(float delta) {
@@ -145,19 +146,14 @@ public class Renderer extends GameSystem implements IRenderer {
     @Override
     public void drawAnimatedSprite(AnimatedSpriteComponent spriteComponent) {
         AnimatedSprite sprite = spriteComponent.getGraphicsObject();
-        TextureRegion texture = sprite.getCurrentAnimation().getKeyFrame(sprite.getTimeframe());
         TransformComponent transform = spriteComponent.getOwner().getComponentByType(TransformComponent.class);
-
-        if (texture == null) return;
 
         Vector2 position = transform.getPosition();
         Vector2 origin = transform.getOrigin();
         Vector2 scale = transform.getScale();
         float rotation = transform.getRotation();
-        float width = texture.getRegionWidth();
-        float height = texture.getRegionHeight();
 
-        batch.draw(texture, position.x, position.y, origin.x, origin.y, width, height, scale.x, scale.y, rotation);
+        sprite.draw(batch, position.x, position.y, origin.x, origin.y, scale.x, scale.y, rotation);
     }
     @Override
     public void drawParticles(ParticlesComponent particlesComponent) {

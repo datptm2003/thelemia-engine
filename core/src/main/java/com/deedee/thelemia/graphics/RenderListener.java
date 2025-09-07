@@ -39,6 +39,13 @@ public class RenderListener implements IEventListener {
 
         } else if (event instanceof FinishTransitionEvent) {
             gameSystem.finishCurrentTransition();
+
+        } else if (event instanceof ApplyShaderEvent) {
+            ApplyShaderEvent applyShaderEvent = (ApplyShaderEvent) event;
+            gameSystem.applyShader(applyShaderEvent.getShaderName());
+
+        } else if (event instanceof ResetShaderEvent) {
+            gameSystem.resetShader();
         }
     }
 }
