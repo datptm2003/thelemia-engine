@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,13 +26,12 @@ import com.deedee.thelemia.scene.component.WidgetComponent;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class ThelemiaLauncher extends ApplicationAdapter {
-    private final EngineConfig config = new EngineConfig(1920, 1048, "MyThelemiaEngine", false);
+    private final EngineConfig config = new EngineConfig(new Color(0.15f, 0.15f, 0.2f, 1f), 1920, 1048, "MyThelemiaEngine", false);
     private final PhysicsConfig physicsConfig = new PhysicsConfig(new Vector2());
     private final Engine engine = new Engine(config, physicsConfig);
 
     @Override
     public void create() {
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         engine.create();
 
         DebugSample debugSample = new DebugSample(engine);

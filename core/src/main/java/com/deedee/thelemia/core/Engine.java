@@ -31,10 +31,10 @@ public class Engine extends ApplicationAdapter {
     public void create() {
         defaultSystems.put(SceneManager.class, new SceneManager());
         defaultSystems.put(InputHandler.class, new InputHandler()); // Must initialize before Renderer
-        defaultSystems.put(Renderer.class, new Renderer());
         defaultSystems.put(AudioEmitter.class, new AudioEmitter());
         defaultSystems.put(PhysicsEngine.class, new PhysicsEngine(physicsConfig));
         defaultSystems.put(TimerController.class, new TimerController());
+        defaultSystems.put(Renderer.class, new Renderer(config.getBackgroundColor()));
     }
     @Override
     public void render() {

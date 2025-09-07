@@ -21,6 +21,7 @@ import com.deedee.thelemia.graphics.AnimatedSprite;
 import com.deedee.thelemia.graphics.Fragment;
 import com.deedee.thelemia.graphics.Particles;
 import com.deedee.thelemia.graphics.TileMap;
+import com.deedee.thelemia.graphics.transition.FadeTransition;
 import com.deedee.thelemia.input.InputController;
 import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.Scene;
@@ -126,7 +127,7 @@ public class DebugSample {
         testAnimatedSprite.setAnimation("test");
         Entity testAnimatedSpriteEntity = new Entity("animation");
 
-        Fragment testFragment = getSimpleFragment(skin);
+        Fragment testFragment = getSampleFragment(skin);
         Entity testFragmentEntity = new Entity("fragment");
 
         TileMap testTileMap = new TileMap(skin, "tilemap/gameart2d-desert.tmx");
@@ -148,47 +149,71 @@ public class DebugSample {
         ParticlesComponent particlesComponent = new ParticlesComponent(testParticlesEntity, testParticles);
         testParticlesEntity.addComponent(particlesComponent);
 
-        Scene testScene = getSampleScene(testAnimatedSpriteEntity);
+        Scene testScene1 = getSampleScene1(testAnimatedSpriteEntity);
+        Scene testScene2 = getSampleScene2(testAnimatedSpriteEntity);
 
-        testScene.addEntity(testAnimatedSpriteEntity);
-        testScene.addEntity(testFragmentEntity);
-        testScene.addEntity(testTileMapEntity);
-        testScene.addEntity(testParticlesEntity);
+        testScene1.addEntity(testAnimatedSpriteEntity);
+        testScene2.addEntity(testFragmentEntity);
+        testScene2.addEntity(testTileMapEntity);
+        testScene1.addEntity(testParticlesEntity);
 
-        engine.getSceneManager().addScene(testScene);
-        engine.getSceneManager().loadScene("test");
+        engine.getSceneManager().addScene(testScene1);
+        engine.getSceneManager().addScene(testScene2);
+
+        engine.getSceneManager().loadScene("test1", null);
     }
 
-    private Scene getSampleScene(Entity testAnimatedSpriteEntity) {
+    private Scene getSampleScene1(Entity testAnimatedSpriteEntity) {
         CustomInputAdapter testInputAdapter = new CustomInputAdapter(testAnimatedSpriteEntity);
 
-        return new Scene("test", new CustomInputController(testInputAdapter), engine.getSceneManager()) {
+        return new Scene("test1", new CustomInputController(testInputAdapter), engine.getSceneManager()) {
+            @Override
+            public void show() {
+                super.show();
+                Entity testAnimatedSpriteEntity = getEntityById("animation");
+                Entity testParticlesEntity = getEntityById("particles");
+
+                AnimatedSpriteComponent animatedSpriteComponent = testAnimatedSpriteEntity.getComponentByType(AnimatedSpriteComponent.class);
+                ParticlesComponent testParticlesComponent = testParticlesEntity.getComponentByType(ParticlesComponent.class);
+
+                EventBus.getInstance().post(new RenderAnimatedSpriteEvent(animatedSpriteComponent));
+                Timer particlesTimer = new Timer(2f, false, () -> {
+                    EventBus.getInstance().post(new RenderParticlesEvent(testParticlesComponent, 350, 530, false));
+                });
+                Timer changeSceneTimer = new Timer(5f, false, () -> {
+                    engine.getSceneManager().loadScene("test2", new FadeTransition(1f, false));
+                });
+                EventBus.getInstance().post(new AddTimerEvent("test1", particlesTimer));
+                EventBus.getInstance().post(new AddTimerEvent("test2", changeSceneTimer));
+            }
+
+            @Override
+            public void hide() {
+                super.hide();
+//                engine.getRenderer().clearScreen(null);
+            }
+        };
+    }
+    private Scene getSampleScene2(Entity testAnimatedSpriteEntity) {
+        CustomInputAdapter testInputAdapter = new CustomInputAdapter(testAnimatedSpriteEntity);
+
+        return new Scene("test2", new CustomInputController(testInputAdapter), engine.getSceneManager()) {
             @Override
             public void show() {
                 super.show();
                 Entity testFragmentEntity = getEntityById("fragment");
-                Entity testAnimatedSpriteEntity1 = getEntityById("animation");
                 Entity testTileMapEntity = getEntityById("tilemap");
-                Entity testParticlesEntity = getEntityById("particles");
 
                 WidgetComponent widgetComponent = testFragmentEntity.getComponentByType(WidgetComponent.class);
-                AnimatedSpriteComponent animatedSpriteComponent = testAnimatedSpriteEntity1.getComponentByType(AnimatedSpriteComponent.class);
                 TileMapComponent tileMapComponent = testTileMapEntity.getComponentByType(TileMapComponent.class);
-                ParticlesComponent testParticlesComponent = testParticlesEntity.getComponentByType(ParticlesComponent.class);
 
                 EventBus.getInstance().post(new RenderFragmentEvent(widgetComponent, 1.0f));
-                EventBus.getInstance().post(new RenderAnimatedSpriteEvent(animatedSpriteComponent));
                 EventBus.getInstance().post(new ChangeMapEvent(tileMapComponent));
-
-                Timer particlesTimer = new Timer(5f, false, () -> {
-                    EventBus.getInstance().post(new RenderParticlesEvent(testParticlesComponent, 350, 530, false));
-                });
-                EventBus.getInstance().post(new AddTimerEvent("test", particlesTimer));
             }
         };
     }
 
-    private Fragment getSimpleFragment(Skin skin) {
+    private Fragment getSampleFragment(Skin skin) {
         return new Fragment(skin,1.0f) {
             @Override
             public void create() {

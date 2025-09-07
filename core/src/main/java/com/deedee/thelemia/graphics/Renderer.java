@@ -21,7 +21,7 @@ import java.util.Vector;
 
 public class Renderer extends GameSystem implements IRenderer {
     private final RenderListener listener = new RenderListener(this);
-    private final Color DEFAULT_BACKGROUND = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+    private final Color defaultBackground;
 
     private final Stage stage;
     private final Table root = new Table();
@@ -34,8 +34,22 @@ public class Renderer extends GameSystem implements IRenderer {
 
     private final List<AnimatedSpriteComponent> spriteComponents = new ArrayList<>();
     private final List<ParticlesComponent> particlesComponents = new ArrayList<>();
+    private Transition nextTransition;
 
+    public Renderer(Color backgroundColor) {
+        this.defaultBackground = backgroundColor;
+        camera = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        stage = new Stage(camera.getViewport(), batch);
+        subscribeListener();
+
+        batch.setProjectionMatrix(camera.getProjectionMatrix());
+        root.setFillParent(true);
+        stage.addActor(root);
+
+        EventBus.getInstance().post(new AssignStageEvent(stage));
+    }
     public Renderer() {
+        this.defaultBackground = Color.WHITE;
         camera = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(camera.getViewport(), batch);
         subscribeListener();
@@ -53,17 +67,23 @@ public class Renderer extends GameSystem implements IRenderer {
         EventBus.getInstance().subscribe(RenderAnimatedSpriteEvent.class, listener);
         EventBus.getInstance().subscribe(ChangeMapEvent.class, listener);
         EventBus.getInstance().subscribe(RenderParticlesEvent.class, listener);
+        EventBus.getInstance().subscribe(ChangeTransitionEvent.class, listener);
+        EventBus.getInstance().subscribe(FinishTransitionEvent.class, listener);
     }
     @Override
     public void update(float delta) {
-        batch.setProjectionMatrix(camera.getProjectionMatrix());
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        clearScreen(null);
 
         camera.update(delta);
+        batch.setProjectionMatrix(camera.getProjectionMatrix());
+
         if (mapRenderer != null) {
             mapRenderer.setView(camera.getInternalCamera());
             mapRenderer.render();
         }
+
+        // Flush the sprite batch
+        batch.begin();
 
         for (AnimatedSpriteComponent spriteComponent : spriteComponents) {
             AnimatedSprite sprite = spriteComponent.getGraphicsObject();
@@ -80,6 +100,12 @@ public class Renderer extends GameSystem implements IRenderer {
             drawParticles(particlesComponent);
         }
 
+        if (nextTransition != null && !nextTransition.isFinished()) {
+            nextTransition.draw(batch);
+        }
+
+        batch.end();
+
         stage.act(delta);
         stage.draw();
     }
@@ -89,6 +115,7 @@ public class Renderer extends GameSystem implements IRenderer {
         camera.dispose();
         stage.dispose();
         shaderManager.dispose();
+        if (mapRenderer != null) mapRenderer.dispose();
     }
     @Override
     public RenderListener getListener() {
@@ -130,15 +157,18 @@ public class Renderer extends GameSystem implements IRenderer {
         float width = texture.getRegionWidth();
         float height = texture.getRegionHeight();
 
-        batch.begin();
         batch.draw(texture, position.x, position.y, origin.x, origin.y, width, height, scale.x, scale.y, rotation);
-        batch.end();
     }
     @Override
     public void drawParticles(ParticlesComponent particlesComponent) {
-        batch.begin();
         particlesComponent.getGraphicsObject().draw(batch);
-        batch.end();
+    }
+
+    public void changeNextTransition(Transition nextTransition) {
+        this.nextTransition = nextTransition;
+    }
+    public void finishCurrentTransition() {
+        if (nextTransition != null) nextTransition.finish();
     }
 
     @Override
@@ -157,11 +187,12 @@ public class Renderer extends GameSystem implements IRenderer {
 
     @Override
     public void clearScreen(Color color) {
-        if (color == null) Gdx.gl.glClearColor(DEFAULT_BACKGROUND.r, DEFAULT_BACKGROUND.g, DEFAULT_BACKGROUND.b, DEFAULT_BACKGROUND.a);
-        else Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
+        if (color == null) {
+            Gdx.gl.glClearColor(defaultBackground.r, defaultBackground.g, defaultBackground.b, defaultBackground.a);
+        } else {
+            Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
+        }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.clear();
-        spriteComponents.clear();
     }
 
     public Stage getStage() {

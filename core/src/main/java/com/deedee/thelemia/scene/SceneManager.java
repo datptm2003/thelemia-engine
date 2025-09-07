@@ -2,7 +2,9 @@ package com.deedee.thelemia.scene;
 
 import com.deedee.thelemia.ai.utils.MessageDispatcher;
 import com.deedee.thelemia.event.EventBus;
+import com.deedee.thelemia.event.common.ChangeTransitionEvent;
 import com.deedee.thelemia.event.common.DispatchMessageEvent;
+import com.deedee.thelemia.graphics.Transition;
 
 import java.util.*;
 
@@ -12,7 +14,10 @@ public class SceneManager extends GameSystem implements ISceneManager {
     private final MessageDispatcher messageDispatcher = new MessageDispatcher();
     private final AssetStorage assetStorage = new AssetStorage();
     private final List<Scene> scenes = new ArrayList<>();
+
     private Scene currentScene;
+    private Transition currentTransition;
+    private Scene pendingNextScene;
 
     public SceneManager() {
         subscribeListener();
@@ -25,7 +30,21 @@ public class SceneManager extends GameSystem implements ISceneManager {
 
     @Override
     public void update(float delta) {
-        if (currentScene != null) {
+        if (currentTransition != null) {
+            currentTransition.update(delta);
+            if (currentTransition.isFinished()) {
+                if (currentScene != null) {
+                    unloadScene();
+                }
+                currentScene = pendingNextScene;
+                if (currentScene != null) {
+                    currentScene.show();
+                }
+                currentTransition = null;
+                pendingNextScene = null;
+                EventBus.getInstance().post(new ChangeTransitionEvent(null));
+            }
+        } else if (currentScene != null) {
             currentScene.update(delta);
         }
     }
@@ -39,17 +58,27 @@ public class SceneManager extends GameSystem implements ISceneManager {
     }
 
     @Override
-    public void loadScene(String name) {
-        if (currentScene != null) {
-            unloadScene();
+    public void loadScene(String name, Transition transition) {
+        currentTransition = transition;
+        pendingNextScene = getSceneByName(name);
+        EventBus.getInstance().post(new ChangeTransitionEvent(transition));
+
+        if (currentTransition == null) {
+            if (currentScene != null) {
+                unloadScene();
+            }
+            currentScene = pendingNextScene;
+            if (currentScene != null) {
+                currentScene.show();
+            }
+            pendingNextScene = null;
         }
-        currentScene = getSceneByName(name);
-        currentScene.show();
+
     }
     @Override
     public void unloadScene() {
         currentScene.hide();
-        currentScene = null;
+//        currentScene = null;
     }
 
     @Override
