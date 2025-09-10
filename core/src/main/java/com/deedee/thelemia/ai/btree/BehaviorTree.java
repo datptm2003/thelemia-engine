@@ -3,7 +3,7 @@ package com.deedee.thelemia.ai.btree;
 import com.deedee.thelemia.ai.enumerate.ActionStatus;
 import com.deedee.thelemia.scene.Entity;
 
-public class BehaviorTree implements IBehaviorTree {
+public class BehaviorTree {
     private final Entity owner;
 
     private Node root;
@@ -25,17 +25,14 @@ public class BehaviorTree implements IBehaviorTree {
         this.blackboard = new Blackboard(owner);
     }
 
-    @Override
     public ActionStatus execute() {
         if (root == null) return ActionStatus.FAILED;
 
         return root.execute(blackboard);
     }
-    @Override
     public void reset() {
 
     }
-    @Override
     public void release() {
 
     }

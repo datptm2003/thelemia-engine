@@ -2,17 +2,17 @@ package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.Disposable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ShaderManager implements IShaderManager {
+public class ShaderManager implements Disposable {
     private final Map<String, ShaderProgram> shaders = new HashMap<>();
     private ShaderProgram currentShader;
 
     public ShaderManager() {}
 
-    @Override
     public void loadShader(String name, String vertexPath, String fragmentPath) {
         String vertexCode = Gdx.files.internal(vertexPath).readString();
         String fragmentCode = Gdx.files.internal(fragmentPath).readString();
@@ -25,7 +25,6 @@ public class ShaderManager implements IShaderManager {
 
         shaders.put(name, shader);
     }
-    @Override
     public ShaderProgram applyShader(String name) {
         ShaderProgram shader = shaders.get(name);
         if (shader != null) {
@@ -34,7 +33,6 @@ public class ShaderManager implements IShaderManager {
         }
         return currentShader;
     }
-    @Override
     public void setUniform(String name, Object value) {
         if (currentShader == null) return;
 

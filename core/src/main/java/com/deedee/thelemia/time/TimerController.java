@@ -8,7 +8,7 @@ import com.deedee.thelemia.scene.GameSystem;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TimerController extends GameSystem implements ITimerManager {
+public class TimerController extends GameSystem {
     private final TimeEventListener listener = new TimeEventListener(this);
     private final Map<String, Timer> timers = new HashMap<>();
 
@@ -38,16 +38,13 @@ public class TimerController extends GameSystem implements ITimerManager {
         return listener;
     }
 
-    @Override
     public void addTimer(String id, Timer timer) {
         timers.put(id, timer);
     }
-    @Override
     public void removeTimer(String id) {
         timers.remove(id);
     }
 
-    @Override
     public void clearAll() {
         timers.clear();
     }

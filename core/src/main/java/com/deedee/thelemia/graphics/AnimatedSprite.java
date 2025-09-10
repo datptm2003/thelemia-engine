@@ -6,16 +6,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.RenderAnimatedSpriteEvent;
-import com.deedee.thelemia.scene.component.TransformComponent;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class AnimatedSprite extends GraphicsObject implements IAnimatedSprite {
+public class AnimatedSprite extends RenderableObject {
     private final Map<String, Animation<TextureRegion>> animations = new HashMap<>();
     private String currentAnimation = null;
     private float timeframe = 0f;

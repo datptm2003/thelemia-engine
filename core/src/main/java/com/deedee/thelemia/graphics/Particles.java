@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Particles extends GraphicsObject implements IParticles {
+public class Particles extends RenderableObject {
     protected ParticleEffect template;
     protected ParticleEffectPool pool;
     protected final List<PooledEffect> activeEffects = new ArrayList<>();
@@ -142,7 +142,6 @@ public class Particles extends GraphicsObject implements IParticles {
         pool = new ParticleEffectPool(template, Math.max(1, initial), Math.max(initial, max));
     }
 
-    @Override
     public PooledEffect spawn(float x, float y) {
         if (pool == null) {
             throw new IllegalStateException("Particles not loaded. Call load(...) first.");
@@ -159,18 +158,15 @@ public class Particles extends GraphicsObject implements IParticles {
         setStopped(false);
         return e;
     }
-    @Override
     public PooledEffect spawn() {
         return spawn(position.x, position.y);
     }
 
-    @Override
     public void draw(SpriteBatch batch) {
         for (PooledEffect pooledEffect : activeEffects) {
             pooledEffect.draw(batch);
         }
     }
-    @Override
     public void clear() {
         for (int i = activeEffects.size() - 1; i >= 0; i--) {
             PooledEffect e = activeEffects.remove(i);
@@ -180,7 +176,6 @@ public class Particles extends GraphicsObject implements IParticles {
         }
     }
 
-    @Override
     public void allowCompletion() {
         for (PooledEffect e : activeEffects) {
             try {
@@ -192,7 +187,6 @@ public class Particles extends GraphicsObject implements IParticles {
             }
         }
     }
-    @Override
     public void setEmittersCleanUpBlendFunction(boolean value) {
         try {
             if (template != null) template.setEmittersCleanUpBlendFunction(value);
@@ -206,6 +200,10 @@ public class Particles extends GraphicsObject implements IParticles {
         }
     }
 
+    @Override
+    public void create() {
+        super.create();
+    }
     @Override
     public void start() {
         super.start();

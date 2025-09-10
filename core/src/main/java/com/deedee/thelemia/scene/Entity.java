@@ -5,7 +5,7 @@ import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 import java.util.*;
 
-public class Entity implements IEntity {
+public class Entity {
     protected final String id;
     protected final Map<Class<? extends Component>, Component> components = new HashMap<>();
     protected final Map<ComponentGroup, Boolean> componentGroups = new HashMap<>();
@@ -24,21 +24,17 @@ public class Entity implements IEntity {
         addComponent(new TransformComponent(this));
     }
 
-    @Override
     public void addComponent(Component component) {
         components.put(component.getClass(), component);
         componentGroups.put(component.getGroup(), true);
     }
-    @Override
     public boolean hasComponentGroup(ComponentGroup group) {
         return componentGroups.get(group);
     }
-    @Override
     @SuppressWarnings("unchecked")
     public <T extends Component> T getComponentByType(Class<T> type) {
         return (T) components.get(type);
     }
-    @Override
     @SuppressWarnings("unchecked")
     public <T extends Component> List<T> getComponentsByGroup(ComponentGroup group) {
         List<T> result = new ArrayList<>();
@@ -49,11 +45,9 @@ public class Entity implements IEntity {
         }
         return result;
     }
-    @Override
     public List<Component> getAllComponents() {
         return new ArrayList<>(components.values());
     }
-    @Override
     public void removeComponent(Class<? extends Component> componentType) {
         components.remove(componentType);
     }

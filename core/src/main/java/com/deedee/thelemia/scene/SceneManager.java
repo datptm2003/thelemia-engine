@@ -8,7 +8,7 @@ import com.deedee.thelemia.graphics.Transition;
 
 import java.util.*;
 
-public class SceneManager extends GameSystem implements ISceneManager {
+public class SceneManager extends GameSystem {
     private final SceneEventListener listener = new SceneEventListener(this);
 
     private final MessageDispatcher messageDispatcher = new MessageDispatcher();
@@ -75,7 +75,6 @@ public class SceneManager extends GameSystem implements ISceneManager {
         }
     }
 
-    @Override
     public void loadScene(String name) {
         if (currentScene != null) {
             unloadScene();
@@ -86,7 +85,6 @@ public class SceneManager extends GameSystem implements ISceneManager {
         }
 
     }
-    @Override
     public void loadScene(String name, Transition outTransition, Transition inTransition) {
         currentOutTransition = outTransition;
         currentInTransition = inTransition;
@@ -105,13 +103,11 @@ public class SceneManager extends GameSystem implements ISceneManager {
         }
 
     }
-    @Override
     public void unloadScene() {
         currentScene.hide();
         currentScene = null;
     }
 
-    @Override
     public boolean addScene(Scene newScene) {
         if (getSceneByName(newScene.getName()) != null) {
             return false;
@@ -119,7 +115,6 @@ public class SceneManager extends GameSystem implements ISceneManager {
         scenes.add(newScene);
         return true;
     }
-    @Override
     public Scene getSceneByName(String name) {
         for (Scene scene : scenes) {
             if (scene.getName().equals(name)) {
@@ -128,12 +123,10 @@ public class SceneManager extends GameSystem implements ISceneManager {
         }
         return null;
     }
-    @Override
     public Scene getCurrentScene() {
         if (currentScene == null) return null;
         return currentScene;
     }
-    @Override
     public void removeScene(String name) {
         if (currentScene != null && currentScene.getName().equals(name)) {
             unloadScene();
@@ -141,11 +134,9 @@ public class SceneManager extends GameSystem implements ISceneManager {
         scenes.removeIf(scene -> scene.getName().equals(name));
     }
 
-    @Override
     public MessageDispatcher getMessageDispatcher() {
         return messageDispatcher;
     }
-    @Override
     public AssetStorage getAssetStorage() {
         return assetStorage;
     }

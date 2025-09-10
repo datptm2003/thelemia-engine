@@ -3,7 +3,7 @@ package com.deedee.thelemia.ai.fsm;
 import com.deedee.thelemia.ai.utils.Message;
 import com.deedee.thelemia.scene.Entity;
 
-public abstract class State implements IState {
+public abstract class State {
     protected State globalState;
 
     public State() {

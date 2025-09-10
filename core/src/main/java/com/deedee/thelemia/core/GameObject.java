@@ -1,29 +1,24 @@
 package com.deedee.thelemia.core;
 
-public class GameObject implements IGameObject {
+public class GameObject {
     protected boolean isStarted = false;
     protected boolean isStopped = false;
 
-    @Override
     public void create() {
 
     }
-    @Override
     public void start() {
         isStarted = true;
     }
 
-    @Override
     public void update(float delta) {
         if (!isStarted) start();
         if (isStopped) stop();
     }
 
-    @Override
     public void stop() {
 
     }
-    @Override
     public void dispose() {
 
     }

@@ -2,11 +2,8 @@ package com.deedee.thelemia.graphics;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.deedee.thelemia.event.EventBus;
-import com.deedee.thelemia.event.common.RenderFragmentEvent;
-import com.deedee.thelemia.scene.component.TransformComponent;
 
-public class Fragment extends GraphicsObject implements IFragment {
+public class Fragment extends RenderableObject {
     protected WidgetGroup widgetGroup;
     protected final float parentAlpha;
 

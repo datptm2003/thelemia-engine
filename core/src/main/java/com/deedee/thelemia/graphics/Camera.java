@@ -6,9 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.deedee.thelemia.core.GameObject;
-import com.deedee.thelemia.core.IGameObject;
 
-public class Camera extends GameObject implements ICamera {
+public class Camera extends GameObject {
     private final OrthographicCamera camera;
     private final Viewport viewport;
 
@@ -40,20 +39,16 @@ public class Camera extends GameObject implements ICamera {
         super.dispose();
     }
 
-    @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
     }
 
-    @Override
     public void setPosition(Vector2 position) {
         camera.position.set(position.x, position.y, 0);
     }
-    @Override
     public void setViewport(float width, float height) {
         viewport.update((int) width, (int) height, true);
     }
-    @Override
     public Matrix4 getProjectionMatrix() {
         return camera.combined;
     }

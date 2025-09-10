@@ -43,7 +43,7 @@ public class AnimatedSpriteComponent extends Component implements IGraphicsCompo
         return ComponentGroup.GRAPHICS;
     }
     @Override
-    public AnimatedSprite getGraphicsObject() {
+    public AnimatedSprite getRenderableObject() {
         return sprite;
     }
 }

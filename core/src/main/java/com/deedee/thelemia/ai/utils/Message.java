@@ -2,7 +2,7 @@ package com.deedee.thelemia.ai.utils;
 
 import com.deedee.thelemia.ai.enumerate.MessageTarget;
 
-public class Message implements IMessage {
+public class Message {
     private final String name;
     private final MessageTarget target;
 

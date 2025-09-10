@@ -5,7 +5,7 @@ import com.deedee.thelemia.scene.component.StateMachineComponent;
 
 import java.util.List;
 
-public class MessageDispatcher implements IMessageDispatcher {
+public class MessageDispatcher {
     public boolean dispatch(Entity receiver, Message message) {
         StateMachineComponent stateMachineComponent = receiver.getComponentByType(StateMachineComponent.class);
         if (stateMachineComponent != null) {

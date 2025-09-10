@@ -2,14 +2,13 @@ package com.deedee.thelemia.ai.btree;
 
 import com.deedee.thelemia.ai.enumerate.ActionStatus;
 
-public abstract class Node implements INode {
+public abstract class Node {
     String name;
 
     public Node(String name) {
         this.name = name;
     }
 
-    @Override
     public abstract ActionStatus execute(Blackboard blackboard);
 
     public String getName() {

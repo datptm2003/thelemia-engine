@@ -38,7 +38,7 @@ public class ParticlesComponent extends Component implements IGraphicsComponent 
         return ComponentGroup.GRAPHICS;
     }
     @Override
-    public Particles getGraphicsObject() {
+    public Particles getRenderableObject() {
         return particles;
     }
 }

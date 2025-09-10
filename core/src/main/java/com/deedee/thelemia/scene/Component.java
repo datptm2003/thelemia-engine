@@ -8,16 +8,13 @@ public abstract class Component implements IComponent {
         this.owner = owner;
     }
 
-    @Override
     public boolean isEnabled() {
         return enabled;
     }
-    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    @Override
     public Entity getOwner() {
         return owner;
     }

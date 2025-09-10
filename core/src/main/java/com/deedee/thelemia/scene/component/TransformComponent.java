@@ -6,9 +6,9 @@ import com.deedee.thelemia.scene.Entity;
 import com.deedee.thelemia.scene.enumerate.ComponentGroup;
 
 public class TransformComponent extends Component implements ICoreComponent {
-    private Vector2 origin = new Vector2(0.0f, 0.0f);
-    private Vector2 position = new Vector2(0.0f,0.0f);
-    private Vector2 scale = new Vector2(1.0f, 1.0f);
+    private final Vector2 origin = new Vector2(0.0f, 0.0f);
+    private final Vector2 position = new Vector2(0.0f,0.0f);
+    private final Vector2 scale = new Vector2(1.0f, 1.0f);
     private float rotation = 0.0f;
 
     public TransformComponent(Entity owner) {
@@ -28,8 +28,9 @@ public class TransformComponent extends Component implements ICoreComponent {
     public Vector2 getOrigin() {
         return origin;
     }
-    public void setOrigin(Vector2 origin) {
-        this.origin = origin;
+    public void setOrigin(float x, float y) {
+        this.origin.x = x;
+        this.origin.y = y;
     }
 
     public Vector2 getPosition() {

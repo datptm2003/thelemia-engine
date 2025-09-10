@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -18,7 +17,7 @@ import com.deedee.thelemia.scene.component.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Renderer extends GameSystem implements IRenderer {
+public class Renderer extends GameSystem {
     private final RenderListener listener = new RenderListener(this);
     private final Color defaultBackground;
 
@@ -87,14 +86,14 @@ public class Renderer extends GameSystem implements IRenderer {
         batch.begin();
 
         for (AnimatedSpriteComponent spriteComponent : spriteComponents) {
-            AnimatedSprite sprite = spriteComponent.getGraphicsObject();
+            AnimatedSprite sprite = spriteComponent.getRenderableObject();
             if (!sprite.isLoaded()) continue;
 
             sprite.update(delta);
             drawAnimatedSprite(spriteComponent);
         }
         for (ParticlesComponent particlesComponent : particlesComponents) {
-            Particles particles = particlesComponent.getGraphicsObject();
+            Particles particles = particlesComponent.getRenderableObject();
             if (!particles.isLoaded()) continue;
 
             particles.update(delta);
@@ -123,29 +122,24 @@ public class Renderer extends GameSystem implements IRenderer {
         return listener;
     }
 
-    @Override
     public void addWidget(WidgetComponent widgetComponent) {
-        root.add(widgetComponent.getGraphicsObject().getWidget());
+        root.add(widgetComponent.getRenderableObject().getWidget());
     }
-    @Override
     public void addAnimatedSprite(AnimatedSpriteComponent spriteComponent) {
         spriteComponents.add(spriteComponent);
     }
-    @Override
     public void addParticles(ParticlesComponent particlesComponent) {
         particlesComponents.add(particlesComponent);
     }
-    @Override
     public void changeTileMap(TileMapComponent tileMapComponent, float unitScale) {
         if (mapRenderer != null) mapRenderer.dispose();
 
-        TileMap tileMap = tileMapComponent.getGraphicsObject();
+        TileMap tileMap = tileMapComponent.getRenderableObject();
         mapRenderer = new OrthogonalTiledMapRenderer(tileMap.getTiledMap(), unitScale, batch);
     }
 
-    @Override
     public void drawAnimatedSprite(AnimatedSpriteComponent spriteComponent) {
-        AnimatedSprite sprite = spriteComponent.getGraphicsObject();
+        AnimatedSprite sprite = spriteComponent.getRenderableObject();
         TransformComponent transform = spriteComponent.getOwner().getComponentByType(TransformComponent.class);
 
         Vector2 position = transform.getPosition();
@@ -155,9 +149,8 @@ public class Renderer extends GameSystem implements IRenderer {
 
         sprite.draw(batch, position.x, position.y, origin.x, origin.y, scale.x, scale.y, rotation);
     }
-    @Override
     public void drawParticles(ParticlesComponent particlesComponent) {
-        particlesComponent.getGraphicsObject().draw(batch);
+        particlesComponent.getRenderableObject().draw(batch);
     }
 
     public void changeNextTransition(Transition nextTransition) {
@@ -167,21 +160,17 @@ public class Renderer extends GameSystem implements IRenderer {
         if (nextTransition != null) nextTransition.finish();
     }
 
-    @Override
     public void loadShader(String name, String vertexPath, String fragmentPath) {
         shaderManager.loadShader(name, vertexPath, fragmentPath);
     }
-    @Override
     public void applyShader(String name) {
         ShaderProgram currentShader = shaderManager.applyShader(name);
         batch.setShader(currentShader);
     }
-    @Override
     public void resetShader() {
         batch.setShader(null);
     }
 
-    @Override
     public void clearScreen(Color color) {
         if (color == null) {
             Gdx.gl.glClearColor(defaultBackground.r, defaultBackground.g, defaultBackground.b, defaultBackground.a);

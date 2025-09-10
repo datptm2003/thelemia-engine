@@ -1,6 +1,6 @@
 package com.deedee.thelemia.time;
 
-public class Timer implements ITimer {
+public class Timer {
     private float timeLeft;
     private float duration;
     private boolean repeat;
@@ -15,7 +15,6 @@ public class Timer implements ITimer {
         this.callback = callback;
     }
 
-    @Override
     public void update(float delta) {
         if (paused || finished) return;
         timeLeft -= delta;
@@ -29,20 +28,16 @@ public class Timer implements ITimer {
         }
     }
 
-    @Override
     public void pause() {
         paused = true;
     }
-    @Override
     public void resume() {
         paused = false;
     }
-    @Override
     public void reset() {
         timeLeft = duration;
         finished = false;
     }
-    @Override
     public boolean isFinished() {
         return finished;
     }

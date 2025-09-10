@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PhysicsEngine extends GameSystem implements IPhysicsEngine {
+public class PhysicsEngine extends GameSystem {
     private static class InternalContactListener implements ContactListener {
         @Override
         public void beginContact(Contact contact) {
@@ -58,7 +58,6 @@ public class PhysicsEngine extends GameSystem implements IPhysicsEngine {
         subscribeListener();
     }
 
-    @Override
     public RigidBody createBody(BodyDef bodyDef, List<FixtureDef> fixtureDefs, BodyData bodyData) {
         Body body = world.createBody(bodyDef);
         for (FixtureDef fixtureDef : fixtureDefs) {
@@ -68,11 +67,9 @@ public class PhysicsEngine extends GameSystem implements IPhysicsEngine {
         bodies.put(bodyData.getName(), rigidBody);
         return rigidBody;
     }
-    @Override
     public RigidBody getRigidBody(String name) {
         return bodies.get(name);
     }
-    @Override
     public void destroyBody(String name) {
         RigidBody body = bodies.get(name);
         world.destroyBody(body.getInternalBody());

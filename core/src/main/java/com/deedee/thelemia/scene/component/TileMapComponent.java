@@ -39,7 +39,7 @@ public class TileMapComponent extends Component implements IGraphicsComponent {
         return ComponentGroup.GRAPHICS;
     }
     @Override
-    public TileMap getGraphicsObject() {
+    public TileMap getRenderableObject() {
         return tileMap;
     }
 

@@ -8,7 +8,7 @@ import com.deedee.thelemia.event.common.AssignStageEvent;
 import com.deedee.thelemia.event.common.ChangeInputControllerEvent;
 import com.deedee.thelemia.scene.GameSystem;
 
-public class InputHandler extends GameSystem implements IInputHandler {
+public class InputHandler extends GameSystem {
     private final InputListener listener = new InputListener(this);
 
     private Stage stage;

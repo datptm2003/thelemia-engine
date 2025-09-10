@@ -3,7 +3,7 @@ package com.deedee.thelemia.ai.fsm;
 import com.deedee.thelemia.ai.utils.Message;
 import com.deedee.thelemia.scene.Entity;
 
-public class StateMachine implements IStateMachine {
+public class StateMachine {
     private final Entity owner;
 
     private State initialState;
@@ -30,12 +30,10 @@ public class StateMachine implements IStateMachine {
         currentState.updateGlobalState(globalState);
     }
 
-    @Override
     public void update() {
         currentState.update();
         globalState.update();
     }
-    @Override
     public void reset() {
         if (currentState != null) {
             currentState.exit();
@@ -47,7 +45,6 @@ public class StateMachine implements IStateMachine {
             currentState = null;
         }
     }
-    @Override
     public void release() {
 
     }
@@ -71,20 +68,16 @@ public class StateMachine implements IStateMachine {
         globalState.enter();
     }
 
-    @Override
     public State getInitialState() {
         return initialState;
     }
-    @Override
     public State getCurrentState() {
         return currentState;
     }
-    @Override
     public State getGlobalState() {
         return globalState;
     }
 
-    @Override
     public boolean handleMessage(Message message) {
         switch (message.getTarget()) {
             case CURRENT:

@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TileMap extends GraphicsObject implements ITileMap {
+public class TileMap extends RenderableObject {
     private final TiledMap tiledMap;
     private final int tileWidth;
     private final int tileHeight;
@@ -240,7 +240,6 @@ public class TileMap extends GraphicsObject implements ITileMap {
         if (tiledMap != null) tiledMap.dispose();
     }
 
-    @Override
     public TiledMapTileLayer getTileLayer(Enum<?> layerName) {
         MapLayer layer = tiledMap.getLayers().get(layerName.name());
         if (layer instanceof TiledMapTileLayer) {
@@ -252,7 +251,6 @@ public class TileMap extends GraphicsObject implements ITileMap {
     /**
      * Sets a tile identified by layerName and coordinates
      */
-    @Override
     public void setTile(Enum<?> layerName, int tx, int ty, TiledMapTile tile) {
         TiledMapTileLayer layer = getTileLayer(layerName);
         if (layer == null) return;
@@ -278,7 +276,6 @@ public class TileMap extends GraphicsObject implements ITileMap {
     /**
      * Clears a tile identified by layerName and coordinates
      */
-    @Override
     public void clearTile(Enum<?> layerName, int tx, int ty) {
         TiledMapTileLayer layer = getTileLayer(layerName);
         if (layer == null) return;

@@ -48,7 +48,7 @@ public class WidgetComponent extends Component implements IGraphicsComponent {
         return ComponentGroup.GRAPHICS;
     }
     @Override
-    public Fragment getGraphicsObject() {
+    public Fragment getRenderableObject() {
         return fragment;
     }
 

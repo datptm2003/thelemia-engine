@@ -1,8 +1,6 @@
 package com.deedee.thelemia.event.common;
 
-import com.badlogic.gdx.math.Vector2;
 import com.deedee.thelemia.event.Event;
-import com.deedee.thelemia.graphics.Particles;
 import com.deedee.thelemia.scene.component.ParticlesComponent;
 
 public class RenderParticlesEvent extends Event {
@@ -11,8 +9,8 @@ public class RenderParticlesEvent extends Event {
     public RenderParticlesEvent(ParticlesComponent particlesComponent, int x, int y, boolean loop) {
         super();
         this.particlesComponent = particlesComponent;
-        this.particlesComponent.getGraphicsObject().setPosition(x, y);
-        this.particlesComponent.getGraphicsObject().setLoop(loop);
+        this.particlesComponent.getRenderableObject().setPosition(x, y);
+        this.particlesComponent.getRenderableObject().setLoop(loop);
     }
 
     public ParticlesComponent getParticlesComponent() {

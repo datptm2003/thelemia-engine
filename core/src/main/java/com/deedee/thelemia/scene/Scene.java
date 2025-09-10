@@ -2,13 +2,14 @@ package com.deedee.thelemia.scene;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.utils.Disposable;
 import com.deedee.thelemia.event.EventBus;
 import com.deedee.thelemia.event.common.ChangeInputControllerEvent;
 import com.deedee.thelemia.input.InputController;
 
 import java.util.*;
 
-public class Scene implements IScene {
+public class Scene implements Disposable {
     protected final String name;
     protected final SceneManager sceneManager;
     protected final List<Entity> entities = new ArrayList<>();
@@ -26,19 +27,15 @@ public class Scene implements IScene {
         this.inputController = null;
     }
 
-    @Override
     public void addEntity(Entity entity) {
         entities.add(entity);
     }
-    @Override
     public void removeEntity(String id) {
         entities.removeIf(entity -> entity.getId().equals(id));
     }
-    @Override
     public Entity getEntityById(String id) {
         return entities.stream().filter(entity -> Objects.equals(entity.getId(), id)).findFirst().orElse(null);
     }
-    @Override
     public List<Entity> getEntitiesByType(Class<? extends Entity> type) {
         List<Entity> result = new ArrayList<>();
         for (Entity entity : entities) {
@@ -48,34 +45,27 @@ public class Scene implements IScene {
         }
         return result;
     }
-    @Override
     public List<Entity> getAllEntities() {
         return entities;
     }
 
-    @Override
     public void addSound(String alias) {
         sounds.add(alias);
     }
-    @Override
     public Sound getSound(String alias) {
         return sceneManager.getAssetStorage().get(alias, Sound.class);
     }
-    @Override
     public void removeSound(String alias) {
         sounds.remove(alias);
     }
 
-    @Override
     public void show() {
         EventBus.getInstance().post(new ChangeInputControllerEvent(inputController));
         sceneManager.getAssetStorage().loadGroup(sounds, Sound.class);
     }
-    @Override
     public void update(float delta) {
 
     }
-    @Override
     public void hide() {
         EventBus.getInstance().post(new ChangeInputControllerEvent(null));
         sceneManager.getAssetStorage().unloadGroup(sounds);
